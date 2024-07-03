@@ -1,2 +1,2 @@
 # Expense-Tracker
-Content to be added later...
+React application for personal expense/income management

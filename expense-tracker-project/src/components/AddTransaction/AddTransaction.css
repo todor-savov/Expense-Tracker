@@ -1,0 +1,54 @@
+.expense-form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 30px;
+    border-radius: 6px;
+    background: #fff;
+    box-shadow: 0 0 8px  #cc7a00; 
+}
+
+.expense-form-row-1, .expense-form-row-2 {
+    display: flex;
+    flex-direction: row;
+    margin: 20px;
+    padding: 20px;
+    border-radius: 6px;
+    box-shadow: 0 0 8px  #cc7a00; 
+}
+
+#expense-date, #expense-name, #expense-amount,
+#expense-category, #expense-payment {
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    width: calc(100% - 10px);
+    margin: 5px;
+    padding: 5px;
+}
+       
+#add-expense {
+    width: 20%;
+    align-self: center;
+    border: none;
+    border-radius: 5px; 
+    background: #cc7a00;
+    color: #fff;
+    cursor: pointer;
+}
+    
+#add-expense:hover {
+    background: #ff9800;
+}
+
+#upload-sales-receipt {
+    margin-left: 10px;
+    border: none;
+    border-radius: 5px; 
+    background: #cc7a00;
+    color: #fff;
+    cursor: pointer;
+}
+
+#upload-sales-receipt:hover {
+    background: #ff9800;
+}

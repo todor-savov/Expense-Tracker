@@ -1,18 +1,23 @@
+import { useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import AuthContext from './context/AuthContext.tsx';
 import Transactions from './views/Transactions.tsx';
 import AddTransaction from './components/AddTransaction/AddTransaction.tsx';
-import UploadReceipt from './components/UploadReceipt/UploadReceipt.tsx';
+import Login from './components/Login/Login.tsx';
 import './App.css';
 
 function App() {
+  const [authValue, setAuthValue] = useState({status: false, user: ''});
 
   return (
     <BrowserRouter>
-    <Routes>
-      <Route path="/transactions" element={<Transactions />} />
-      <Route path="/add-transaction" element={<AddTransaction />} />
-      <Route path="/upload-receipt" element={<UploadReceipt/>} />
-    </Routes>
+      <AuthContext.Provider value={{ isLoggedIn: authValue, setLoginState: setAuthValue }}>
+        <Routes>
+          <Route path="/transactions" element={<Transactions />} />
+          <Route path="/add-transaction" element={<AddTransaction />} />
+          <Route path="/login" element={<Login />} />
+        </Routes>
+      </AuthContext.Provider>
     </BrowserRouter>
   )
 }

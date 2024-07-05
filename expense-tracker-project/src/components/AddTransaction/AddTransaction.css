@@ -39,16 +39,3 @@
 #add-expense:hover {
     background: #ff9800;
 }
-
-#upload-sales-receipt {
-    margin-left: 10px;
-    border: none;
-    border-radius: 5px; 
-    background: #cc7a00;
-    color: #fff;
-    cursor: pointer;
-}
-
-#upload-sales-receipt:hover {
-    background: #ff9800;
-}

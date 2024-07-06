@@ -1,0 +1,24 @@
+.all-transactions-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.all-transactions-table th,
+.all-transactions-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.all-transactions-table th {
+    background-color: #f2f2f2;
+}
+
+.receiptImage {
+    max-width: 50px; 
+    max-height: 50px; 
+    object-fit: cover; 
+    display: block;
+    margin: 0 auto; 
+    border-radius: 5px;
+}

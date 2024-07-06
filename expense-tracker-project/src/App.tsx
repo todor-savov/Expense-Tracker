@@ -16,6 +16,7 @@ function App() {
           <Route path="/transactions" element={<Transactions />} />
           <Route path="/add-transaction" element={<AddTransaction />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/edit-transaction/:id" element={<AddTransaction mode={"edit"} />} />
         </Routes>
       </AuthContext.Provider>
     </BrowserRouter>

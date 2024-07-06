@@ -106,3 +106,11 @@ export const getTransactions = async (user: string): Promise<FetchedTransaction[
     return [];
   }
 }
+
+export const deleteTransaction = async (transactionId: string): Promise<void|undefined> => {
+  try {
+    return await set(ref(database, `transactions/${transactionId}`), null);
+  } catch (error: any) {
+    console.log(error.message);
+  }
+}

@@ -24,10 +24,10 @@ const Login = () => {
                     if (!userCredentials) throw new Error(`Incorrect login credentials.`);
                     const userDetails = await getUserDetails(form.emailAddress);
                     if (!userDetails) throw new Error(`User details not found.`);
-                    if (userDetails[0].isBlocked) throw new Error(`Your account has been blocked. Please contact the administrator.`);
+                    //if (userDetails[0].isBlocked) throw new Error(`Your account has been blocked. Please contact the administrator.`);
                     setLoading(false);
                     setLoginState({status: true, user: form.emailAddress});
-                    navigate(location.state?.from.pathname || '/home');
+                    navigate(location.state?.from.pathname || '/transactions');
                 } catch (error: any) {
                     setLoading(false);
                     setError(error.message);

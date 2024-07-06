@@ -10,7 +10,8 @@ import './AddTransaction.css';
 const AddTransaction = () => {
     const { isLoggedIn } = useContext(AuthContext);
     const [loading, setLoading] = useState<boolean>(false);
-    const [salesReceipt, setSalesReceipt] = useState<string | null>(null);
+    const [error, setError] = useState<string|null>(null);
+    const [salesReceipt, setSalesReceipt] = useState<string|null>(null);
     interface NewTransaction {
         date: string;
         name: string;
@@ -20,20 +21,22 @@ const AddTransaction = () => {
         receipt: string;
         user: string;
     }
-    const [transaction, setTransaction] = useState<NewTransaction | null>(null);
+    const [transaction, setTransaction] = useState<NewTransaction|null>(null);
     const navigate = useNavigate();
 
     useEffect(() => {
         const addHandler = async () => {
-            if (transaction === null) {
-                return;
+            try {
+                if (transaction === null) return;
+                setLoading(true);
+                await addTransaction(transaction);
+                setLoading(false);
+                navigate('/transactions');
+            } catch (error: any) {
+                setError(error.message);
+                console.log(error.message);
             }
-            setLoading(true);
-            await addTransaction(transaction);
-            setLoading(false);
-            navigate('/transactions');
         }
-
         if (transaction) addHandler();
     }, [transaction]);
 
@@ -78,6 +81,7 @@ const AddTransaction = () => {
 
     return (
         <>  
+            {error && <p>{error}</p>}
             <form onSubmit={handleSubmit} className='expense-form'>
                 <h2>Expense Information</h2>
 

@@ -55,7 +55,7 @@ const AddTransaction = () => {
         const expenseCategory = target['expense-category'].value;
         const expensePayment = target['expense-payment'].value; 
 
-        const expenseDetails = {
+        const expenseDetails = { 
             date: expenseDate,
             name: expenseName,
             amount: expenseAmount,

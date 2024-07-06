@@ -12,6 +12,7 @@ import { getStorage } from "firebase/storage";
 const firebaseConfig = {
   apiKey: "AIzaSyAvcAtWh7L2iqKweGNEJGoFeAPb5I1Wc_s",
   authDomain: "expense-tracking-app-33495.firebaseapp.com",
+  databaseURL: "https://expense-tracking-app-33495-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "expense-tracking-app-33495",
   storageBucket: "expense-tracking-app-33495.appspot.com",
   messagingSenderId: "926297351817",

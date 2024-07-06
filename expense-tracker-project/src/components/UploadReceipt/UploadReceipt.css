@@ -1,5 +1,6 @@
 .upload-receipt {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     padding: 20px;
@@ -36,4 +37,11 @@
 /* Change background color on hover */
 .upload-receipt label:hover {
     background-color: #0056b3;
+}
+
+.upload-receipt img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-top: 20px;
 }

@@ -74,8 +74,7 @@ interface NewTransaction {
 export const addTransaction = async (transactionDetails: NewTransaction): Promise<void|undefined> => {
   try {
     const response = await push(ref(database, 'transactions'), transactionDetails);
-    const transactionId = response.key;
-    update(ref(database, `transactions/${transactionId}`), { id: transactionId });
+    update(ref(database, `transactions/${response.key}`), { id: response.key });
   } catch (error: any) {
     console.log(error.message);
   }
@@ -95,15 +94,30 @@ interface FetchedTransaction {
 export const getTransactions = async (user: string): Promise<FetchedTransaction[]|[]> => {
   try {
     const snapshot = await get(query(ref(database, "transactions"), orderByChild("user"), equalTo(user)));
-    if (snapshot.exists()) {
-      const transactions = Object.values(snapshot.val()) as FetchedTransaction[];
-      return transactions;
-    } else {
-      return [];
-    }
+    if (snapshot.exists()) return Object.values(snapshot.val()) as FetchedTransaction[];
+    else return [];
   } catch (error: any) {
     console.log(error.message);
     return [];
+  }
+}
+
+export const getTransaction = async (transactionId: string): Promise<FetchedTransaction|null> => {
+  try {
+    const snapshot = await get(ref(database, `transactions/${transactionId}`));
+    if (snapshot.exists()) return snapshot.val() as FetchedTransaction;
+    else return null;
+  } catch (error: any) {
+    console.log(error.message);
+    return null;
+  }
+}
+
+export const updateTransaction = async (transactionDetails: FetchedTransaction, transactionId: string): Promise<void|undefined> => {
+  try {
+    return await set(ref(database, `transactions/${transactionId}`), transactionDetails);
+  } catch (error: any) {
+    console.log(error.message);
   }
 }
 

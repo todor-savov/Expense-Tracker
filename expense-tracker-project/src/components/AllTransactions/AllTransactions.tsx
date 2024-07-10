@@ -75,5 +75,5 @@ const AllTransactions = () => {
     );
 }
 
-export default AllTransactions;
+export default AllTransactions; 
 

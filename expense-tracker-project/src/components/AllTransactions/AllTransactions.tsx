@@ -66,7 +66,7 @@ const AllTransactions = () => {
             {error && <p>{error}</p>}
             <h2>My Transactions</h2>
             {transactions.length === 0 ? 
-                <p>No transactions found</p> : <StickyTable transactions={transactions} />
+                <p>No transactions found</p> : <StickyTable transactions={transactions} setTransactionToDelete={setTransactionToDelete} />
             }
             <br />
             <br />

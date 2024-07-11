@@ -41,3 +41,14 @@
     padding: 20px;
     border-radius: 10px;
 }
+
+.receipt-icon {
+    cursor: pointer;
+    color: #74C0FC;
+}
+
+.edit-button, .delete-button {
+    cursor: pointer;
+    padding: 10px;
+    margin-left: 10px;
+}

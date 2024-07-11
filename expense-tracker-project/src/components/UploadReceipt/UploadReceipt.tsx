@@ -5,10 +5,10 @@ import { uploadFile } from "../../service/storage-service.ts";
 import './UploadReceipt.css';
 
 interface UploadReceiptProps {
-    addReceipt: (url: string) => void;
+    setSalesReceipt: (url: string) => void;
 }
 
-const UploadReceipt: React.FC<UploadReceiptProps> = ({ addReceipt }) => {
+const UploadReceipt: React.FC<UploadReceiptProps> = ({ setSalesReceipt }) => {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [fileToUpload, setFileToUpload] = useState<File|null>(null);
     const [receiptURL, setReceiptURL] = useState<string|null>(null);
@@ -21,7 +21,7 @@ const UploadReceipt: React.FC<UploadReceiptProps> = ({ addReceipt }) => {
                 setLoading(true);
                 const receiptURL = await uploadFile(fileToUpload as File);
                 setReceiptURL(receiptURL);
-                addReceipt(receiptURL);
+                setSalesReceipt(receiptURL);
                 setLoading(false);
             } catch (error: any) {
                 setError(error.message);
@@ -50,10 +50,8 @@ const UploadReceipt: React.FC<UploadReceiptProps> = ({ addReceipt }) => {
             {error && <p>{error}</p>}
             <div className='upload-receipt'>
                 <FontAwesomeIcon icon={faReceipt} size="2xl" style={{color: "#74C0FC",}} />
-
                 <input type="file" id="file" name="file" accept="image/*" ref={fileInputRef} onChange={(event) => handleUpload(event)} />
                 <label htmlFor="file">Sales Receipt</label>
-
                 {receiptURL && 
                     <div>        
                         <img src={receiptURL as string} alt="receipt" />

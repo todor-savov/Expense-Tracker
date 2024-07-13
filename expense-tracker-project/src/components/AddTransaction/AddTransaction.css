@@ -5,39 +5,27 @@
     padding: 30px;
     border-radius: 6px;
     background: #fff;
-    box-shadow: 0 0 8px  #cc7a00; 
+    box-shadow: 0 0 8px  #0074cc; 
 }
 
-.expense-form-row-1, .expense-form-row-2 {
-    display: flex;
-    flex-direction: row;
-    margin: 20px;
-    padding: 20px;
-    border-radius: 6px;
-    box-shadow: 0 0 8px  #cc7a00; 
-}
-
-#expense-date, #expense-name, #expense-amount,
-#expense-category, #expense-payment {
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    width: calc(100% - 10px);
-    margin: 5px;
-    padding: 5px;
-}
-       
 #add-expense {
-    width: 20%;
+    width: 30%;
     align-self: center;
     border: none;
     border-radius: 5px; 
-    background: #cc7a00;
+    background: #0074cc;
     color: #fff;
     cursor: pointer;
 }
     
 #add-expense:hover {
     background: #ff9800;
+}
+
+.date-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
 }
 
 .spinner {

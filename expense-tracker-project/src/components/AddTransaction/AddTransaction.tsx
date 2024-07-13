@@ -2,6 +2,12 @@ import { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarDays, faTags, faCalculator, faList, faCreditCard } from '@fortawesome/free-solid-svg-icons';
+import { Box, Button, MenuItem, TextField } from '@mui/material';
+import { Save } from '@mui/icons-material';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs';
 import { addTransaction, getTransaction, updateTransaction } from '../../service/database-service';
 import UploadReceipt from '../UploadReceipt/UploadReceipt';
 import AuthContext from '../../context/AuthContext';
@@ -34,6 +40,11 @@ const AddTransaction = ({ mode }: { mode: string }) => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string|null>(null);
+    const [dateError, setDateError] = useState<string|null>(null);
+    const [nameError, setNameError] = useState<string|null>(null);
+    const [amountError, setAmountError] = useState<string|null>(null);
+    const [categoryError, setCategoryError] = useState<string|null>(null);
+    const [paymentError, setPaymentError] = useState<string|null>(null);
     const [salesReceipt, setSalesReceipt] = useState<string|null>(null);
     const [newTransaction, setNewTransaction] = useState<NewTransaction|null>(null);
     const [fetchedTransaction, setFetchedTransaction] = useState<FetchedTransaction|null>(null);
@@ -125,56 +136,66 @@ const AddTransaction = ({ mode }: { mode: string }) => {
 
     return (
         <>  
-            {error && <p>{error}</p>}
-            <form onSubmit={handleSubmit} className='expense-form'>
-                <h2>Transaction Details</h2>
-
-                <div className='expense-form-row-1'>
-                    <FontAwesomeIcon icon={faCalendarDays} size="xl" style={{color: "#74C0FC",}} />
-                    <input id="expense-date" type="date" name="expense-date" 
-                        defaultValue={fetchedTransaction ? fetchedTransaction?.date : ''} 
-                        required/>
-
-                    <FontAwesomeIcon icon={faTags} size="xl" style={{color: "#74C0FC",}} />
-                    <input id="expense-name" type="text" name="expense-name" 
-                        {...fetchedTransaction ? { defaultValue: fetchedTransaction?.name } : { placeholder: 'Expense Name' }} 
-                        required/>
-
-                    <FontAwesomeIcon icon={faCalculator} size="xl" style={{color: "#74C0FC",}} />
-                    <input id="expense-amount" type="text" name="expense-amount" 
-                        {...fetchedTransaction ? { defaultValue: fetchedTransaction?.amount } : { placeholder: 'Expense Amount' }} 
-                        required/>
+            <Box component="form" sx={{'& .MuiTextField-root': { m: 1, width: '25ch' },}} noValidate
+                autoComplete="off" onSubmit={handleSubmit} className="expense-form"
+            >
+                <h2>Add New Transaction</h2>
+                {error && <p>{error}</p>}
+                <div className='date-container'>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DemoContainer components={['DatePicker']}>
+                                <DatePicker 
+                                    value={fetchedTransaction ? dayjs(fetchedTransaction?.date) : null}
+                                    label={<FontAwesomeIcon icon={faCalendarDays} size="xl" style={{color: "#74C0FC",}} />}
+                                    slotProps={{textField: {
+                                            id: "expense-date",
+                                            error: !!dateError,
+                                            helperText: dateError || "Please select a date", 
+                                            required: true
+                                    }}}
+                                />
+                        </DemoContainer>
+                    </LocalizationProvider>
                 </div>
 
-                <div className='expense-form-row-2'>
-                    <FontAwesomeIcon icon={faList} size="xl" style={{color: "#74C0FC",}} />
-                    <select id="expense-category" name="expense-category" 
+                <div>
+                    <TextField error={!!nameError} type="text" id="expense-name" label={<FontAwesomeIcon icon={faTags} size="xl" style={{color: "#74C0FC",}} />}
+                        {...fetchedTransaction ? { defaultValue: fetchedTransaction?.name } : { placeholder: 'Name' }} 
+                        helperText={nameError || "Please select name"} required
+                    />
+
+                    <TextField error={!!amountError} type="number" id="expense-amount" label={<FontAwesomeIcon icon={faCalculator} size="xl" style={{color: "#74C0FC",}} />}
+                        {...fetchedTransaction ? { defaultValue: fetchedTransaction?.amount } : { placeholder: 'Amount' }} 
+                        helperText={amountError || "Please select amount"} required
+                    />
+                </div>
+                <div>
+                    <TextField error={!!categoryError} select id="expense-category" name="expense-category" label={<FontAwesomeIcon icon={faList} size="xl" style={{color: "#74C0FC",}} />}
                         defaultValue={fetchedTransaction ? fetchedTransaction?.category : ""}
-                        required>
-                        <option value="" disabled>Category</option>
-                        <option value="Food">Food</option>
-                        <option value="Transport">Transport</option>
-                        <option value="Utilities">Utilities</option>
-                        <option value="Entertainment">Entertainment</option>
-                        <option value="Others">Others</option>
-                    </select>
+                        helperText={categoryError || "Please select category"} required 
+                    >
+                        <MenuItem key="Category" value="" disabled>Category</MenuItem>
+                        <MenuItem key="Food" value="Food">Food</MenuItem>
+                        <MenuItem key="Transport" value="Transport">Transport</MenuItem>
+                        <MenuItem key="Utilities" value="Utilities">Utilities</MenuItem>
+                        <MenuItem key="Entertainment" value="Entertainment">Entertainment</MenuItem>
+                        <MenuItem key="Others" value="Others">Others</MenuItem>
+                    </TextField>
 
-                    <FontAwesomeIcon icon={faCreditCard} size="xl" style={{color: "#74C0FC",}} />
-                    <select id="expense-payment" name="expense-payment" 
+                    <TextField error={!!paymentError} select id="expense-payment" name="expense-payment" label={<FontAwesomeIcon icon={faCreditCard} size="xl" style={{color: "#74C0FC",}} />}
                         defaultValue={fetchedTransaction ? fetchedTransaction?.payment : ""}
-                        required>
-                        <option value="" disabled>Payment Method</option>
-                        <option value="cash">Cash</option>
-                        <option value="card">Card</option>
-                    </select>
+                        helperText={paymentError || "Please select payment method"} required 
+                    >
+                        <MenuItem key="Payment" value="" disabled>Payment Method</MenuItem>
+                        <MenuItem key="Cash" value="Cash">Cash</MenuItem>
+                        <MenuItem key="Card" value="Card">Card</MenuItem>
+                    </TextField>
                 </div>
-
-                <div className='expense-form-row-3'>
-                    <UploadReceipt setSalesReceipt={setSalesReceipt} />
+                <div>
+                    {<UploadReceipt setSalesReceipt={setSalesReceipt} />}
                 </div>
-                
-                <button type="submit" id='add-expense'>Add</button>
-            </form>
+                <Button id='add-expense' type="submit" endIcon={<Save />}>Save</Button>
+            </Box>
         </>
     );
 }

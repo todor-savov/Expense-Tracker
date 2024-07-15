@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faReceipt } from '@fortawesome/free-solid-svg-icons';
 import { uploadFile } from "../../service/storage-service.ts";
+import { Button } from '@mui/material';
+import { VisuallyHiddenInput } from '../../common/utils.ts';
 import './UploadReceipt.css';
 
 interface UploadReceiptProps {
@@ -49,9 +51,10 @@ const UploadReceipt: React.FC<UploadReceiptProps> = ({ setSalesReceipt }) => {
         <>
             {error && <p>{error}</p>}
             <div className='upload-receipt'>
-                <FontAwesomeIcon icon={faReceipt} size="2xl" style={{color: "#74C0FC",}} />
-                <input type="file" id="file" name="file" accept="image/*" ref={fileInputRef} onChange={(event) => handleUpload(event)} />
-                <label htmlFor="file">Sales Receipt</label>
+                <Button component="label" role={undefined} variant="contained" tabIndex={-1} 
+                    startIcon={<span><FontAwesomeIcon icon={faReceipt} size="2xl" style={{color: "#74C0FC",}}/> Sales Receipt</span>}>       
+                    <VisuallyHiddenInput type="file" id="file" name="file" accept="image/*" ref={fileInputRef} onChange={(event) => handleUpload(event)} />
+                </Button>
                 {receiptURL && 
                     <div>        
                         <img src={receiptURL as string} alt="receipt" />

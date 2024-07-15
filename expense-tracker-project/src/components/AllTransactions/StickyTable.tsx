@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -13,9 +13,10 @@ import TextField from '@mui/material/TextField';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare, faReceipt, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import { getCategoryIcon } from '../../common/utils';
-import { IconButton } from '@mui/material';
-import { GridSearchIcon } from '@mui/x-data-grid';
+import { IconButton, InputAdornment } from '@mui/material';
+import { GridFilterListIcon } from '@mui/x-data-grid';
 import { useNavigate } from 'react-router-dom';
+import { ClearIcon } from '@mui/x-date-pickers';
 
 interface Column {
   id: 'category' | 'date' | 'name' | 'amount' | 'payment' | 'receipt';
@@ -48,29 +49,41 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionT
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
   const [showReceipt, setShowReceipt] = useState<string>('');
   const [filteredTransactions, setFilteredTransactions] = useState<FetchedTransaction[]>(transactions);
-  const [searchCriteria, setSearchCriteria] = useState<string>('');
-  const [sum, setSum] = useState<number>(0);
+  const [searchFilters, setSearchFilters] = useState<Map<string, string>>(new Map());
   const [hoveredRow, setHoveredRow] = useState<string>('');
+  const [sum, setSum] = useState<number>(0);
 
   const columns: readonly Column[] = [
     { id: 'category', label: 'Category', minWidth: 50,
-      render: () => <IconButton onClick={() => setSearchCriteria("category")}><GridSearchIcon /></IconButton> 
+      render: () => <IconButton onClick={() => setSearchFilters(new Map(searchFilters.set("category", "")))}>
+                      <GridFilterListIcon />
+                    </IconButton> 
     },
     { id: 'date', label: 'Date', minWidth: 100, 
-      render: () => <IconButton onClick={() => setSearchCriteria("date")}><GridSearchIcon /></IconButton> 
+      render: () => <IconButton onClick={() => setSearchFilters(new Map(searchFilters.set("date", "")))}>
+                      <GridFilterListIcon />
+                    </IconButton> 
     },
     { id: 'name', label: 'Name', minWidth: 100,
-      render: () => <IconButton onClick={() => setSearchCriteria("name")}><GridSearchIcon /></IconButton> 
+      render: () => <IconButton onClick={() => setSearchFilters(new Map(searchFilters.set("name", "")))}>
+                      <GridFilterListIcon />
+                    </IconButton> 
     },
     { id: 'amount', label: 'Amount', minWidth: 70,
       format: (value: number) => value.toLocaleString('en-US'),
-      render: () => <IconButton onClick={() => setSearchCriteria("amount")}><GridSearchIcon /></IconButton>
+      render: () => <IconButton onClick={() => setSearchFilters(new Map(searchFilters.set("amount", "")))}>
+                      <GridFilterListIcon />
+                    </IconButton>
     },
     { id: 'payment', label: 'Payment', minWidth: 70, 
-      render: () => <IconButton onClick={() => setSearchCriteria("payment")}><GridSearchIcon /></IconButton>, 
-     },
+      render: () => <IconButton onClick={() => setSearchFilters(new Map(searchFilters.set("payment", "")))}>
+                      <GridFilterListIcon />
+                    </IconButton>
+    },
     { id: 'receipt', label: 'Receipt', minWidth: 120,
-      render: () => <IconButton onClick={() => setSearchCriteria("receipt")}><GridSearchIcon /></IconButton>, 
+      render: () => <IconButton onClick={() => setSearchFilters(new Map(searchFilters.set("receipt", "")))}>
+                      <GridFilterListIcon />
+                    </IconButton>
     }
   ];
 
@@ -85,26 +98,55 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionT
   
   const handleMouseLeave = () => setHoveredRow('');
 
-  const handleSearch = (event: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>) => {
-    console.log(event.target.value);
-    console.log(searchCriteria);
+  useEffect(() => {
+      let filteredResults: FetchedTransaction[] = [...transactions];
+      for (const [key, value] of searchFilters.entries()) {
+        filteredResults = filteredResults.filter(transaction => 
+                        transaction[key as keyof FetchedTransaction].toString().toLowerCase().includes(value));
+      }
+      setFilteredTransactions(filteredResults);
+      setSum(filteredResults.reduce((acc, transaction) => acc + transaction.amount, 0));
+  }, [searchFilters]);
 
-    // Filter transactions based on search
-    const searchString = event.target.value.toString().toLowerCase();
-    const filteredTransactions = 
-            transactions.filter(transaction => transaction[searchCriteria as keyof FetchedTransaction].toString().toLowerCase().includes(searchString));
+  const clearFilter = (key: string) => {
+    const newMap = new Map();
+    if (key !== "all") {
+      for (const [k, v] of searchFilters.entries()) {
+        if (k !== key) newMap.set(k, v);
+      }
+    }
+    setSearchFilters(newMap);
+  };
 
-    console.log(filteredTransactions);
-
-    const sum = filteredTransactions.reduce((acc, transaction) => {
-        console.log(transaction);
-        return acc + transaction.amount;
-    }, 0);
-
-    setSum(sum);
-    // Update the transactions displayed
-    setFilteredTransactions(filteredTransactions);
-  }
+  const loadSearchFilters = () => {
+    const activeFilters = [...searchFilters].map(([key]) => 
+             <TextField fullWidth key={key} label={key} id="search" 
+              onChange={(event) => setSearchFilters(new Map(searchFilters.set(key, event.target.value.toString().toLowerCase())))} 
+              size="small" 
+              InputProps={{endAdornment: (
+                          <InputAdornment position="end">
+                              <IconButton onClick={() => clearFilter(key)}>
+                                  <ClearIcon style={{color: 'red'}}/>
+                              </IconButton> 
+                          </InputAdornment>
+                        )}}
+              style={{ margin: '1%'}}
+           />         
+    );
+    
+    if (activeFilters.length > 0) {
+        return <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', borderRadius: '5px' }}>
+                  <Box style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', margin: '0.3%', padding: '1%', borderRadius: '5px' }}>
+                      {activeFilters} 
+                  </Box>
+                  {activeFilters.length > 1 && 
+                    <IconButton style={{justifyContent: "left"}} onClick={() => clearFilter("all")}>
+                        <ClearIcon style={{color: 'red'}}/> <span style={{ fontSize: '0.9rem' }}>Clear All Filters</span>
+                    </IconButton>
+                  }
+              </Box>
+    }
+  };
 
   return (
     <>
@@ -114,12 +156,8 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionT
             </div>
             :
             <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-                <TableContainer sx={{ maxHeight: 440 }}>
-                    {searchCriteria &&
-                        <Box sx={{ margin: '2%', padding: '1%' }}>
-                            <TextField fullWidth label={searchCriteria} id="search" onChange={(event) => handleSearch(event)}/>
-                        </Box>
-                    }
+                <TableContainer sx={{maxWidth: '100%'}}>
+                    {loadSearchFilters()}
                     <Table stickyHeader aria-label="sticky table">
                         <TableHead>
                             <TableRow>
@@ -168,9 +206,7 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionT
                             }
                         </TableBody>
                     </Table>
-                    <Box sx={{ margin: '2%', padding: '1%' }}>
-                        <p>GROSS: {sum}</p>
-                    </Box>
+                    <Box sx={{ margin: '2%', padding: '1%' }}> <p>TOTAL: {sum}</p> </Box>
                 </TableContainer>
                 <TablePagination
                     rowsPerPageOptions={[10, 25, 100]}

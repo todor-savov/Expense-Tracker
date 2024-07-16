@@ -12,11 +12,12 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare, faReceipt, faTrashCan } from '@fortawesome/free-solid-svg-icons';
-import { getCategoryIcon } from '../../common/utils';
+import { getCategoryIcon, getMonthAsNumber } from '../../common/utils';
 import { IconButton, InputAdornment } from '@mui/material';
 import { GridFilterListIcon } from '@mui/x-data-grid';
 import { useNavigate } from 'react-router-dom';
 import { ClearIcon } from '@mui/x-date-pickers';
+import { ArrowUpward, ArrowDownward } from '@mui/icons-material';
 
 interface Column {
   id: 'category' | 'date' | 'name' | 'amount' | 'payment' | 'receipt';
@@ -24,7 +25,6 @@ interface Column {
   minWidth: number;
   align?: 'left';
   format?: (value: number) => string;
-  render: () => JSX.Element;
 }
 
 interface FetchedTransaction {
@@ -43,6 +43,11 @@ interface StickyTableProps {
     setTransactionToDelete: (id: string) => void;
 }
 
+interface sortParams {
+    column: string;
+    ascending: boolean;
+} 
+
 const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionToDelete }) => {
   const navigate = useNavigate();
   const [page, setPage] = useState<number>(0);
@@ -50,41 +55,18 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionT
   const [showReceipt, setShowReceipt] = useState<string>('');
   const [filteredTransactions, setFilteredTransactions] = useState<FetchedTransaction[]>(transactions);
   const [searchFilters, setSearchFilters] = useState<Map<string, string>>(new Map());
+  const [sortParams, setSortParams] = useState<sortParams>({'column': 'date', 'ascending': false});
+  const [hoveredColumnTitle, setHoveredColumnTitle] = useState<string>('');
   const [hoveredRow, setHoveredRow] = useState<string>('');
   const [sum, setSum] = useState<number>(0);
 
   const columns: readonly Column[] = [
-    { id: 'category', label: 'Category', minWidth: 50,
-      render: () => <IconButton onClick={() => setSearchFilters(new Map(searchFilters.set("category", "")))}>
-                      <GridFilterListIcon />
-                    </IconButton> 
-    },
-    { id: 'date', label: 'Date', minWidth: 100, 
-      render: () => <IconButton onClick={() => setSearchFilters(new Map(searchFilters.set("date", "")))}>
-                      <GridFilterListIcon />
-                    </IconButton> 
-    },
-    { id: 'name', label: 'Name', minWidth: 100,
-      render: () => <IconButton onClick={() => setSearchFilters(new Map(searchFilters.set("name", "")))}>
-                      <GridFilterListIcon />
-                    </IconButton> 
-    },
-    { id: 'amount', label: 'Amount', minWidth: 70,
-      format: (value: number) => value.toLocaleString('en-US'),
-      render: () => <IconButton onClick={() => setSearchFilters(new Map(searchFilters.set("amount", "")))}>
-                      <GridFilterListIcon />
-                    </IconButton>
-    },
-    { id: 'payment', label: 'Payment', minWidth: 70, 
-      render: () => <IconButton onClick={() => setSearchFilters(new Map(searchFilters.set("payment", "")))}>
-                      <GridFilterListIcon />
-                    </IconButton>
-    },
-    { id: 'receipt', label: 'Receipt', minWidth: 120,
-      render: () => <IconButton onClick={() => setSearchFilters(new Map(searchFilters.set("receipt", "")))}>
-                      <GridFilterListIcon />
-                    </IconButton>
-    }
+    { id: 'category', label: 'Category', minWidth: 50 },
+    { id: 'date', label: 'Date', minWidth: 100 },
+    { id: 'name', label: 'Name', minWidth: 100 },
+    { id: 'amount', label: 'Amount', minWidth: 70, format: (value: number) => value.toLocaleString('en-US') },
+    { id: 'payment', label: 'Payment', minWidth: 70 },
+    { id: 'receipt', label: 'Receipt', minWidth: 120 }
   ];
 
   const handleChangePage = (event: unknown, newPage: number) => setPage(newPage);
@@ -100,9 +82,12 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionT
 
   useEffect(() => {
       let filteredResults: FetchedTransaction[] = [...transactions];
-      for (const [key, value] of searchFilters.entries()) {
-        filteredResults = filteredResults.filter(transaction => 
-                        transaction[key as keyof FetchedTransaction].toString().toLowerCase().includes(value));
+      for (let [key, value] of searchFilters.entries()) {
+        if (key === "date" && value.length > 0) value = getMonthAsNumber(value);
+
+        filteredResults = filteredResults.filter((transaction) => 
+            transaction[key as keyof FetchedTransaction].toString().toLowerCase().includes(value)
+        )
       }
       setFilteredTransactions(filteredResults);
       setSum(filteredResults.reduce((acc, transaction) => acc + transaction.amount, 0));
@@ -120,7 +105,7 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionT
 
   const loadSearchFilters = () => {
     const activeFilters = [...searchFilters].map(([key]) => 
-             <TextField fullWidth key={key} label={key} id="search" 
+             <TextField fullWidth key={key} label={key} className="search" 
               onChange={(event) => setSearchFilters(new Map(searchFilters.set(key, event.target.value.toString().toLowerCase())))} 
               size="small" 
               InputProps={{endAdornment: (
@@ -161,17 +146,37 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionT
                     <Table stickyHeader aria-label="sticky table">
                         <TableHead>
                             <TableRow>
-                            {columns.map(column => 
-                                <TableCell key={column.id} align={column.align} style={{ minWidth: column.minWidth }}> 
-                                    {column.label}
-                                    {column.render()}
-                                </TableCell>
-                            )}
+                              {columns.map(column => 
+                                  <TableCell key={column.id} align={column.align} style={{ minWidth: column.minWidth }}
+                                    onMouseEnter={() => setHoveredColumnTitle(column.id)} onMouseLeave={() => setHoveredColumnTitle('')}>
+                                      {column.label}
+
+                                      <IconButton size='small' onClick={() => setSearchFilters(new Map(searchFilters.set(column.id, "")))}>
+                                        <GridFilterListIcon fontSize='small' />
+                                      </IconButton>
+
+                                      {column.id === sortParams.column  
+                                        ? <IconButton size='small' onClick={() => setSortParams({...sortParams, 'ascending': !sortParams.ascending})}>
+                                              {sortParams.ascending ? <ArrowUpward fontSize='small' /> : <ArrowDownward fontSize='small' />}
+                                          </IconButton> 
+                                        : (column.id === hoveredColumnTitle && 
+                                          <IconButton size='small' onClick={() => setSortParams({...sortParams, 'column': column.id})}>
+                                              <ArrowUpward fontSize='small' />
+                                          </IconButton>)
+                                      }
+                                  </TableCell>
+                              )}
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {filteredTransactions
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                            .sort((transaction1, transaction2) => {
+                                const key1 = transaction1[sortParams.column as keyof FetchedTransaction];
+                                const key2 = transaction2[sortParams.column as keyof FetchedTransaction];
+                                if (sortParams.ascending) return key1 > key2 ? 1 : -1;
+                                else return key1 < key2 ? 1 : -1;
+                            })
                             .map((transaction) =>
                                 <TableRow hover role="checkbox" tabIndex={-1} key={transaction.id}
                                   onMouseEnter={() => handleMouseEnter(transaction.id)}
@@ -196,6 +201,10 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionT
                                             return <TableCell key={column.id} align={column.align}>
                                                          {getCategoryIcon(`${value}`)}
                                                    </TableCell>
+                                        } else if (column.id === 'date') {
+                                            return <TableCell key={column.id} align={column.align}>
+                                                      {new Date(value).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                                                  </TableCell>
                                         } else {
                                             return <TableCell key={column.id} align={column.align}>
                                                         {column.format && typeof value === 'number' ? column.format(value) : `${value}`}

@@ -14,17 +14,16 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare, faReceipt, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import { getCategoryIcon, getMonthAsNumber } from '../../common/utils';
 import { IconButton, InputAdornment } from '@mui/material';
-import { GridFilterListIcon } from '@mui/x-data-grid';
-import { useNavigate } from 'react-router-dom';
+ import { useNavigate } from 'react-router-dom';
 import { ClearIcon } from '@mui/x-date-pickers';
 import { ArrowUpward, ArrowDownward } from '@mui/icons-material';
+import SearchIcon from '@mui/icons-material/Search';
 
 interface Column {
   id: 'category' | 'date' | 'name' | 'amount' | 'payment' | 'receipt';
   label: string;
   minWidth: number;
   align?: 'left';
-  format?: (value: number) => string;
 }
 
 interface FetchedTransaction {
@@ -64,7 +63,7 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionT
     { id: 'category', label: 'Category', minWidth: 50 },
     { id: 'date', label: 'Date', minWidth: 100 },
     { id: 'name', label: 'Name', minWidth: 100 },
-    { id: 'amount', label: 'Amount', minWidth: 70, format: (value: number) => value.toLocaleString('en-US') },
+    { id: 'amount', label: 'Amount', minWidth: 70 },
     { id: 'payment', label: 'Payment', minWidth: 70 },
     { id: 'receipt', label: 'Receipt', minWidth: 120 }
   ];
@@ -152,7 +151,7 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionT
                                       {column.label}
 
                                       <IconButton size='small' onClick={() => setSearchFilters(new Map(searchFilters.set(column.id, "")))}>
-                                        <GridFilterListIcon fontSize='small' />
+                                        <SearchIcon fontSize='small' />
                                       </IconButton>
 
                                       {column.id === sortParams.column  
@@ -205,9 +204,13 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionT
                                             return <TableCell key={column.id} align={column.align}>
                                                       {new Date(value).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
                                                   </TableCell>
+                                        } else if (column.id === 'amount') {                                      
+                                            return <TableCell key={column.id} align={column.align}>
+                                                        {(value as number).toFixed(2)}
+                                                    </TableCell>  
                                         } else {
                                             return <TableCell key={column.id} align={column.align}>
-                                                        {column.format && typeof value === 'number' ? column.format(value) : `${value}`}
+                                                        {value}
                                                     </TableCell>
                                         }
                                     })} 

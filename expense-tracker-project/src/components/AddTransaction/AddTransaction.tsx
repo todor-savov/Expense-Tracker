@@ -114,7 +114,7 @@ const AddTransaction = ({ mode }: { mode: string }) => {
 
         const date = target['expense-date'].value;
         const name = target['expense-name'].value;
-        const amount = target['expense-amount'].value;
+        const amount = +target['expense-amount'].value;
         const category = target['expense-category'].value;
         const payment = target['expense-payment'].value; 
 

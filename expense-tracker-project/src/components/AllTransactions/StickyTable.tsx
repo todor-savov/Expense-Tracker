@@ -12,7 +12,7 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare, faReceipt, faTrashCan } from '@fortawesome/free-solid-svg-icons';
-import { getCategoryIcon, getMonthAsNumber } from '../../common/utils';
+import { getCategoryIcon, getMonthAsNumber, getPaymentIcon } from '../../common/utils';
 import { IconButton, InputAdornment } from '@mui/material';
  import { useNavigate } from 'react-router-dom';
 import { ClearIcon } from '@mui/x-date-pickers';
@@ -148,7 +148,7 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionT
                               {columns.map(column => 
                                   <TableCell key={column.id} align={column.align} style={{ minWidth: column.minWidth }}
                                     onMouseEnter={() => setHoveredColumnTitle(column.id)} onMouseLeave={() => setHoveredColumnTitle('')}>
-                                      {column.label}
+                                      <strong>{column.label}</strong>
 
                                       <IconButton size='small' onClick={() => setSearchFilters(new Map(searchFilters.set(column.id, "")))}>
                                         <SearchIcon fontSize='small' />
@@ -195,30 +195,34 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionT
                                                                 <button className="delete-button" onClick={() => setTransactionToDelete(transaction.id)}><FontAwesomeIcon icon={faTrashCan} size="sm" /></button>
                                                               </span>
                                                         }
-                                                    </TableCell>
+                                                   </TableCell>
                                         } else if (column.id === 'category') {
                                             return <TableCell key={column.id} align={column.align}>
-                                                         {getCategoryIcon(`${value}`)}
+                                                      {getCategoryIcon(`${value}`)}
                                                    </TableCell>
                                         } else if (column.id === 'date') {
                                             return <TableCell key={column.id} align={column.align}>
                                                       {new Date(value).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-                                                  </TableCell>
+                                                   </TableCell>
                                         } else if (column.id === 'amount') {                                      
                                             return <TableCell key={column.id} align={column.align}>
                                                         {(value as number).toFixed(2)}
-                                                    </TableCell>  
+                                                   </TableCell>  
+                                        } else if (column.id === 'payment') {
+                                            return <TableCell key={column.id} align={column.align}>
+                                                      {getPaymentIcon(`${value}`)}
+                                                   </TableCell>  
                                         } else {
                                             return <TableCell key={column.id} align={column.align}>
                                                         {value}
-                                                    </TableCell>
+                                                   </TableCell>
                                         }
                                     })} 
                                 </TableRow>)
                             }
                         </TableBody>
                     </Table>
-                    <Box sx={{ margin: '2%', padding: '1%' }}> <p>TOTAL: {sum}</p> </Box>
+                    <Box sx={{ margin: '2%', padding: '1%' }}> <strong>TOTAL: </strong> {sum}</Box>
                 </TableContainer>
                 <TablePagination
                     rowsPerPageOptions={[10, 25, 100]}

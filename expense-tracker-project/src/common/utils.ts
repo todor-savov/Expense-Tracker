@@ -1,17 +1,19 @@
 import { styled } from "@mui/material";
 import LoadTooltip from "../components/LoadTooltip/LoadTooltip";
 
-export const getCategoryIcon = (category: string): JSX.Element => {
-    switch (category) {
-        case 'Food':
-            return LoadTooltip({imgSrc: 'https://img.icons8.com/emoji/48/hamburger-emoji.png', imgAlt: 'hamburger-emoji', type: 'Food'});
-        case 'Transport':
-            return LoadTooltip({imgSrc: 'https://img.icons8.com/color/48/suv.png', imgAlt: 'suv', type: 'Transport'});
-        case 'Utilities':
-            return LoadTooltip({imgSrc: 'https://img.icons8.com/officel/80/light-on.png', imgAlt: 'light-on', type: 'Utilities'});
-        default:
-            return LoadTooltip({imgSrc: 'https://img.icons8.com/color/48/000000/coin-wallet.png', imgAlt: 'coin-wallet', type: 'Other'});
-    }
+interface Category {
+    imgSrc: string;
+    imgAlt: string;
+    type: string;
+}
+
+export const getCategoryIcon = (category: string, categories: Category[]): JSX.Element => {
+    const categoryIcon = categories.find((cat) => cat.type === category);
+    if (categoryIcon) {
+        return LoadTooltip({imgSrc: categoryIcon.imgSrc, imgAlt: categoryIcon.imgAlt, type: categoryIcon.type});
+    } else {
+        return LoadTooltip({imgSrc: 'https://img.icons8.com/color/48/000000/coin-wallet.png', imgAlt: 'coin-wallet', type: 'Other'});
+    } 
 }
 
 export const getPaymentIcon = (payment: string): JSX.Element => {

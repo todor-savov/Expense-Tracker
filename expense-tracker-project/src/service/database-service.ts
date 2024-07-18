@@ -128,3 +128,20 @@ export const deleteTransaction = async (transactionId: string): Promise<void|und
     console.log(error.message);
   }
 }
+
+interface Category {
+  imgSrc: string;
+  imgAlt: string;
+  type: string;
+}
+
+export const getCategories = async (): Promise<Category[]|[]> => {
+  try {
+    const snapshot = await get(ref(database, "categories"));
+    if (snapshot.exists()) return Object.values(snapshot.val()) as Category[];
+    else return [];
+  } catch (error: any) {
+    console.log(error.message);
+    return [];
+  }
+}

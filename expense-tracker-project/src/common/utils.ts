@@ -1,24 +1,28 @@
 import { styled } from "@mui/material";
+import LoadTooltip from "../components/LoadTooltip/LoadTooltip";
 
-export const getCategoryIcon = (category: string): string => {
-        switch (category) {
-            case 'Food':
-                return '🍔';
-            case 'Transport':
-                return '🚗';
-            case 'Utilities':
-                return '💡';
-            case 'Health':
-                return '🏥';
-            case 'Rent':
-                return '🏠';
-            case 'Entertainment':
-                return '🎥';
-            case 'Miscellaneous':
-                return '💰';
-            default:
-                return '💰';
-        }
+export const getCategoryIcon = (category: string): JSX.Element => {
+    switch (category) {
+        case 'Food':
+            return LoadTooltip({imgSrc: 'https://img.icons8.com/emoji/48/hamburger-emoji.png', imgAlt: 'hamburger-emoji', type: 'Food'});
+        case 'Transport':
+            return LoadTooltip({imgSrc: 'https://img.icons8.com/color/48/suv.png', imgAlt: 'suv', type: 'Transport'});
+        case 'Utilities':
+            return LoadTooltip({imgSrc: 'https://img.icons8.com/officel/80/light-on.png', imgAlt: 'light-on', type: 'Utilities'});
+        default:
+            return LoadTooltip({imgSrc: 'https://img.icons8.com/color/48/000000/coin-wallet.png', imgAlt: 'coin-wallet', type: 'Other'});
+    }
+}
+
+export const getPaymentIcon = (payment: string): JSX.Element => {
+    switch (payment) {
+        case 'Cash':
+            return LoadTooltip({imgSrc: 'https://img.icons8.com/color/48/cash-in-hand.png', imgAlt: 'cash-in-hand', type: 'Cash'});
+        case 'Card':
+            return LoadTooltip({imgSrc: 'https://img.icons8.com/plasticine/100/bank-cards.png', imgAlt: 'bank-cards', type: 'Card'});
+        default:
+            return LoadTooltip({imgSrc: 'https://img.icons8.com/color/48/000000/coin-wallet.png', imgAlt: 'coin-wallet', type: 'Other'});
+    }
 }
 
 export const VisuallyHiddenInput = styled('input')({

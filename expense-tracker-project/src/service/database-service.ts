@@ -145,3 +145,20 @@ export const getCategories = async (): Promise<Category[]|[]> => {
     return [];
   }
 }
+
+interface Payment {
+  imgSrc: string;
+  imgAlt: string;
+  type: string;
+}
+
+export const getPayments = async (): Promise<Payment[]|[]> => {
+  try {
+    const snapshot = await get(ref(database, "payments"));
+    if (snapshot.exists()) return Object.values(snapshot.val()) as Payment[];
+    else return [];
+  } catch (error: any) {
+    console.log(error.message);
+    return [];
+  }
+}

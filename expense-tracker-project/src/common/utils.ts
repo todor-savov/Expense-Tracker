@@ -7,6 +7,12 @@ interface Category {
     type: string;
 }
 
+interface Payment {
+    imgSrc: string;
+    imgAlt: string;
+    type: string;
+}
+
 export const getCategoryIcon = (category: string, categories: Category[]): JSX.Element => {
     const categoryIcon = categories.find((cat) => cat.type === category);
     if (categoryIcon) {
@@ -16,14 +22,12 @@ export const getCategoryIcon = (category: string, categories: Category[]): JSX.E
     } 
 }
 
-export const getPaymentIcon = (payment: string): JSX.Element => {
-    switch (payment) {
-        case 'Cash':
-            return LoadTooltip({imgSrc: 'https://img.icons8.com/color/48/cash-in-hand.png', imgAlt: 'cash-in-hand', type: 'Cash'});
-        case 'Card':
-            return LoadTooltip({imgSrc: 'https://img.icons8.com/plasticine/100/bank-cards.png', imgAlt: 'bank-cards', type: 'Card'});
-        default:
-            return LoadTooltip({imgSrc: 'https://img.icons8.com/color/48/000000/coin-wallet.png', imgAlt: 'coin-wallet', type: 'Other'});
+export const getPaymentIcon = (payment: string, payments: Payment[]): JSX.Element => {
+    const paymentIcon = payments.find((pay) => pay.type === payment);
+    if (paymentIcon) {
+        return LoadTooltip({imgSrc: paymentIcon.imgSrc, imgAlt: paymentIcon.imgAlt, type: paymentIcon.type});
+    } else {
+        return LoadTooltip({imgSrc: 'https://img.icons8.com/color/48/000000/coin-wallet.png', imgAlt: 'coin-wallet', type: 'Other'});
     }
 }
 

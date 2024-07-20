@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -10,14 +11,14 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPenToSquare, faReceipt, faTrashCan } from '@fortawesome/free-solid-svg-icons';
-import { getCategoryIcon, getMonthAsNumber, getPaymentIcon } from '../../common/utils';
 import { IconButton, InputAdornment } from '@mui/material';
- import { useNavigate } from 'react-router-dom';
 import { ClearIcon } from '@mui/x-date-pickers';
 import { ArrowUpward, ArrowDownward } from '@mui/icons-material';
 import SearchIcon from '@mui/icons-material/Search';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPenToSquare, faReceipt, faTrashCan } from '@fortawesome/free-solid-svg-icons';
+import { getCategoryIcon, getMonthAsNumber, getPaymentIcon } from '../../common/utils';
+import { getCategories, getPayments } from '../../service/database-service';
 
 interface Column {
   id: 'category' | 'date' | 'name' | 'amount' | 'payment' | 'receipt';
@@ -47,6 +48,18 @@ interface sortParams {
     ascending: boolean;
 } 
 
+interface Category {
+  imgSrc: string;
+  imgAlt: string;
+  type: string;
+}
+
+interface Payment {
+  imgSrc: string;
+  imgAlt: string;
+  type: string;
+}
+
 const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionToDelete }) => {
   const navigate = useNavigate();
   const [page, setPage] = useState<number>(0);
@@ -58,6 +71,8 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionT
   const [hoveredColumnTitle, setHoveredColumnTitle] = useState<string>('');
   const [hoveredRow, setHoveredRow] = useState<string>('');
   const [sum, setSum] = useState<number>(0);
+  const [categories, setCategories] = useState<Category[]|[]>([]);
+  const [payments, setPayments] = useState<Payment[]|[]>([]);
 
   const columns: readonly Column[] = [
     { id: 'category', label: 'Category', minWidth: 50 },
@@ -91,6 +106,16 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionT
       setFilteredTransactions(filteredResults);
       setSum(filteredResults.reduce((acc, transaction) => acc + transaction.amount, 0));
   }, [searchFilters]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const categories = await getCategories();
+      const payments = await getPayments();
+      setCategories(categories);
+      setPayments(payments);
+    }
+    fetchCategories();
+  }, []);
 
   const clearFilter = (key: string) => {
     const newMap = new Map();
@@ -198,7 +223,7 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionT
                                                    </TableCell>
                                         } else if (column.id === 'category') {
                                             return <TableCell key={column.id} align={column.align}>
-                                                      {getCategoryIcon(`${value}`)}
+                                                      {getCategoryIcon(`${value}`, categories)}
                                                    </TableCell>
                                         } else if (column.id === 'date') {
                                             return <TableCell key={column.id} align={column.align}>
@@ -210,7 +235,7 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionT
                                                    </TableCell>  
                                         } else if (column.id === 'payment') {
                                             return <TableCell key={column.id} align={column.align}>
-                                                      {getPaymentIcon(`${value}`)}
+                                                      {getPaymentIcon(`${value}`, payments)}
                                                    </TableCell>  
                                         } else {
                                             return <TableCell key={column.id} align={column.align}>

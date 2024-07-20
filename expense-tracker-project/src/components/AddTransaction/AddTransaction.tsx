@@ -8,9 +8,10 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
-import { addTransaction, getTransaction, updateTransaction } from '../../service/database-service';
+import { addTransaction, getCategories, getPayments, getTransaction, updateTransaction } from '../../service/database-service';
 import UploadReceipt from '../UploadReceipt/UploadReceipt';
 import AuthContext from '../../context/AuthContext';
+import { getCategoryIcon, getPaymentIcon } from '../../common/utils';
 import './AddTransaction.css';
 
 interface NewTransaction {
@@ -34,6 +35,18 @@ interface FetchedTransaction {
     user: string;
 }
 
+interface Category {
+    imgSrc: string;
+    imgAlt: string;
+    type: string;
+}
+
+interface Payment {
+    imgSrc: string;
+    imgAlt: string;
+    type: string;
+}
+
 const AddTransaction = ({ mode }: { mode: string }) => {
     const { isLoggedIn } = useContext(AuthContext);
     const { id } = useParams();
@@ -49,6 +62,18 @@ const AddTransaction = ({ mode }: { mode: string }) => {
     const [newTransaction, setNewTransaction] = useState<NewTransaction|null>(null);
     const [fetchedTransaction, setFetchedTransaction] = useState<FetchedTransaction|null>(null);
     const [transactionToEdit, setTransactionToEdit] = useState<FetchedTransaction|null>(null);
+    const [categories, setCategories] = useState<Category[]|[]>([]);
+    const [payments, setPayments] = useState<Payment[]|[]>([]);
+
+    useEffect(() => {
+        const fetchCategoriesAndPayments = async () => {
+          const categories = await getCategories();
+          const payments = await getPayments();
+          setCategories(categories);
+          setPayments(payments);
+        }
+        fetchCategoriesAndPayments();
+      }, []);
 
     useEffect(() => {
         // This useEffect is used to fetch the transaction details from the database
@@ -170,26 +195,33 @@ const AddTransaction = ({ mode }: { mode: string }) => {
                     />
                 </div>
                 <div>
-                    <TextField error={!!categoryError} select id="expense-category" name="expense-category" label={<FontAwesomeIcon icon={faList} size="xl" style={{color: "#74C0FC",}} />}
-                        defaultValue={fetchedTransaction ? fetchedTransaction?.category : ""}
-                        helperText={categoryError || "Please select category"} required 
-                    >
-                        <MenuItem key="Category" value="" disabled>Category</MenuItem>
-                        <MenuItem key="Food" value="Food">Food</MenuItem>
-                        <MenuItem key="Transport" value="Transport">Transport</MenuItem>
-                        <MenuItem key="Utilities" value="Utilities">Utilities</MenuItem>
-                        <MenuItem key="Entertainment" value="Entertainment">Entertainment</MenuItem>
-                        <MenuItem key="Others" value="Others">Others</MenuItem>
-                    </TextField>
+                    {categories.length > 0 && 
+                        <TextField error={!!categoryError} select id="expense-category" name="expense-category" label={<FontAwesomeIcon icon={faList} size="xl" style={{color: "#74C0FC",}} />}
+                            defaultValue={fetchedTransaction ? fetchedTransaction?.category : ""}
+                            helperText={categoryError || "Please select category"} required 
+                        >
+                            <MenuItem key="Category" value="" disabled>Category</MenuItem>
+                            {categories.map((category: Category) => (
+                                <MenuItem key={category.type} value={category.type}>
+                                    {getCategoryIcon(category.type, categories)}
+                                </MenuItem>
+                            ))}
+                        </TextField>
+                    }
 
-                    <TextField error={!!paymentError} select id="expense-payment" name="expense-payment" label={<FontAwesomeIcon icon={faCreditCard} size="xl" style={{color: "#74C0FC",}} />}
-                        defaultValue={fetchedTransaction ? fetchedTransaction?.payment : ""}
-                        helperText={paymentError || "Please select payment method"} required 
-                    >
-                        <MenuItem key="Payment" value="" disabled>Payment Method</MenuItem>
-                        <MenuItem key="Cash" value="Cash">Cash</MenuItem>
-                        <MenuItem key="Card" value="Card">Card</MenuItem>
-                    </TextField>
+                    {payments.length > 0 &&
+                        <TextField error={!!paymentError} select id="expense-payment" name="expense-payment" label={<FontAwesomeIcon icon={faCreditCard} size="xl" style={{color: "#74C0FC",}} />}
+                            defaultValue={fetchedTransaction ? fetchedTransaction?.payment : ""}
+                            helperText={paymentError || "Please select payment method"} required 
+                        >
+                            <MenuItem key="Payment" value="" disabled>Payment Method</MenuItem>
+                            {payments.map((payment: Payment) => (
+                                <MenuItem key={payment.type} value={payment.type}>
+                                    {getPaymentIcon(payment.type, payments)}
+                                </MenuItem>
+                            ))}
+                        </TextField>
+                    }
                 </div>
                 <div>
                     {<UploadReceipt setSalesReceipt={setSalesReceipt} />}

@@ -182,7 +182,6 @@ const AddTransaction = ({ mode }: { mode: string }) => {
                         </DemoContainer>
                     </LocalizationProvider>
                 </div>
-
                 <div>
                     <TextField error={!!nameError} type="text" id="expense-name" label={<FontAwesomeIcon icon={faTags} size="xl" style={{color: "#74C0FC",}} />}
                         {...fetchedTransaction ? { defaultValue: fetchedTransaction?.name } : { placeholder: 'Name' }} 
@@ -224,7 +223,7 @@ const AddTransaction = ({ mode }: { mode: string }) => {
                     }
                 </div>
                 <div>
-                    {<UploadReceipt setSalesReceipt={setSalesReceipt} />}
+                    {<UploadReceipt setSalesReceipt={setSalesReceipt} transaction={fetchedTransaction} />}
                 </div>
                 <Button id='add-expense' type="submit" endIcon={<Save />}>Save</Button>
             </Box>

@@ -43,7 +43,7 @@ const Navigation = () => {
                 </ListItemButton>
             </ListItem>
 
-            <ListItem key={'Overview & Stats'} disablePadding onClick={() => navigate('/')}>
+            <ListItem key={'Overview & Stats'} disablePadding onClick={() => navigate('/overview')}>
                 <ListItemButton>
                     <ListItemIcon><FontAwesomeIcon icon={faChartLine} size="2xl" style={{color: "#e72d18",}} /></ListItemIcon>
                     <ListItemText primary={'Overview & Stats'} />

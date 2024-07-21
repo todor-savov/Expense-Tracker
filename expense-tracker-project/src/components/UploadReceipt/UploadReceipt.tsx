@@ -6,11 +6,23 @@ import { Button } from '@mui/material';
 import { VisuallyHiddenInput } from '../../common/utils.ts';
 import './UploadReceipt.css';
 
-interface UploadReceiptProps {
-    setSalesReceipt: (url: string) => void;
+interface FetchedTransaction {
+    id: string;
+    date: string;
+    name: string;
+    amount: number;
+    category: string;
+    payment: string;
+    receipt: string;
+    user: string;
 }
 
-const UploadReceipt: React.FC<UploadReceiptProps> = ({ setSalesReceipt }) => {
+interface UploadReceiptProps {
+    setSalesReceipt: (url: string) => void;
+    transaction: FetchedTransaction|null;
+}
+
+const UploadReceipt: React.FC<UploadReceiptProps> = ({ setSalesReceipt, transaction }) => {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [fileToUpload, setFileToUpload] = useState<File|null>(null);
     const [receiptURL, setReceiptURL] = useState<string|null>(null);
@@ -55,9 +67,13 @@ const UploadReceipt: React.FC<UploadReceiptProps> = ({ setSalesReceipt }) => {
                     startIcon={<span><FontAwesomeIcon icon={faReceipt} size="2xl" style={{color: "#74C0FC",}}/> Sales Receipt</span>}>       
                     <VisuallyHiddenInput type="file" id="file" name="file" accept="image/*" ref={fileInputRef} onChange={(event) => handleUpload(event)} />
                 </Button>
-                {receiptURL && 
+                {receiptURL ? 
                     <div>        
                         <img src={receiptURL as string} alt="receipt" />
+                    </div>
+                    : transaction && 
+                    <div>        
+                        <img src={transaction?.receipt as string} alt="receipt" />
                     </div>
                 }
             </div>

@@ -247,7 +247,7 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionT
                             }
                         </TableBody>
                     </Table>
-                    <Box sx={{ margin: '2%', padding: '1%' }}> <strong>TOTAL: </strong> {sum}</Box>
+                    <Box sx={{ margin: '2%', padding: '1%' }}> <strong>TOTAL: </strong> {sum.toFixed(2)}</Box>
                 </TableContainer>
                 <TablePagination
                     rowsPerPageOptions={[10, 25, 100]}

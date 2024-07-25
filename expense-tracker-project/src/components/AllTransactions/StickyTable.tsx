@@ -193,8 +193,7 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionT
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {filteredTransactions
-                            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                          {filteredTransactions
                             .sort((transaction1, transaction2) => {
                                 const key1 = transaction1[sortParams.column as keyof FetchedTransaction];
                                 const key2 = transaction2[sortParams.column as keyof FetchedTransaction];
@@ -244,7 +243,8 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionT
                                         }
                                     })} 
                                 </TableRow>)
-                            }
+                            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                          }
                         </TableBody>
                     </Table>
                     <Box sx={{ margin: '2%', padding: '1%' }}> <strong>TOTAL: </strong> {sum.toFixed(2)}</Box>

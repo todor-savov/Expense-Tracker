@@ -21,7 +21,7 @@ const Navigation = () => {
   };
 
   const DrawerList = (
-    <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
+    <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)} className="drawer-list">
         {<List>
             <ListItem key={'Home'} disablePadding onClick={() => navigate('/')}>
                 <ListItemButton>

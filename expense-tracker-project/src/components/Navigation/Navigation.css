@@ -4,3 +4,20 @@
     left: 10px;
     z-index: 1000;
 }
+
+.drawer-list {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.drawer-list li {
+    margin: 2rem 0;
+    padding: 1rem;
+}
+
+.drawer-list li span {
+    font-size: 1.2rem;
+    font-weight: bold;
+}

@@ -10,6 +10,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import './Navigation.css';
 
 const Navigation = () => {
   const [open, setOpen] = useState(false);
@@ -62,7 +63,9 @@ const Navigation = () => {
 
   return (
     <div>
-      <Button onClick={toggleDrawer(true)}>Load Side Menu</Button>
+      <Button onClick={toggleDrawer(true)} className="navigation-button"> 
+        <img width="78" height="78" src="https://img.icons8.com/external-flat-papa-vector/78/external-Left-Double-Arrow-interface-flat-papa-vector.png" alt="external-Left-Double-Arrow-interface-flat-papa-vector"/>
+      </Button>
       <Drawer open={open} onClose={toggleDrawer(false)}>
         {DrawerList}
       </Drawer>

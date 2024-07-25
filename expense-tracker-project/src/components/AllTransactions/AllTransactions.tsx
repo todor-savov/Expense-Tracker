@@ -64,7 +64,6 @@ const AllTransactions = () => {
     return (
         <>
             {error && <p>{error}</p>}
-            <h2>My Transactions</h2>
             {transactions.length === 0 ? 
                 <p>No transactions found</p> : <StickyTable transactions={transactions} setTransactionToDelete={setTransactionToDelete} />
             }

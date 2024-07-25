@@ -164,7 +164,6 @@ const AddTransaction = ({ mode }: { mode: string }) => {
             <Box component="form" sx={{'& .MuiTextField-root': { m: 1, width: '25ch' },}} noValidate
                 autoComplete="off" onSubmit={handleSubmit} className="expense-form"
             >
-                <h2>Add New Transaction</h2>
                 {error && <p>{error}</p>}
                 <div className='date-container'>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>

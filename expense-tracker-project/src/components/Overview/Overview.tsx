@@ -2,10 +2,9 @@ import * as React from 'react';
 import { useEffect, useState, useContext } from 'react';
 import AuthContext from '../../context/AuthContext';
 import { Avatar, List, ListItem, ListItemAvatar, ListItemText } from '@mui/material';
-import Tabs from '@mui/material/Tabs';
+import Tabs, { tabsClasses } from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
 import FunctionsIcon from '@mui/icons-material/Functions';
 import PieActiveArc from '../PieChart/PieChart';
 import { getCategories, getTransactions } from '../../service/database-service';
@@ -36,13 +35,14 @@ interface Category {
 
 const Overview = () => {
     const { isLoggedIn } = useContext(AuthContext);
-    const [value, setValue] = useState<number>(1);
+    const [outerValue, setOuterValue] = useState<number>(0);
+    const [innerValue, setInnerValue] = useState<number>(0);
     const [transactions, setTransactions] = useState<FetchedTransaction[]|[]>([]);
     const [filteredTransactions, setFilteredTransactions] = useState<FetchedTransaction[]|[]>([]);
     const [categories, setCategories] = useState<Category[]|[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string|null>(null);
-    const [view, setView] = useState<string>("monthly");
+    const [view, setView] = useState<string>('');
     const [pieData, setPieData] = useState<Data[]|[]>([]);
     const [totalSum, setTotalSum] = useState<number>(0);
 
@@ -76,9 +76,15 @@ const Overview = () => {
         fetchCategories();
     }, []);
 
-    const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    const handleOuterChange = (event: React.SyntheticEvent, newValue: number) => {
         event.preventDefault();
-        setValue(newValue);
+        setOuterValue(newValue);
+        setInnerValue(0);
+    };
+
+    const handleInnerChange = (event: React.SyntheticEvent, newValue: number) => {
+        event.preventDefault();
+        setInnerValue(newValue);
     };
 
     const handleTabClick = (newValue: string) => {
@@ -118,30 +124,41 @@ const Overview = () => {
   
     return (
       <Box className="overview-container">
-        <Tabs value={value} onChange={handleChange} centered>
-          <Tab label="Year" onClick={() => setView("yearly")} />
-          <Tab label="Month" onClick={() => setView("monthly")} /> 
-        </Tabs>
-        <Tabs value={value} variant="scrollable" scrollButtons="auto" aria-label="scrollable auto tabs example" onChange={handleChange}>
-            {view === 'monthly' ? (
-                Array.from(
-                    new Set(transactions.map((transaction) => 
-                        new Date(transaction.date).toLocaleString('en-US', { month: 'long', year: 'numeric' })
-                    ))
-                ).map((month, index) => <Tab key={index} label={month} onClick={() => handleTabClick(month)} />)
-            ) : (
-                Array.from(
-                    new Set(transactions.map((transaction) => new Date(transaction.date).toLocaleString('en-US', { year: 'numeric' })))
-                ).map((year, index) => <Tab key={index} label={year} onClick={() => handleTabClick(year)} />)
-                )
+         <Box className="overview-header">
+            <Tabs value={outerValue} onChange={handleOuterChange}>
+                <Tab key={0} label="Year" onClick={() => setView("yearly")} sx={{ backgroundColor: outerValue === 0 ? 'lightblue' : 'inherit' }} />
+                <Tab key={1} label="Month" onClick={() => setView("monthly")} sx={{ backgroundColor: outerValue === 1 ? 'lightblue' : 'inherit' }} /> 
+            </Tabs>
+
+            {view && 
+                <Tabs value={innerValue} variant="scrollable" scrollButtons allowScrollButtonsMobile aria-label="scrollable force tabs example" onChange={handleInnerChange}
+                    sx={{ [`& .${tabsClasses.scrollButtons}`]: {'&.Mui-disabled': { opacity: 0.3 },},}} className='scrollable-tabs'>
+                    {view === 'monthly' ? 
+                        Array.from(
+                            new Set(transactions.map((transaction) => 
+                                new Date(transaction.date).toLocaleString('en-US', { month: 'long', year: 'numeric' })
+                                ))
+                            ).map((month, index) => 
+                                <Tab key={index} label={month} onClick={() => handleTabClick(month)} 
+                                    sx={{ backgroundColor: innerValue === index ? 'lightblue' : 'inherit' }} />)
+                        : 
+                        Array.from(
+                            new Set(transactions.map((transaction) => 
+                                new Date(transaction.date).toLocaleString('en-US', { year: 'numeric' })
+                                ))
+                            ).map((year, index) => 
+                                <Tab key={index} label={year} onClick={() => handleTabClick(year)} 
+                                    sx={{ backgroundColor: innerValue === index ? 'lightblue' : 'inherit' }} />)
+                    }
+                </Tabs>
             }
-        </Tabs>
+        </Box>
 
         {pieData.length > 0 ? 
             <>          
-                <Container className="pie-container">
+                <Box className="pie-container">
                     <PieActiveArc data={ pieData.map((category) => {return {...category, value: +((category.value / totalSum)*100).toFixed(2)}}) } />
-                </Container>
+                </Box>
         
                 <List className='list-container'>
                     <ListItem className="custom-list-item">
@@ -170,7 +187,8 @@ const Overview = () => {
                         </ListItem>
                     )}
                 </List>
-            </> : 'No data available'}
+            </> : 'No data available'
+        }
       </Box>
     );
 }

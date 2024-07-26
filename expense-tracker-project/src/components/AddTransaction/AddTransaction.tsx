@@ -186,7 +186,8 @@ const AddTransaction = ({ mode }: { mode: string }) => {
                         {...fetchedTransaction ? { defaultValue: fetchedTransaction?.name } : { placeholder: 'Name' }} 
                         helperText={nameError || "Please select name"} required
                     />
-
+                </div>
+                <div>
                     <TextField error={!!amountError} type="number" id="expense-amount" label={<FontAwesomeIcon icon={faCalculator} size="xl" style={{color: "#74C0FC",}} />}
                         {...fetchedTransaction ? { defaultValue: fetchedTransaction?.amount } : { placeholder: 'Amount' }} 
                         helperText={amountError || "Please select amount"} required
@@ -206,7 +207,9 @@ const AddTransaction = ({ mode }: { mode: string }) => {
                             ))}
                         </TextField>
                     }
+                </div>
 
+                <div>
                     {payments.length > 0 &&
                         <TextField error={!!paymentError} select id="expense-payment" name="expense-payment" label={<FontAwesomeIcon icon={faCreditCard} size="xl" style={{color: "#74C0FC",}} />}
                             defaultValue={fetchedTransaction ? fetchedTransaction?.payment : ""}

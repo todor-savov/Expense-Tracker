@@ -17,12 +17,32 @@ function App() {
       <BrowserRouter>
         <AuthContext.Provider value={{ isLoggedIn: authValue, setLoginState: setAuthValue }}>
                 <Routes>
-                  <Route path="/" element={<Authenticated><Header from={"Home (Latest Transactions)"} /> <Home /></Authenticated>} />
+                  <Route path="/" element={<Authenticated>
+                    <div className="header-container"> 
+                      <Header from={"Home (Latest Transactions)"} /> 
+                    </div>
+                    <Home /></Authenticated>} />
                   <Route path="/login" element={<Login />} />
-                  <Route path="/transactions" element={<Authenticated><Header from={"Transactions"} /> <Transactions /></Authenticated>} />
-                  <Route path="/add-transaction" element={<Authenticated><Header from={"Add Transaction"} /> <AddTransaction mode="new" /></Authenticated>} />
-                  <Route path="/edit-transaction/:id" element={<Authenticated><Header from={"Edit Transaction"} /> <AddTransaction mode="edit" /></Authenticated>} />
-                  <Route path="/overview" element={<Authenticated><Header from={"Overview"} /> <Overview /></Authenticated>} />
+                  <Route path="/transactions" element={<Authenticated>
+                    <div className="header-container">
+                      <Header from={"Transactions"} /> 
+                    </div>
+                    <Transactions /></Authenticated>} />
+                  <Route path="/add-transaction" element={<Authenticated>
+                    <div className="header-container">
+                      <Header from={"Add Transaction"} /> 
+                    </div>
+                    <AddTransaction mode="new" /></Authenticated>} />
+                  <Route path="/edit-transaction/:id" element={<Authenticated>
+                    <div className="header-container">
+                      <Header from={"Edit Transaction"} />
+                    </div>
+                    <AddTransaction mode="edit" /></Authenticated>} />
+                  <Route path="/overview" element={<Authenticated>
+                    <div className="header-container">
+                      <Header from={"Overview"} />
+                    </div>
+                    <Overview /></Authenticated>} />
                 </Routes>
         </AuthContext.Provider>
       </BrowserRouter>

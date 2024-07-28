@@ -80,7 +80,7 @@ const Home = () => {
     }, []);
 
     return ( showReceipt ? 
-                <div onClick={() => setShowReceipt('')}>
+                <div className='receipt-content' onClick={() => setShowReceipt('')}>
                     <img src={showReceipt} alt="receipt" />
                 </div>
             :

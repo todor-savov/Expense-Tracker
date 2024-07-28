@@ -2,7 +2,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 100%;  
     background-color: rgb(225, 225, 225);
     border-radius: 5%;
     padding: 20px;
@@ -10,7 +9,6 @@
 
 .overview-header {
     display: flex;
-    width: 85%;
     background-color: white;
     margin-top: 5px;
     margin-bottom: 20px;
@@ -21,6 +19,8 @@
 }
 
 .pie-container {
+    display: flex;
+    width: 80%;
     background-color: white;
     border-radius: 5%;
     padding: 20px;
@@ -30,9 +30,7 @@
 .list-container {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 90%;
+    width: 80%;
 }
 
 .custom-list-item .MuiListItemAvatar-root {

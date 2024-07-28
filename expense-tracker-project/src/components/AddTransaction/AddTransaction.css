@@ -1,31 +1,45 @@
 .expense-form {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
+    display: grid;
+    grid-template-columns: 50% 50%;
+    gap: 20px;
     padding: 30px;
     border-radius: 6px;
     background: #fff;
-    box-shadow: 0 0 8px  #0074cc; 
+    box-shadow: 0 0 8px #0074cc;
+}
+
+.input-fields {
+    grid-column: 1 / 2;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+}
+
+.upload-receipt {
+    grid-column: 2 / 3;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
 }
 
 #add-expense {
-    width: 30%;
+    grid-column: 1 / 3;
+    justify-self: center;
+    width: 20%;
+    padding: 15px;
     align-self: center;
     border: none;
-    border-radius: 5px; 
+    border-radius: 5px;
     background: #0074cc;
     color: #fff;
     cursor: pointer;
 }
-    
+
 #add-expense:hover {
     background: #ff9800;
-}
-
-.date-container {
-    display: flex;
-    justify-content: center;
-    width: 100%;
 }
 
 .spinner {
@@ -41,6 +55,6 @@
     animation: spin 1s linear infinite;
 }
 
-.spinnerContainer{
+.spinnerContainer {
     height: 100vh;
 }

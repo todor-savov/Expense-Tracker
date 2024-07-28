@@ -165,7 +165,7 @@ const AddTransaction = ({ mode }: { mode: string }) => {
                 autoComplete="off" onSubmit={handleSubmit} className="expense-form"
             >
                 {error && <p>{error}</p>}
-                <div className='date-container'>
+                <div className='input-fields'>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DemoContainer components={['DatePicker']}>
                                 <DatePicker 
@@ -180,20 +180,17 @@ const AddTransaction = ({ mode }: { mode: string }) => {
                                 />
                         </DemoContainer>
                     </LocalizationProvider>
-                </div>
-                <div>
+                
                     <TextField error={!!nameError} type="text" id="expense-name" label={<FontAwesomeIcon icon={faTags} size="xl" style={{color: "#74C0FC",}} />}
                         {...fetchedTransaction ? { defaultValue: fetchedTransaction?.name } : { placeholder: 'Name' }} 
                         helperText={nameError || "Please select name"} required
                     />
-                </div>
-                <div>
+               
                     <TextField error={!!amountError} type="number" id="expense-amount" label={<FontAwesomeIcon icon={faCalculator} size="xl" style={{color: "#74C0FC",}} />}
                         {...fetchedTransaction ? { defaultValue: fetchedTransaction?.amount } : { placeholder: 'Amount' }} 
                         helperText={amountError || "Please select amount"} required
                     />
-                </div>
-                <div>
+                
                     {categories.length > 0 && 
                         <TextField error={!!categoryError} select id="expense-category" name="expense-category" label={<FontAwesomeIcon icon={faList} size="xl" style={{color: "#74C0FC",}} />}
                             defaultValue={fetchedTransaction ? fetchedTransaction?.category : ""}
@@ -207,9 +204,7 @@ const AddTransaction = ({ mode }: { mode: string }) => {
                             ))}
                         </TextField>
                     }
-                </div>
-
-                <div>
+                
                     {payments.length > 0 &&
                         <TextField error={!!paymentError} select id="expense-payment" name="expense-payment" label={<FontAwesomeIcon icon={faCreditCard} size="xl" style={{color: "#74C0FC",}} />}
                             defaultValue={fetchedTransaction ? fetchedTransaction?.payment : ""}
@@ -224,9 +219,9 @@ const AddTransaction = ({ mode }: { mode: string }) => {
                         </TextField>
                     }
                 </div>
-                <div>
-                    {<UploadReceipt setSalesReceipt={setSalesReceipt} transaction={fetchedTransaction} />}
-                </div>
+                
+                <UploadReceipt setSalesReceipt={setSalesReceipt} transaction={fetchedTransaction} />
+
                 <Button id='add-expense' type="submit" endIcon={<Save />}>Save</Button>
             </Box>
         </>

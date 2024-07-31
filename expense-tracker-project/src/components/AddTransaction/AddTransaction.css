@@ -23,6 +23,12 @@
     justify-content: center;
     align-items: center;
     gap: 10px;
+    padding: 10px;
+    border: 2px dashed #ccc;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    margin: 20px auto;
+    transition: border-color 0.3s;
 }
 
 #add-expense {

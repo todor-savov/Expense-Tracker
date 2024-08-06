@@ -79,12 +79,21 @@ const Home = () => {
         fetchCategoriesAndPayments();
     }, []);
 
+    if (loading) {
+        return (
+            <div className='spinnerContainer'>
+                <div className='spinner'></div>
+            </div>
+        )
+    }
+
     return ( showReceipt ? 
                 <div className='receipt-content' onClick={() => setShowReceipt('')}>
                     <img src={showReceipt} alt="receipt" />
                 </div>
             :
             <>
+                {error && <p>{error}</p>}
                  <Paper sx={{ width: '100%', overflow: 'hidden' }}>
                     <TableContainer sx={{maxWidth: '100%'}}>
                         <Table stickyHeader aria-label="sticky table">

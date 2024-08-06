@@ -83,7 +83,10 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionT
     { id: 'receipt', label: 'Receipt', minWidth: 120 }
   ];
 
-  const handleChangePage = (event: unknown, newPage: number) => setPage(newPage);
+  const handleChangePage = (event: unknown, newPage: number) => {
+    console.log(event);
+    setPage(newPage);
+  }
 
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRowsPerPage(+event.target.value);

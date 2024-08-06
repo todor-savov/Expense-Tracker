@@ -1,7 +1,7 @@
 .expense-form {
     display: grid;
     grid-template-columns: 50% 50%;
-    gap: 20px;
+    gap: 5px;
     padding: 30px;
     border-radius: 6px;
     background: #fff;
@@ -23,11 +23,11 @@
     justify-content: center;
     align-items: center;
     gap: 10px;
-    padding: 10px;
+    padding: 20px;
     border: 2px dashed #ccc;
     border-radius: 10px;
     background-color: #f9f9f9;
-    margin: 20px auto;
+    margin: 20px 14px;
     transition: border-color 0.3s;
 }
 

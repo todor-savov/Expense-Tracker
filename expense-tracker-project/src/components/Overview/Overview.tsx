@@ -123,6 +123,7 @@ const Overview = () => {
     }
   
     return (
+       <>{error && <p>{error}</p>}
       <Box className="overview-container">
          <Box className="overview-header">
             <Tabs value={outerValue} onChange={handleOuterChange}>
@@ -190,6 +191,7 @@ const Overview = () => {
             </> : 'No data available'
         }
       </Box>
+      </>
     );
 }
 

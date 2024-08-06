@@ -143,6 +143,26 @@ const AddTransaction = ({ mode }: { mode: string }) => {
         const category = target['expense-category'].value;
         const payment = target['expense-payment'].value; 
 
+        if (name.length > 30) {
+            setNameError('Name error');
+        }
+
+        if (date.length > 30) {
+            setDateError('Date error');
+        }
+
+        if (typeof amount !== 'number') {
+            setAmountError('Amount error');
+        }
+
+        if (typeof category !== 'string') {
+            setCategoryError('Category error');
+        }
+
+        if (typeof payment !== 'string') {
+            setPaymentError('Payment error');
+        }
+
         const expenseDetails = { date, name, amount, category, payment, receipt, user: isLoggedIn.user };
 
         if (mode === 'edit') {

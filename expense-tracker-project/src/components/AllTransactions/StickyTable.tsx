@@ -200,8 +200,15 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionT
                             .sort((transaction1, transaction2) => {
                                 const key1 = transaction1[sortParams.column as keyof FetchedTransaction];
                                 const key2 = transaction2[sortParams.column as keyof FetchedTransaction];
-                                if (sortParams.ascending) return key1 > key2 ? 1 : -1;
-                                else return key1 < key2 ? 1 : -1;
+                                if (sortParams.column === 'date') {
+                                  const date1 = new Date(key1 as string);
+                                  const date2 = new Date(key2 as string);
+                                  if (sortParams.ascending) return date1 > date2 ? 1 : -1;
+                                  else return date1 < date2 ? 1 : -1;
+                                } else {
+                                  if (sortParams.ascending) return key1 > key2 ? 1 : -1;
+                                  else return key1 < key2 ? 1 : -1;
+                                }
                             })
                             .map((transaction) =>
                                 <TableRow hover role="checkbox" tabIndex={-1} key={transaction.id}

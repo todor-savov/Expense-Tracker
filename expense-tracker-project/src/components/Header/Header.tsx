@@ -26,6 +26,7 @@ const Header: React.FC<HeaderProps> = ({ from }) => {
 
   const handleClose = () => {
     setAnchorEl(null);
+    setAuth(true);
   };
 
   return (

@@ -148,7 +148,9 @@ const Overview = () => {
                                 new Set(transactions.map((transaction) => 
                                     new Date(transaction.date).toLocaleString('en-US', { month: 'long', year: 'numeric' })
                                     ))
-                                ).map((month, index) => 
+                                )
+                                .sort((a, b) => new Date(a).getTime() - new Date(b).getTime())
+                                .map((month, index) => 
                                     <Tab key={index} label={month} onClick={() => handleTabClick(month)} 
                                         sx={{ backgroundColor: innerValue === index ? 'lightblue' : 'inherit' }} />)
                             : 
@@ -156,7 +158,9 @@ const Overview = () => {
                                 new Set(transactions.map((transaction) => 
                                     new Date(transaction.date).toLocaleString('en-US', { year: 'numeric' })
                                     ))
-                                ).map((year, index) => 
+                                )
+                                .sort((a, b) => parseInt(a) - parseInt(b))
+                                .map((year, index) => 
                                     <Tab key={index} label={year} onClick={() => handleTabClick(year)} 
                                         sx={{ backgroundColor: innerValue === index ? 'lightblue' : 'inherit' }} />)
                         }

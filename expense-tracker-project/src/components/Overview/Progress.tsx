@@ -41,7 +41,14 @@ const Progress = () => {
                     return monthYear;
                 })));
 
-              
+                const monthOrder = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+                uniqueMonths.sort((a, b) => {
+                    const [monthA, yearA] = a.split(' ');
+                    const [monthB, yearB] = b.split(' ');
+                    if (yearA !== yearB) return parseInt(yearA) - parseInt(yearB);
+                    else return monthOrder.indexOf(monthA) - monthOrder.indexOf(monthB);
+                });                
                   
                 const uniqueCategories = Array.from(new Set(filteredTransactions.map(transaction => transaction.category)));
                   

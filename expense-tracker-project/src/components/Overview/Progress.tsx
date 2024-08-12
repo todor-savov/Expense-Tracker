@@ -21,67 +21,98 @@ interface Data {
 
 const Progress = () => {
     const { isLoggedIn } = useContext(AuthContext);
-    const [transactionFilter, setTransactionFilter] = useState<string>('');
+    const [transactions, setTransactions] = useState<FetchedTransaction[]>([]);
+    const [uniqueMonths, setUniqueMonths] = useState<string[]>([]);
+    const [uniqueYears, setUniqueYears] = useState<string[]>([]);
     const [data, setData] = useState<Data|null>(null);
     const [timeSpan, setTimeSpan] = useState<string>('');
-    const [uniqueMonths, setUniqueMonths] = useState<string[]>([]);
     const [error, setError] = useState<string|null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
+                setLoading(true);
                 const transactions = await getTransactions(isLoggedIn.user);
-
-                const filteredTransactions = transactionFilter === 'monthly-all' ? transactions : 
-                    transactions.filter((transaction: FetchedTransaction) => transaction.date.substring(6) === transactionFilter);
-                                
-                const uniqueMonths = Array.from(new Set(filteredTransactions.map(transaction => {
-                    const [month, , year] = transaction.date.split('/');
-                    const monthYear = new Date(`${year}-${month}`).toLocaleString('en-US', { month: 'long', year: 'numeric' });
-                    return monthYear;
-                })));
-
-                const monthOrder = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-
-                uniqueMonths.sort((a, b) => {
-                    const [monthA, yearA] = a.split(' ');
-                    const [monthB, yearB] = b.split(' ');
-                    if (yearA !== yearB) return parseInt(yearA) - parseInt(yearB);
-                    else return monthOrder.indexOf(monthA) - monthOrder.indexOf(monthB);
-                });                
-                  
-                const uniqueCategories = Array.from(new Set(filteredTransactions.map(transaction => transaction.category)));
-                  
-                const sumsByCategory = uniqueCategories.reduce((acc, category) => {
-                    acc[category] = Array(uniqueMonths.length).fill(0);
-                    return acc;
-                }, {} as Data);
-
-                filteredTransactions.forEach(transaction => {
-                    const [month, , year] = transaction.date.split('/');
-                    const monthYear = new Date(`${year}-${month}`).toLocaleString('en-US', { month: 'long', year: 'numeric' });
-                    const monthIndex = uniqueMonths.indexOf(monthYear);
-                    if (monthIndex !== -1) sumsByCategory[transaction.category][monthIndex] += transaction.amount;
-                });
-                  
-                setUniqueMonths(uniqueMonths);
-                setData(sumsByCategory);
+                setTransactions(transactions);
+                setLoading(false);
             } catch (error: any) {
                 console.log(error.message);
                 setError(error.message);
             }
         }
-        if (transactionFilter) fetchData();
-    }, [transactionFilter]);
+        if (!transactions.length) fetchData();
+    }, []);
 
     const handleChange = (event: SelectChangeEvent) => {
         event.preventDefault();
-        if (event.target.value === 'yearly') setTransactionFilter('yearly');
-        if (event.target.value === 'monthly-current') setTransactionFilter(new Date().getFullYear().toString());
-        if (event.target.value === 'monthly-all') setTransactionFilter('monthly-all');
+
+        const filteredTransactions = (event.target.value === 'yearly' || event.target.value === 'monthly-all') ? transactions : 
+            transactions.filter((transaction: FetchedTransaction) => transaction.date.substring(6) === new Date().getFullYear().toString());
+
+        const uniqueCategories = Array.from(new Set(filteredTransactions.map(transaction => transaction.category)));
+
+        if (event.target.value === 'monthly-all' || event.target.value === 'monthly-current') {
+            const uniqueMonths = Array.from(new Set(filteredTransactions.map(transaction => {
+                const [month, , year] = transaction.date.split('/');
+                return new Date(`${year}-${month}`).toLocaleString('en-US', { month: 'long', year: 'numeric' });
+            })));
+
+            const monthOrder = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+            uniqueMonths.sort((a, b) => {
+                const [monthA, yearA] = a.split(' ');
+                const [monthB, yearB] = b.split(' ');
+                if (yearA !== yearB) return parseInt(yearA) - parseInt(yearB);
+                else return monthOrder.indexOf(monthA) - monthOrder.indexOf(monthB);
+            });              
+
+            const sumsByCategory = uniqueCategories.reduce((acc, category) => {
+                acc[category] = Array(uniqueMonths.length).fill(0);
+                return acc;
+            }, {} as Data);
+
+            filteredTransactions.forEach(transaction => {
+                const [month, , year] = transaction.date.split('/');
+                const monthYear = new Date(`${year}-${month}`).toLocaleString('en-US', { month: 'long', year: 'numeric' });
+                const monthIndex = uniqueMonths.indexOf(monthYear);
+                if (monthIndex !== -1) sumsByCategory[transaction.category][monthIndex] += transaction.amount;
+            });
+              
+            setUniqueMonths(uniqueMonths);
+            setUniqueYears([]);
+            setData(sumsByCategory);
+        } else {
+            const uniqueYears = Array.from(new Set(filteredTransactions.map(transaction => transaction.date.substring(6))));
+            uniqueYears.sort((a, b) => Number(a) - Number(b));
+
+            const sumsByCategory = uniqueCategories.reduce((acc, category) => {
+                acc[category] = Array(uniqueYears.length).fill(0);
+                return acc;
+            }, {} as Data);
+
+            filteredTransactions.forEach(transaction => {
+                const year = transaction.date.substring(6);
+                const yearIndex = uniqueYears.indexOf(year);
+                if (yearIndex !== -1) sumsByCategory[transaction.category][yearIndex] += transaction.amount;
+            });
+
+            setUniqueYears(uniqueYears);
+            setUniqueMonths([]);
+            setData(sumsByCategory);
+        }
+
         setTimeSpan(event.target.value);
     }
   
+    if (loading) {
+        return (
+            <div className='spinnerContainer'>
+                <div className='spinner'></div>
+            </div>
+        )
+    }
+
     return (
         <>
             {error && <p>{error}</p>}
@@ -105,8 +136,8 @@ const Progress = () => {
                                 id: 'Time',
                                 label: 'Time',
                                 scaleType: 'band',
-                                data: uniqueMonths,
-                                valueFormatter: (month) => `${month.split(' ')[0].substring(0, 3)} ${month.split(' ')[1]}`,
+                                data: uniqueYears.length ? uniqueYears : uniqueMonths,
+                                valueFormatter: uniqueYears.length ? (year) => year : (month) => `${month.split(' ')[0].substring(0, 3)} ${month.split(' ')[1]}`,
                                 tickLabelStyle: {
                                     fontSize: 11,
                                     textAnchor: 'middle',

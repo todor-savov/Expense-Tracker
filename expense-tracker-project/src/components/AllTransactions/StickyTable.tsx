@@ -17,7 +17,7 @@ import { ArrowUpward, ArrowDownward } from '@mui/icons-material';
 import SearchIcon from '@mui/icons-material/Search';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare, faReceipt, faTrashCan } from '@fortawesome/free-solid-svg-icons';
-import { getCategoryIcon, getMonthAsNumber, getPaymentIcon } from '../../common/utils';
+import { getCategoryIcon, getPaymentIcon } from '../../common/utils';
 import { getCategories, getPayments } from '../../service/database-service';
 
 interface Column {
@@ -100,11 +100,7 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionT
   useEffect(() => {
       let filteredResults: FetchedTransaction[] = [...transactions];
       for (let [key, value] of searchFilters.entries()) {
-        if (key === "date" && value.length > 0) value = getMonthAsNumber(value);
-
-        filteredResults = filteredResults.filter((transaction) => 
-            transaction[key as keyof FetchedTransaction].toString().toLowerCase().includes(value)
-        )
+        if (key === "date" && value.length > 0) filteredResults = filteredResults.filter((transaction) => transaction[key as keyof FetchedTransaction].toString().toLowerCase().includes(value));        
       }
       setFilteredTransactions(filteredResults);
       setSum(filteredResults.reduce((acc, transaction) => acc + transaction.amount, 0));

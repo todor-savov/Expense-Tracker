@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material";
+import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Tooltip } from "@mui/material";
 import { getTransactions } from "../../service/database-service";
 import AuthContext from "../../context/AuthContext";
 import { axisClasses, LineChart } from "@mui/x-charts";
@@ -79,9 +79,11 @@ const Progress = () => {
                 if (monthIndex !== -1) sumsByCategory[transaction.category][monthIndex] += transaction.amount;
             });
               
+            const totalValues = uniqueMonths.map((month, index) => uniqueCategories.reduce((acc, category) => acc + sumsByCategory[category][index], 0));
+
             setUniqueMonths(uniqueMonths);
             setUniqueYears([]);
-            setData(sumsByCategory);
+            setData({...sumsByCategory, Total: totalValues});
         } else {
             const uniqueYears = Array.from(new Set(filteredTransactions.map(transaction => transaction.date.substring(6))));
             uniqueYears.sort((a, b) => Number(a) - Number(b));
@@ -97,9 +99,11 @@ const Progress = () => {
                 if (yearIndex !== -1) sumsByCategory[transaction.category][yearIndex] += transaction.amount;
             });
 
+            const totalValues = uniqueYears.map((year, index) => uniqueCategories.reduce((acc, category) => acc + sumsByCategory[category][index], 0));
+
             setUniqueYears(uniqueYears);
             setUniqueMonths([]);
-            setData(sumsByCategory);
+            setData({...sumsByCategory, Total: totalValues});
         }
 
         setTimeSpan(event.target.value);
@@ -175,8 +179,8 @@ const Progress = () => {
                             id: category,
                             label: category,
                             data: data[category],
-                            stack: 'total',
-                            area: true,
+                            stack: category !== 'Total' ? 'total' : undefined,
+                            area: category !== 'Total' ? true : false,
                             showMark: true,
                         })) : []}
 

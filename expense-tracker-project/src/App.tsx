@@ -9,6 +9,7 @@ import Transactions from './views/Transactions.tsx';
 import AddTransaction from './components/AddTransaction/AddTransaction.tsx';
 import Overview from './components/Overview/Overview.tsx';
 import Header from './components/Header/Header.tsx';
+import Categories from './components/Categories/Categories.tsx';
 
 function App() {
   const [authValue, setAuthValue] = useState({status: false, user: ''});
@@ -43,6 +44,11 @@ function App() {
                       <Header from={"Overview"} />
                     </div>
                     <Overview /></Authenticated>} />
+                  <Route path="/categories" element={<Authenticated>
+                    <div className="header-container">
+                      <Header from={"Categories"} />
+                    </div>
+                    <Categories /></Authenticated>} />
                 </Routes>
         </AuthContext.Provider>
       </BrowserRouter>

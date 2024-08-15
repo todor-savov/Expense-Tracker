@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Tooltip } from "@mui/material";
+import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import { getTransactions } from "../../service/database-service";
 import AuthContext from "../../context/AuthContext";
 import { axisClasses, LineChart } from "@mui/x-charts";
@@ -79,7 +79,10 @@ const Progress = () => {
                 if (monthIndex !== -1) sumsByCategory[transaction.category][monthIndex] += transaction.amount;
             });
               
-            const totalValues = uniqueMonths.map((month, index) => uniqueCategories.reduce((acc, category) => acc + sumsByCategory[category][index], 0));
+            const totalValues = uniqueMonths.map((month, index) => {
+                console.log(month);
+                return uniqueCategories.reduce((acc, category) => acc + sumsByCategory[category][index], 0)
+            });
 
             setUniqueMonths(uniqueMonths);
             setUniqueYears([]);
@@ -99,7 +102,10 @@ const Progress = () => {
                 if (yearIndex !== -1) sumsByCategory[transaction.category][yearIndex] += transaction.amount;
             });
 
-            const totalValues = uniqueYears.map((year, index) => uniqueCategories.reduce((acc, category) => acc + sumsByCategory[category][index], 0));
+            const totalValues = uniqueYears.map((year, index) => {
+                console.log(year);
+                return uniqueCategories.reduce((acc, category) => acc + sumsByCategory[category][index], 0)
+            });
 
             setUniqueYears(uniqueYears);
             setUniqueMonths([]);

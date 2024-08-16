@@ -1,6 +1,6 @@
 export const searchIcons = async (searchTerm: string) => {
     try {
-        const response = await fetch(`/api/v4/icons/search?query=${searchTerm}&count=10`, {
+        const response = await fetch(`/api/v4/icons/search?query=${searchTerm}&count=20`, {
             method: 'GET',
             headers: {
                 accept: 'application/json',
@@ -12,5 +12,3 @@ export const searchIcons = async (searchTerm: string) => {
         console.error(error);
     }
 }
-
-

@@ -162,3 +162,12 @@ export const getPayments = async (): Promise<Payment[]|[]> => {
     return [];
   }
 }
+
+export const createCategory = async (category: Category): Promise<void|undefined> => {
+  try {
+    const response = await push(ref(database, 'categories'), category);
+    update(ref(database, `categories/${response.key}`), { id: response.key });    
+  } catch (error: any) {
+    console.log(error.message);
+  }
+}

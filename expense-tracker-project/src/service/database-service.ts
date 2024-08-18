@@ -130,9 +130,16 @@ export const deleteTransaction = async (transactionId: string): Promise<void|und
 }
 
 interface Category {
+  id: string;
+  type: string;
   imgSrc: string;
   imgAlt: string;
+}
+
+interface NewCategory {
   type: string;
+  imgSrc: string;
+  imgAlt: string;
 }
 
 export const getCategories = async (): Promise<Category[]|[]> => {
@@ -163,10 +170,18 @@ export const getPayments = async (): Promise<Payment[]|[]> => {
   }
 }
 
-export const createCategory = async (category: Category): Promise<void|undefined> => {
+export const createCategory = async (category: NewCategory): Promise<void|undefined> => {
   try {
     const response = await push(ref(database, 'categories'), category);
     update(ref(database, `categories/${response.key}`), { id: response.key });    
+  } catch (error: any) {
+    console.log(error.message);
+  }
+}
+
+export const deleteCategory = async (categoryId: string): Promise<void|undefined> => {
+  try {
+    return await set(ref(database, `categories/${categoryId}`), null);
   } catch (error: any) {
     console.log(error.message);
   }

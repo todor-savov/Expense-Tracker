@@ -179,6 +179,15 @@ export const createCategory = async (category: NewCategory): Promise<void|undefi
   }
 }
 
+export const updateCategory = async (categoryDetails: Category, categoryId: string|undefined): Promise<void|undefined> => {
+  try {
+    if (!categoryId) return;
+    return await set(ref(database, `categories/${categoryId}`), categoryDetails);
+  } catch (error: any) {
+    console.log(error.message);
+  }
+}
+
 export const deleteCategory = async (categoryId: string): Promise<void|undefined> => {
   try {
     return await set(ref(database, `categories/${categoryId}`), null);

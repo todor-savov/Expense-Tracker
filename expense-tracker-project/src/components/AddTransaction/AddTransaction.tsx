@@ -112,6 +112,7 @@ const AddTransaction = ({ mode }: { mode: string }) => {
     useEffect(() => {
         const updateHandler = async () => {
             try {
+                console.log(transactionToEdit);
                 if (transactionToEdit === null) return;
                 setLoading(true);
                 updateTransaction(transactionToEdit, transactionToEdit.id);
@@ -127,8 +128,14 @@ const AddTransaction = ({ mode }: { mode: string }) => {
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        const receipt = salesReceipt ? salesReceipt : 'none';
 
+        const receipt = (mode === 'edit') ? 
+            (fetchedTransaction ? 
+                (salesReceipt ? salesReceipt : fetchedTransaction.receipt) : 'none') 
+        : (salesReceipt ? salesReceipt : 'none');
+
+        console.log(receipt);
+        
         const target = event.target as typeof event.target & {
             'expense-date': { value: string };
             'expense-name': { value: string };
@@ -163,7 +170,7 @@ const AddTransaction = ({ mode }: { mode: string }) => {
             setPaymentError('Payment error');
         }
 
-        const expenseDetails = { date, name, amount, category, payment, receipt, user: isLoggedIn.user };
+        const expenseDetails = { date, name, amount, category, payment, receipt: receipt || '', user: isLoggedIn.user };
 
         if (mode === 'edit') {
             if (id) setTransactionToEdit({ ...expenseDetails, id: id });

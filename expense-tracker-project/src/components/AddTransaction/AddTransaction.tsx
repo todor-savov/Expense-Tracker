@@ -112,7 +112,6 @@ const AddTransaction = ({ mode }: { mode: string }) => {
     useEffect(() => {
         const updateHandler = async () => {
             try {
-                console.log(transactionToEdit);
                 if (transactionToEdit === null) return;
                 setLoading(true);
                 updateTransaction(transactionToEdit, transactionToEdit.id);
@@ -133,8 +132,6 @@ const AddTransaction = ({ mode }: { mode: string }) => {
             (fetchedTransaction ? 
                 (salesReceipt ? salesReceipt : fetchedTransaction.receipt) : 'none') 
         : (salesReceipt ? salesReceipt : 'none');
-
-        console.log(receipt);
         
         const target = event.target as typeof event.target & {
             'expense-date': { value: string };

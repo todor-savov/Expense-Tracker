@@ -100,7 +100,7 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionT
   useEffect(() => {
       let filteredResults: FetchedTransaction[] = [...transactions];
       for (let [key, value] of searchFilters.entries()) {
-        if (key === "date" && value.length > 0) filteredResults = filteredResults.filter((transaction) => transaction[key as keyof FetchedTransaction].toString().toLowerCase().includes(value));        
+        if (value.length > 0) filteredResults = filteredResults.filter((transaction) => transaction[key as keyof FetchedTransaction].toString().toLowerCase().includes(value));        
       }
       setFilteredTransactions(filteredResults);
       setSum(filteredResults.reduce((acc, transaction) => acc + transaction.amount, 0));

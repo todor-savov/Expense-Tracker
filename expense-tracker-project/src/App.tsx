@@ -20,7 +20,7 @@ function App() {
                 <Routes>
                   <Route path="/" element={<Authenticated>
                     <div className="header-container"> 
-                      <Header from={"Home (Latest Transactions)"} /> 
+                      <Header from={"Home (Last 5 Transactions)"} /> 
                     </div>
                     <Home /></Authenticated>} />
                   <Route path="/login" element={<Login />} />

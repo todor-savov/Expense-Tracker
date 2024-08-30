@@ -107,7 +107,11 @@ const Home = () => {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {transactions.sort((transaction1, transaction2) => transaction1['date'] < transaction2['date'] ? 1 : -1)
+                                {transactions.sort((t1, t2) => {
+                                    const date1 = new Date(t1['date'] as string);
+                                    const date2 = new Date(t2['date'] as string);
+                                    return date1 < date2 ? 1 : -1;
+                                })
                                 .slice(0, 5)
                                 .map((transaction) =>
                                     <TableRow hover role="checkbox" tabIndex={-1} key={transaction.id}>

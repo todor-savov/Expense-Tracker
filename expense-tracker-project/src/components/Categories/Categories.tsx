@@ -4,9 +4,10 @@ import { searchIcons } from "../../service/icons-service";
 import { createCategory, deleteCategory, getCategories, updateCategory } from "../../service/database-service";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
-import { ADD_CATEGORY_ICON, CANCEL_CATEGORY_ICON, SAVE_CATEGORY_ICON } from "../../common/constants";
-import "./Categories.css";
+import { CANCEL_CATEGORY_ICON, SAVE_CATEGORY_ICON } from "../../common/constants";
 import { GridAddIcon } from "@mui/x-data-grid";
+import { AddBox } from "@mui/icons-material";
+import "./Categories.css";
 
 interface Category {
     id: string;
@@ -200,7 +201,11 @@ const Categories = () => {
 
                 {error && <p>{error}</p>}
 
-                {(!addCategoryMode && !editedCategory) && <Button onClick={handleAddCategoryButtonClick}><img width="67" height="67" src={ADD_CATEGORY_ICON} alt="add-category-icon"/></Button>}
+                {(!addCategoryMode && !editedCategory) && 
+                    <Box>
+                        <Button onClick={handleAddCategoryButtonClick}><AddBox style={{fontSize: 40 }} /></Button>
+                    </Box>
+                }
 
             {(addCategoryMode || editedCategory) && 
                 <Box component="form" className="category-details" onSubmit={handleSubmit}>

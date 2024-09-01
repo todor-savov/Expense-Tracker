@@ -248,7 +248,7 @@ const Categories = () => {
                             <TextField type="text" fullWidth id="search-input" helperText={"Search for category icons (provided by IconFinder)"} 
                                 onChange={(e) => setSearchTerm(e.target.value)} label="Search" variant="outlined" />
 
-                            <Typography id="transition-modal-description">
+                            <Box id="transition-modal-description">
                                 {foundIcons.length > 0 ?
                                     <Box className="icon-grid">
                                         {foundIcons.map((icon, index) => {
@@ -258,7 +258,7 @@ const Categories = () => {
                                     </Box>
                                     : 'No icons found'
                                 }
-                            </Typography>
+                            </Box>
                         </Box>
                     </Modal>
                 </Box>

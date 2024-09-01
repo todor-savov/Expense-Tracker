@@ -23,3 +23,5 @@ export const SPECIAL_CHARS_REGEX = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
 export const DEFAULT_IMAGE = 'https://tse1.mm.bing.net/th?q=blank%20profile%20picture%20image';
 export const MAX_YEAR_SPAN = 3;
 export const DEFAULT_EVENT_IMAGE = 'https://leekduck.com/assets/img/events/events-default.jpg';
+export const SAVE_CATEGORY_ICON = 'https://img.icons8.com/ios/100/40C057/ok--v1.png';
+export const CANCEL_CATEGORY_ICON = 'https://img.icons8.com/color/96/cancel--v1.png';

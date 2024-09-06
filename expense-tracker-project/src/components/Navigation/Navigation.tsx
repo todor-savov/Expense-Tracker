@@ -20,7 +20,7 @@ const Navigation: React.FC<NavigationProps> = ({ setIsNavigationOpen }) => {
   const DrawerList = (
     <Box sx={{ width: 250 }} role="presentation" onClick={() => setIsNavigationOpen(false)} className="drawer-list">
         <List>
-            <ListItem key={'Home'} disablePadding onClick={() => navigate('/')}>
+            <ListItem key={'Home'} disablePadding onClick={() => navigate('/home')}>
                 <ListItemButton>
                     <ListItemIcon><FontAwesomeIcon icon={faHouseUser} size="2xl" style={{color: "#FFD43B",}} /></ListItemIcon>
                     <ListItemText primary={'Home'} />

@@ -16,12 +16,12 @@ const Authenticated = ({ children }: { children: ReactNode }) => {
     }, []);
 
     if (loading) {
-        return <div className='spinnerContainer'>
+        return  <div className='spinnerContainer'>
                     <div className='spinner'></div>
                 </div>
     }
     
-    if(!isLoggedIn.user) {
+    if(!isLoggedIn.status) {
         return <Navigate replace to="/login" state={{ from: location }}/>
     }
 

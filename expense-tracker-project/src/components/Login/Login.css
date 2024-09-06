@@ -1,101 +1,67 @@
-.login-form {
+.loginContainer {
     display: flex;
-    flex-direction: column;
-    width: 450px;
-    margin: 0 auto;
-    margin-top: 70px;
-    --input-focus: #2d8cf0;
-  --font-color: #323232;
-  --font-color-sub: #666;
-  --bg-color: beige;
-  --main-color: black;
-  padding: 40px;
-  background: rgb(239,239,239);
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  gap: 10px;
-  border-radius: 15px;
-  border: 2px solid var(--main-color);
-  box-shadow: 4px 4px var(--main-color);
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
 }
-
-.loginContainer{
-    height: 100vh;
+  
+.login-form {
+    width: 100%;
+    max-width: 400px;
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
 }
-
-
-.login-form p {
-    font-family: "Poetsen One", sans-serif;
-    font-size: 36px;
-    font-weight: 600;
-}
-
-.login-form h5 {
-    font-size: 20px;
-    font-weight: 600;
-    color: var(--font-color-sub);
-    margin-top: 15px;
-
-}
-
+  
 .login-span {
     display: block;
     margin-bottom: 10px;
+    text-align: left;
 }
-
-#span-name{
-   color: rgb(24,150,195);
+  
+.input__field {
+    width: 100%;
+    padding: 12px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
 }
-
-#span-sign-up{
-    color: rgb(24,150,195);
+  
+.login-form div {
+    color: #d9534f;
+    margin-bottom: 10px;
+}
+  
+.btn {
+    color: white;
+    background-color: #007bff;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+  
+.btn:hover {
+    background-color: #0056b3;
+}
+  
+#span-sign-up {
+    color: #007bff;
     cursor: pointer;
 }
-
-.login-form label {
-    display: inline-block;
-    font-size: 16px;
-    font-weight: bold;
-    width: 120px; 
+  
+#span-sign-up:hover {
+    text-decoration: underline;
 }
-
-
-.login-form div {
-    color: rgb(212, 12, 12);
-    font-weight: bold;
-}
-
-.spinner {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    border: 4px solid rgba(0, 0, 0, 0.1);
-    border-left-color: #333;
-    border-radius: 50%;
-    width: 100px;
-    height: 100px;
-    animation: spin 1s linear infinite;
-}
-
-.spinnerContainer{
-    height: 100vh;
-}
-
-@keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
-}
-
-@media  (max-width: 500px) {
+  
+@media (max-width: 768px) {
     .login-form {
-        width: 350px;
+      padding: 30px;
+      width: 90%;
     }
-    
 }

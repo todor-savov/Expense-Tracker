@@ -4,6 +4,7 @@ import { signInUser } from '../../service/authentication-service.ts';
 import AuthContext from '../../context/AuthContext.tsx';
 import { getUserDetails } from '../../service/database-service.ts';
 import { EMAIL_REGEX } from '../../common/constants.ts';
+import EXPENSE_TRACKER_APP_ICON from '../../assets/expense-tracker-app-icon.png';
 import './Login.css';
 
 const Login = () => {
@@ -57,18 +58,19 @@ const Login = () => {
     }
 
     if (loading) {
-        return (<div className='spinnerContainer'>
-            <div className='spinner'></div>
-            </div>
-        )
+        return  <div className='spinnerContainer'>
+                    <div className='spinner'></div>
+                </div>
     }
 
     return (
         <div className='loginContainer'>
         <form onSubmit={loginUser} className="login-form">
-        <p>Welcome back <br/> to <span id='span-name'>Expense Tracker</span></p>
+        <p><strong>Welcome to <span id='span-name'>Expense Tracker</span></strong></p>
 
-            {error && <div>{error}</div>}<br />
+            {error ? <div>{error}</div>
+            :  <div><img width='150' height='150' src={EXPENSE_TRACKER_APP_ICON} alt='login' /></div>}
+            <br />
             <span className='login-span'><label htmlFor="email">Email address </label>
             <input className='input__field' type="email" name="email" id="email" required /></span> 
             <br />

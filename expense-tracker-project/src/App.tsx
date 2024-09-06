@@ -1,4 +1,3 @@
-import './App.css';
 import { useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import AuthContext from './context/AuthContext.tsx';
@@ -10,6 +9,8 @@ import AddTransaction from './components/AddTransaction/AddTransaction.tsx';
 import Overview from './components/Overview/Overview.tsx';
 import Header from './components/Header/Header.tsx';
 import Categories from './components/Categories/Categories.tsx';
+import HomePublic from './views/Home/HomePublic.tsx';
+import './App.css';
 
 function App() {
   const [authValue, setAuthValue] = useState({status: false, user: ''});
@@ -18,12 +19,30 @@ function App() {
       <BrowserRouter>
         <AuthContext.Provider value={{ isLoggedIn: authValue, setLoginState: setAuthValue }}>
                 <Routes>
-                  <Route path="/" element={<Authenticated>
-                    <div className="header-container"> 
-                      <Header from={"Home (Last 5 Transactions)"} /> 
-                    </div>
-                    <Home /></Authenticated>} />
-                  <Route path="/login" element={<Login />} />
+                  <Route path="/" element={
+                    <>
+                      <div className="header-container"> 
+                        <Header from={"Home"} /> 
+                      </div>
+                      <HomePublic />
+                    </>                  
+                  } />
+                  <Route path="/home" element={
+                      <Authenticated>
+                        <div className="header-container"> 
+                          <Header from={"Home (Last 5 Transactions)"} /> 
+                        </div>
+                        <Home />
+                      </Authenticated>
+                  } />
+                  <Route path="/login" element={
+                    <>
+                      <div className="header-container"> 
+                        <Header from={"Home"} /> 
+                      </div>
+                      <Login />
+                    </>
+                  } />
                   <Route path="/transactions" element={<Authenticated>
                     <div className="header-container">
                       <Header from={"Transactions"} /> 

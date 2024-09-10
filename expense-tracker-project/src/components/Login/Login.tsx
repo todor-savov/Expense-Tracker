@@ -6,6 +6,8 @@ import { getUserDetails } from '../../service/database-service.ts';
 import { EMAIL_REGEX } from '../../common/constants.ts';
 import EXPENSE_TRACKER_APP_ICON from '../../assets/expense-tracker-app-icon.png';
 import './Login.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons';
 
 const Login = () => {
     const { setLoginState } = useContext<any>(AuthContext);
@@ -66,16 +68,14 @@ const Login = () => {
     return (
         <div className='loginContainer'>
         <form onSubmit={loginUser} className="login-form">
-        <p><strong>Welcome to <span id='span-name'>Expense Tracker</span></strong></p>
+        <p><strong>Welcome back to <span id='span-name'>Expense Tracker</span></strong></p>
 
             {error ? <div>{error}</div>
             :  <div><img width='150' height='150' src={EXPENSE_TRACKER_APP_ICON} alt='login' /></div>}
             <br />
-            <span className='login-span'><label htmlFor="email">Email address </label>
-            <input className='input__field' type="email" name="email" id="email" required /></span> 
+            <input className='input__field' type="email" name="email" id="email" placeholder={'Email address'} required />
             <br />
-            <span className='login-span'><label htmlFor="password">Password </label>
-            <input className='input__field' type="password" name="password" id='password' required /></span>
+            <input className='input__field' type="password" name="password" id='password' placeholder={'Password'} required />
             <br />
             <button className='btn' type="submit">Login</button>
             <h5>Don&apos;t have an account?<span onClick={()=> navigate("/register")} id='span-sign-up'> Sign Up</span></h5>

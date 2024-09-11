@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -14,16 +14,37 @@ import AuthContext from '../../context/AuthContext';
 import { LoginOutlined } from '@mui/icons-material';
 import { signOutUser } from '../../service/authentication-service';
 import { useNavigate } from 'react-router-dom';
+import { getUserDetails } from '../../service/database-service';
 
 interface HeaderProps {
     from: string;
+}
+
+interface UserDetails {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    username: string;
+    photo: string;
+    role: string;
+    isBlocked: boolean;
 }
 
 const Header: React.FC<HeaderProps> = ({ from }) => {
   const { isLoggedIn, setLoginState } = useContext(AuthContext);
   const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
   const [isNavigationOpen, setIsNavigationOpen] = useState<boolean>(false);
+  const [currentUser, setCurrentUser] = useState<UserDetails|null>(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+      const fetchUserDetails = async () => {
+        const userDetails = await getUserDetails(isLoggedIn.user);
+        if (userDetails.length) setCurrentUser(userDetails[0]);
+      }
+      if (isLoggedIn.status) fetchUserDetails();
+  }, []);
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -57,10 +78,13 @@ const Header: React.FC<HeaderProps> = ({ from }) => {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}> {from} </Typography>
           {isLoggedIn.status ? 
             <div>
-              <IconButton size="large" aria-label="account of current user" aria-controls="menu-appbar" aria-haspopup="true"
-                onClick={handleMenu} color="inherit">
-                <AccountCircle />
-              </IconButton>
+              <span>
+                <Typography component="span">Welcome {currentUser?.firstName} {currentUser?.lastName}!  </Typography>
+                <IconButton size="large" aria-label="account of current user" aria-controls="menu-appbar" aria-haspopup="true"
+                  onClick={handleMenu} color="inherit">
+                  <AccountCircle />
+                </IconButton>
+              </span>
               <Menu id="menu-appbar" anchorEl={anchorEl} anchorOrigin={{vertical: 'top', horizontal: 'right',}} keepMounted
                 transformOrigin={{vertical: 'top', horizontal: 'right',}} open={Boolean(anchorEl)} onClose={handleClose}>
                 <MenuItem onClick={handleClose}>Profile</MenuItem>

@@ -137,28 +137,28 @@ const Register = () => {
             <p>User Registration</p>
                 {error && <div className='error-message'>{error}</div>}
 
-                <TextField error={''} type="text" id="firstName" name="firstName" label={'First Name'} className='input__field' required
+                <TextField type="text" id="firstName" name="firstName" label={'First Name'} className='input__field' required
                     helperText={<i>{NAME_MIN_CHARS}-{NAME_MAX_CHARS} characters</i>} 
                 />
 
-                <TextField error={''} type="text" id="lastName" name="lastName" label={'Last Name'} className='input__field' required
+                <TextField type="text" id="lastName" name="lastName" label={'Last Name'} className='input__field' required
                     helperText={<i>{NAME_MIN_CHARS}-{NAME_MAX_CHARS} characters</i>} 
                 /> 
 
-                <TextField error={''} type="email" id="email" name="email" label={'Email'} className='input__field' required 
+                <TextField type="email" id="email" name="email" label={'Email'} className='input__field' required 
                     helperText={<i>Standard email characters, @ and domain</i>} 
                 />
                 <br />
 
-                <TextField error={''} type="text" id="phone" name="phone" label={'Phone'} className='input__field' required
+                <TextField type="text" id="phone" name="phone" label={'Phone'} className='input__field' required
                     helperText={<i>{PHONE_DIGITS} digits exactly</i>} 
                 /> 
 
-                <TextField error={''} type="text" id="username" name="username" label={'Username'} className='input__field' required
+                <TextField type="text" id="username" name="username" label={'Username'} className='input__field' required
                     helperText={<i>{USERNAME_MIN_LENGTH}-{USERNAME_MAX_LENGTH} characters, upper-/lowercase OR digits</i>} 
                 /> 
 
-                <TextField error={''} type="password" id="password" name="password" label={'Password'} className='input__field' required
+                <TextField type="password" id="password" name="password" label={'Password'} className='input__field' required
                     helperText={<i>{PASSWORD_MIN_CHARS}-{PASSWORD_MAX_CHARS} characters, a digit, letter AND a special character as minimum</i>} 
                 /> 
 

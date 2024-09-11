@@ -138,15 +138,15 @@ const Register = () => {
                 {error && <div className='error-message'>{error}</div>}
 
                 <TextField type="text" id="firstName" name="firstName" label={'First Name'} className='input__field' required
-                    helperText={<i>{NAME_MIN_CHARS}-{NAME_MAX_CHARS} characters</i>} 
+                    helperText={<i>{NAME_MIN_CHARS}-{NAME_MAX_CHARS} symbols</i>} 
                 />
 
                 <TextField type="text" id="lastName" name="lastName" label={'Last Name'} className='input__field' required
-                    helperText={<i>{NAME_MIN_CHARS}-{NAME_MAX_CHARS} characters</i>} 
+                    helperText={<i>{NAME_MIN_CHARS}-{NAME_MAX_CHARS} symbols</i>} 
                 /> 
 
                 <TextField type="email" id="email" name="email" label={'Email'} className='input__field' required 
-                    helperText={<i>Standard email characters, @ and domain</i>} 
+                    helperText={<i>Standard email symbols, @ and domain</i>} 
                 />
                 <br />
 
@@ -155,14 +155,14 @@ const Register = () => {
                 /> 
 
                 <TextField type="text" id="username" name="username" label={'Username'} className='input__field' required
-                    helperText={<i>{USERNAME_MIN_LENGTH}-{USERNAME_MAX_LENGTH} characters, upper-/lowercase OR digits</i>} 
+                    helperText={<i>{USERNAME_MIN_LENGTH}-{USERNAME_MAX_LENGTH} symbols, letters OR digits</i>}
                 /> 
 
                 <TextField type="password" id="password" name="password" label={'Password'} className='input__field' required
-                    helperText={<i>{PASSWORD_MIN_CHARS}-{PASSWORD_MAX_CHARS} characters, a digit, letter AND a special character as minimum</i>} 
+                    helperText={<i>{PASSWORD_MIN_CHARS}-{PASSWORD_MAX_CHARS} symbols, ONE digit, letter AND a special symbol</i>} 
                 /> 
 
-                <button className='btn' type="submit">Register</button>
+                <button className='submit-button' type="submit">Register</button>
             </form>
         </div>
     )

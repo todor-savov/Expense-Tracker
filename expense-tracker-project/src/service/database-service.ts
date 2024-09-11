@@ -8,13 +8,12 @@ import { ref, get, set, push, update, query, equalTo, orderByChild, DataSnapshot
  * @param {string} phone - The phone number of the user to check.
  * @returns {Promise<Array<DataSnapshot>|string>} - A promise that resolves to an array of snapshots if the user exists, or a string if an error occurs.
  */
-export const checkIfUserExists = async (username: string, email: string, phone: string): Promise<Array<DataSnapshot>|string> => {
+export const checkIfUserExists = async (username: string, phone: string): Promise<Array<DataSnapshot>|string> => {
   try {
     const snapshot1 = await get(query(ref(database, "users"), orderByChild("username"), equalTo(username)));
-    const snapshot2 = await get(query(ref(database, "users"), orderByChild("email"), equalTo(email)));
-    const snapshot3 = await get(query(ref(database, "users"), orderByChild("phone"), equalTo(phone)));
+    const snapshot2 = await get(query(ref(database, "users"), orderByChild("phone"), equalTo(phone)));
 
-    return [snapshot1, snapshot2, snapshot3];
+    return [snapshot1, snapshot2];
   } catch (error: any) {
     console.log(error.message);
     return error.message;
@@ -28,8 +27,14 @@ export const checkIfUserExists = async (username: string, email: string, phone: 
  */
 
 interface UserDetails {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
   username: string;
-  // Include other properties of userDetails as needed
+  photo: string;
+  role: string;
+  isBlocked: boolean;
 }
 
 export const createUser = async (userDetails: UserDetails): Promise<void|undefined> => {

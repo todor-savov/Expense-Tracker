@@ -1,28 +1,31 @@
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { signInUser } from '../../service/authentication-service.ts';
-import AuthContext from '../../context/AuthContext.tsx';
 import { getUserDetails } from '../../service/database-service.ts';
+import AuthContext from '../../context/AuthContext.tsx';
 import { EMAIL_REGEX } from '../../common/constants.ts';
 import EXPENSE_TRACKER_APP_ICON from '../../assets/expense-tracker-app-icon.png';
+import { TextField } from '@mui/material';
 import './Login.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons';
+
+interface Form {
+    emailAddress: string;
+    password: string;
+}
 
 const Login = () => {
-    const { setLoginState } = useContext<any>(AuthContext);
+    const { setLoginState } = useContext(AuthContext);
     const [error, setError] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
     const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
-    const [form, setForm] = useState<any>({ emailAddress: '', password: '' });
+    const [form, setForm] = useState<Form>({ emailAddress: '', password: '' });
     const navigate = useNavigate();
     const location = useLocation();
     
     useEffect(() => {
-        if (isFormSubmitted) {
             const loginHandler = async () => {
                 try {
-                    setLoading(true);                    
+                    setLoading(true);
                     const userCredentials = await signInUser(form.emailAddress, form.password);
                     if (!userCredentials) throw new Error(`Incorrect login credentials.`);
                     const userDetails = await getUserDetails(form.emailAddress);
@@ -30,15 +33,14 @@ const Login = () => {
                     //if (userDetails[0].isBlocked) throw new Error(`Your account has been blocked. Please contact the administrator.`);
                     setLoading(false);
                     setLoginState({status: true, user: form.emailAddress});
-                    navigate(location.state?.from.pathname || '/transactions');
+                    navigate(location.state?.from.pathname || '/home');
                 } catch (error: any) {
                     setLoading(false);
                     setError(error.message);
                     console.log(error.message);
                 }  
             }
-            loginHandler();
-        }
+            if (isFormSubmitted) loginHandler();
     }, [form]);
 
     const loginUser = (event: React.FormEvent<HTMLFormElement>) => {        
@@ -67,19 +69,22 @@ const Login = () => {
 
     return (
         <div className='loginContainer'>
-        <form onSubmit={loginUser} className="login-form">
-        <p><strong>Welcome back to <span id='span-name'>Expense Tracker</span></strong></p>
-
-            {error ? <div>{error}</div>
-            :  <div><img width='150' height='150' src={EXPENSE_TRACKER_APP_ICON} alt='login' /></div>}
-            <br />
-            <input className='input__field' type="email" name="email" id="email" placeholder={'Email address'} required />
-            <br />
-            <input className='input__field' type="password" name="password" id='password' placeholder={'Password'} required />
-            <br />
-            <button className='btn' type="submit">Login</button>
-            <h5>Don&apos;t have an account?<span onClick={()=> navigate("/register")} id='span-sign-up'> Sign Up</span></h5>
-        </form>
+            <form onSubmit={loginUser} className="login-form">
+            <p><strong>Welcome back to Expense Tracker</strong></p>
+                {error ? 
+                    <div className='error-class'>{error}</div>
+                    :  
+                    <div><img width='150' height='150' src={EXPENSE_TRACKER_APP_ICON} alt='login' /></div>
+                }
+                <TextField type="email" id="email" name="email" label={'Email address'} className='input__field' required 
+                    sx={{marginBottom: '10px'}}
+                />
+                <TextField type="password" id="password" name="password" label={'Password'} className='input__field' required
+                    sx={{marginBottom: '10px'}}
+                />
+                <button className='btn' type="submit">Login</button>
+                <h5>Don't have an account?<span onClick={()=> navigate("/register")} id='span-sign-up'> Sign Up</span></h5>
+            </form>
         </div>
     )
 }

@@ -5,7 +5,7 @@ import AuthContext from '../context/AuthContext.js';
 
 const Authenticated = ({ children }: { children: ReactNode }) => {
     const { isLoggedIn, setLoginState } = useContext(AuthContext);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState<boolean>(true);
     const location = useLocation();
 
     useEffect(() => {

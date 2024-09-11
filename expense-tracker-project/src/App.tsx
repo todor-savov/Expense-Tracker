@@ -11,6 +11,7 @@ import Header from './components/Header/Header.tsx';
 import Categories from './components/Categories/Categories.tsx';
 import HomePublic from './views/Home/HomePublic.tsx';
 import './App.css';
+import Register from './components/Register/Register.tsx';
 
 function App() {
   const [authValue, setAuthValue] = useState({status: false, user: ''});
@@ -42,6 +43,14 @@ function App() {
                       </div>
                       <Login />
                     </>
+                  } />
+                  <Route path="/register" element={
+                    <>
+                      <div className="header-container"> 
+                        <Header from={"Home"} /> 
+                      </div>
+                      <Register />
+                    </>                  
                   } />
                   <Route path="/transactions" element={<Authenticated>
                     <div className="header-container">

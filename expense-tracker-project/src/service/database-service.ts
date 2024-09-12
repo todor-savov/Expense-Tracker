@@ -139,17 +139,19 @@ interface Category {
   type: string;
   imgSrc: string;
   imgAlt: string;
+  user: string;
 }
 
 interface NewCategory {
   type: string;
   imgSrc: string;
   imgAlt: string;
+  user: string;
 }
 
-export const getCategories = async (): Promise<Category[]|[]> => {
+export const getCategories = async (user: string): Promise<Category[]|[]> => {
   try {
-    const snapshot = await get(ref(database, "categories"));
+    const snapshot = await get(query(ref(database, "categories"), orderByChild("user"), equalTo(user)));
     if (snapshot.exists()) return Object.values(snapshot.val()) as Category[];
     else return [];
   } catch (error: any) {

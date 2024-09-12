@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Avatar, Box, Button, List, ListItem, ListItemAvatar, ListItemText, Modal, TextField, Typography } from "@mui/material";
 import { searchIcons } from "../../service/icons-service";
 import { createCategory, deleteCategory, getCategories, updateCategory } from "../../service/database-service";
@@ -7,6 +7,7 @@ import { faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { CANCEL_CATEGORY_ICON, SAVE_CATEGORY_ICON } from "../../common/constants";
 import { GridAddIcon } from "@mui/x-data-grid";
 import { AddBox } from "@mui/icons-material";
+import AuthContext from "../../context/AuthContext";
 import "./Categories.css";
 
 interface Category {
@@ -14,16 +15,19 @@ interface Category {
     type: string;
     imgSrc: string;
     imgAlt: string;
+    user: string;
 }
 
 interface NewCategory {
     type: string;
     imgSrc: string;
     imgAlt: string;
+    user: string;
 }
 
 const Categories = () => {
-    const [categories, setCategories] = useState<Category[]>([]);
+    const { isLoggedIn } = useContext(AuthContext);
+    const [categories, setCategories] = useState<Category[]|[]>([]);
     const [addCategoryMode, setAddCategoryMode] = useState<boolean>(false);
     const [searchTerm, setSearchTerm] = useState<string>("");
     const [foundIcons, setFoundIcons] = useState<any[]>([]);
@@ -40,9 +44,8 @@ const Categories = () => {
         const fetchCategories = async () => {
             try {
                 setLoading(true);
-                const categories = await getCategories();
+                const categories = await getCategories(isLoggedIn.user);
                 if (categories.length > 0) setCategories(categories);
-                else throw new Error("No categories found");
                 setLoading(false);
             } catch (error: any) {
                 console.error(error);
@@ -126,7 +129,7 @@ const Categories = () => {
         if (addCategoryMode) {
             const categoryName = target["category-name"].value;
             if (categoryName && selectedIcon) {
-                setNewCategory({ type: categoryName, imgSrc: selectedIcon, imgAlt: categoryName });
+                setNewCategory({ type: categoryName, imgSrc: selectedIcon, imgAlt: categoryName, user: isLoggedIn.user });
                 setAddCategoryMode(false);
                 setSelectedIcon("");
                 setSearchTerm("");
@@ -140,7 +143,7 @@ const Categories = () => {
             if (categoryName) {
                 setCategoryToUpdate({id: editedCategory.id, type: categoryName, 
                     imgSrc: selectedIcon ? selectedIcon : editedCategory.imgSrc, 
-                    imgAlt: categoryName 
+                    imgAlt: categoryName, user: isLoggedIn.user
                 });
                 setEditedCategory(null);
                 setSelectedIcon("");
@@ -183,21 +186,24 @@ const Categories = () => {
 
     return (
             <Box className="categories-box">
-                <List className="categories-list">
-                    {categories.map((category) => (
-                        <ListItem key={category.id} className="category-item" sx={{ width: 'auto' }}>
-                            <ListItemAvatar>
-                                <Avatar> <img src={category.imgSrc} alt={category.imgAlt} /> </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText primary={category.type} secondary={
-                                <span>
-                                    <Button onClick={() => handleEdit(category)}><FontAwesomeIcon icon={faPenToSquare} size="xl" /></Button>
-                                    <Button onClick={() => setCategoryToDelete(category.id)}><FontAwesomeIcon icon={faTrashCan} size="xl" /></Button>
-                                </span>
-                            } />
-                        </ListItem>
-                    ))}
-                </List>
+                {categories.length > 0 ?
+                    <List className="categories-list">
+                        {categories.map((category) => (
+                            <ListItem key={category.id} className="category-item" sx={{ width: 'auto' }}>
+                                <ListItemAvatar>
+                                    <Avatar> <img src={category.imgSrc} alt={category.imgAlt} /> </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText primary={category.type} secondary={
+                                    <span>
+                                        <Button onClick={() => handleEdit(category)}><FontAwesomeIcon icon={faPenToSquare} size="xl" /></Button>
+                                        <Button onClick={() => setCategoryToDelete(category.id)}><FontAwesomeIcon icon={faTrashCan} size="xl" /></Button>
+                                    </span>
+                                } />
+                            </ListItem>
+                        ))}
+                    </List>
+                    : <p>No categories found</p>
+                }
 
                 {error && <p>{error}</p>}
 

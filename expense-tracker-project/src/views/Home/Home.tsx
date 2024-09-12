@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faReceipt } from "@fortawesome/free-solid-svg-icons";
 import { getCategoryIcon, getPaymentIcon } from "../../common/utils";
 import './Home.css';
-import { Add, PlusOne } from "@mui/icons-material";
+import { Add } from "@mui/icons-material";
 
 interface Column {
     id: 'category' | 'date' | 'name' | 'amount' | 'payment' | 'receipt';

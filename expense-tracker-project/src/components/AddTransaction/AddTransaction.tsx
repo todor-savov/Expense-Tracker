@@ -36,9 +36,11 @@ interface FetchedTransaction {
 }
 
 interface Category {
+    id: string;
     imgSrc: string;
     imgAlt: string;
     type: string;
+    user: string;
 }
 
 interface Payment {
@@ -67,7 +69,7 @@ const AddTransaction = ({ mode }: { mode: string }) => {
 
     useEffect(() => {
         const fetchCategoriesAndPayments = async () => {
-          const categories = await getCategories();
+          const categories = await getCategories(isLoggedIn.user);
           const payments = await getPayments();
           setCategories(categories);
           setPayments(payments);

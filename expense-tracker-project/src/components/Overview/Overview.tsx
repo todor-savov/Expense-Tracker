@@ -29,9 +29,11 @@ interface Data {
 }
 
 interface Category {
+    id: string;
     imgSrc: string;
     imgAlt: string;
     type: string;
+    user: string;
 }
 
 const Overview = () => {
@@ -67,7 +69,7 @@ const Overview = () => {
         const fetchCategories = async () => {
             try {
                 setLoading(true);
-                const categories = await getCategories();
+                const categories = await getCategories(isLoggedIn.user);
                 setCategories(categories);
                 setLoading(false);
             } catch (error: any) {

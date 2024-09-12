@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
@@ -18,7 +18,8 @@ import SearchIcon from '@mui/icons-material/Search';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare, faReceipt, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import { getCategoryIcon, getPaymentIcon } from '../../common/utils';
-import { getCategories, getPayments } from '../../service/database-service';
+import { getCategories, getPayments } from '../../service/database-service.ts';
+import AuthContext from '../../context/AuthContext';
 
 interface Column {
   id: 'category' | 'date' | 'name' | 'amount' | 'payment' | 'receipt';
@@ -49,9 +50,11 @@ interface sortParams {
 } 
 
 interface Category {
+  id: string;
   imgSrc: string;
   imgAlt: string;
   type: string;
+  user: string;
 }
 
 interface Payment {
@@ -61,7 +64,7 @@ interface Payment {
 }
 
 const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionToDelete }) => {
-  const navigate = useNavigate();
+  const { isLoggedIn } = useContext(AuthContext);
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
   const [showReceipt, setShowReceipt] = useState<string>('');
@@ -73,6 +76,7 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionT
   const [sum, setSum] = useState<number>(0);
   const [categories, setCategories] = useState<Category[]|[]>([]);
   const [payments, setPayments] = useState<Payment[]|[]>([]);
+  const navigate = useNavigate();
 
   const columns: readonly Column[] = [
     { id: 'category', label: 'Category', minWidth: 50 },
@@ -121,7 +125,7 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionT
 
   useEffect(() => {
     const fetchCategories = async () => {
-      const categories = await getCategories();
+      const categories = await getCategories(isLoggedIn.user);
       const payments = await getPayments();
       setCategories(categories);
       setPayments(payments);

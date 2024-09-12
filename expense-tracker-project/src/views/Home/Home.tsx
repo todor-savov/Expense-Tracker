@@ -1,10 +1,13 @@
 import { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import AuthContext from "../../context/AuthContext";
 import { getCategories, getPayments, getTransactions } from "../../service/database-service";
-import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import { Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faReceipt } from "@fortawesome/free-solid-svg-icons";
 import { getCategoryIcon, getPaymentIcon } from "../../common/utils";
+import './Home.css';
+import { Add, PlusOne } from "@mui/icons-material";
 
 interface Column {
     id: 'category' | 'date' | 'name' | 'amount' | 'payment' | 'receipt';
@@ -46,6 +49,7 @@ const Home = () => {
     const [showReceipt, setShowReceipt] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string|null>(null);
+    const navigate = useNavigate();
 
     const columns: readonly Column[] = [
         { id: 'category', label: 'Category', minWidth: 50 },
@@ -93,7 +97,7 @@ const Home = () => {
                 <div className='receipt-content' onClick={() => setShowReceipt('')}>
                     <img src={showReceipt} alt="receipt" />
                 </div>
-            :
+            : transactions.length > 0 ?
             <>
                 {error && <p>{error}</p>}
                  <Paper sx={{ width: '100%', overflow: 'hidden' }}>
@@ -155,6 +159,14 @@ const Home = () => {
                     </TableContainer>
                 </Paper>
             </>
+            : 
+            <div className="message-box">
+                <h2>No Transactions Found</h2>
+                <p>Start by adding your first transaction to keep track of your expenses.</p>
+                <Button onClick={() => navigate('/add-transaction')} variant="contained" sx={{marginTop: '20px'}}>
+                    <Add />
+                </Button>
+            </div>
     )
 }
 

@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarDays, faTags, faCalculator, faList, faCreditCard } from '@fortawesome/free-solid-svg-icons';
 import { Box, Button, MenuItem, TextField } from '@mui/material';
-import { Save } from '@mui/icons-material';
+import { Add, Save } from '@mui/icons-material';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -185,8 +185,7 @@ const AddTransaction = ({ mode }: { mode: string }) => {
         )
     }
 
-    return (
-        <>  
+    return (categories.length > 0 ?
             <Box component="form" sx={{'& .MuiTextField-root': { m: 1, width: '25ch' },}} noValidate
                 autoComplete="off" onSubmit={handleSubmit} className="expense-form"
             >
@@ -250,7 +249,10 @@ const AddTransaction = ({ mode }: { mode: string }) => {
 
                 <Button id='add-expense' type="submit" endIcon={<Save />}>Save</Button>
             </Box>
-        </>
+        :  <div className="message-box">
+        <h2>No Categories Found</h2>
+        <p>Please ensure you have created at least one category to be able to add a new transaction.</p>
+    </div>
     );
 }
 

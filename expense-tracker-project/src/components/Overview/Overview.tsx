@@ -11,7 +11,6 @@ import { getCategories, getTransactions } from '../../service/database-service';
 import { getCategoryIcon } from '../../common/utils';
 import './Overview.css';
 import Progress from './Progress';
-import { useNavigate } from 'react-router-dom';
 
 interface FetchedTransaction {
     id: string;

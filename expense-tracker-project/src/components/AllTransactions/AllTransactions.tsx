@@ -4,6 +4,8 @@ import AuthContext from "../../context/AuthContext";
 import { deleteTransaction, getTransactions } from "../../service/database-service";
 import StickyTable from "./StickyTable";
 import './AllTransactions.css';
+import { Button } from "@mui/material";
+import { Add } from "@mui/icons-material";
 
 interface FetchedTransaction {
     id: string;
@@ -65,11 +67,15 @@ const AllTransactions = () => {
         <>
             {error && <p>{error}</p>}
             {transactions.length === 0 ? 
-                <p>No transactions found</p> : <StickyTable transactions={transactions} setTransactionToDelete={setTransactionToDelete} />
+                <div className="message-box">
+                    <h2>No Transactions Found</h2>
+                    <p>Start by adding your first transaction to keep track of your expenses.</p>
+                </div>
+             : <StickyTable transactions={transactions} setTransactionToDelete={setTransactionToDelete} />
             }
-            <br />
-            <br />
-            <button onClick={() => navigate('/add-transaction')}>Add transaction</button>
+            <Button onClick={() => navigate('/add-transaction')} variant="contained" sx={{marginTop: '10px'}}>
+                <Add />
+            </Button>
         </>
     );
 }

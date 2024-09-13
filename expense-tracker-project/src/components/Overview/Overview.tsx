@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useEffect, useState, useContext } from 'react';
 import AuthContext from '../../context/AuthContext';
-import { Avatar, Button, FormControlLabel, FormGroup, List, ListItem, ListItemAvatar, ListItemText, Switch } from '@mui/material';
+import { Avatar, FormControlLabel, FormGroup, List, ListItem, ListItemAvatar, ListItemText, Switch } from '@mui/material';
 import Tabs, { tabsClasses } from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
@@ -11,7 +11,6 @@ import { getCategories, getTransactions } from '../../service/database-service';
 import { getCategoryIcon } from '../../common/utils';
 import './Overview.css';
 import Progress from './Progress';
-import { Add } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 
 interface FetchedTransaction {
@@ -51,7 +50,6 @@ const Overview = () => {
     const [pieData, setPieData] = useState<Data[]|[]>([]);
     const [totalSum, setTotalSum] = useState<number>(0);
     const [switchLabel, setSwitchLabel] = useState<string>('Period Overview');
-    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchData = async () => {

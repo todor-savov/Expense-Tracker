@@ -139,6 +139,7 @@ const Progress = () => {
                     </FormControl>
                 </Box>
 
+                {(transactions.length > 0 && timeSpan !== '') ?
                 <Box sx={{backgroundColor: 'white', boxShadow: 3, borderRadius: 2, width: '100%', padding: 1 }}>
                     <LineChart
                         xAxis={[
@@ -211,6 +212,11 @@ const Progress = () => {
                         }}
                     />   
                 </Box>
+                :   (timeSpan !== '' && 
+                    <div className="message-box">
+                        <h2>No Transactions Found</h2>                
+                    </div>)
+                }
             </Box>
         </>
     );

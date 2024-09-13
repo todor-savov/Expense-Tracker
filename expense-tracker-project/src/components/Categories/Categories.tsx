@@ -202,7 +202,9 @@ const Categories = () => {
                             </ListItem>
                         ))}
                     </List>
-                    : <p>No categories found</p>
+                    :   <div className="message-box">
+                            <h2>No Categories Found</h2>
+                        </div>
                 }
 
                 {error && <p>{error}</p>}

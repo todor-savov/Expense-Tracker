@@ -249,10 +249,9 @@ const AddTransaction = ({ mode }: { mode: string }) => {
 
                 <Button id='add-expense' type="submit" endIcon={<Save />}>Save</Button>
             </Box>
-        :  <div className="message-box">
-        <h2>No Categories Found</h2>
-        <p>Please ensure you have created at least one category to be able to add a new transaction.</p>
-    </div>
+        :   <div className="message-box">
+                <p>Please ensure you have created at least one category to be able to add a new transaction.</p>
+            </div>
     );
 }
 

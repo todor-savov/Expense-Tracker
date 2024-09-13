@@ -4,7 +4,6 @@ import { signInUser } from '../../service/authentication-service.ts';
 import { getUserDetails } from '../../service/database-service.ts';
 import AuthContext from '../../context/AuthContext.tsx';
 import { EMAIL_REGEX } from '../../common/constants.ts';
-import EXPENSE_TRACKER_APP_ICON from '../../assets/expense-tracker-app-icon.png';
 import { TextField } from '@mui/material';
 import './Login.css';
 
@@ -71,11 +70,7 @@ const Login = () => {
         <div className='loginContainer'>
             <form onSubmit={loginUser} className="login-form">
             <p><strong>Welcome back to Expense Tracker</strong></p>
-                {error ? 
-                    <div className='error-class'>{error}</div>
-                    :  
-                    <div><img width='150' height='150' src={EXPENSE_TRACKER_APP_ICON} alt='login' /></div>
-                }
+                {error && <div className='error-class'>{error}</div>}
                 <TextField type="email" id="email" name="email" label={'Email address'} className='input__field' required 
                     sx={{marginBottom: '10px'}}
                 />

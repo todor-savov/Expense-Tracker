@@ -1,5 +1,5 @@
 .message-box {
-    width: 80%;
+    width: 50%;
     border: 2px dashed #1976d2;
     background-color: #f3f5f7;
     color: #1976d2;
@@ -11,8 +11,8 @@
 }
   
 .message-box h2 {
-    margin-bottom: 10px; 
-    font-size: 1.5rem; 
+    margin-bottom: 10px;
+    font-size: 1.3rem; 
 }
   
 .message-box p {

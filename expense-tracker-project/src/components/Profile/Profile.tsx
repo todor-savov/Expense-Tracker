@@ -43,6 +43,31 @@ const Profile = () => {
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         console.log('Form submitted');
+
+        const firstName: string = e.currentTarget['first-name'].value;
+        const lastName: string = e.currentTarget['last-name'].value;
+        const phone: string = e.currentTarget['phone'].value;
+
+        if (!firstName) {
+            setFirstNameError('First Name cannot be empty');
+            return;
+        } else {
+            setFirstNameError(null);
+        }
+
+        if (!lastName) {
+            setLastNameError('Last Name cannot be empty');
+            return;
+        } else {
+            setLastNameError(null);
+        }
+
+        if (!phone) {
+            setPhoneError('Phone Number cannot be empty');
+            return;
+        } else {
+            setPhoneError(null);
+        }
     }
 
     if (loading) {

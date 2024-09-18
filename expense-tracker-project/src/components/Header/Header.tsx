@@ -67,6 +67,11 @@ const Header: React.FC<HeaderProps> = ({ from }) => {
     navigate('/');
   }
 
+  const handleProfileClick = () => {
+    navigate('/profile');
+    setAnchorEl(null);
+  }
+
   return (
     isNavigationOpen ? <Navigation setIsNavigationOpen={setIsNavigationOpen} /> 
     : <Box sx={{ flexGrow: 1 }}>
@@ -87,7 +92,7 @@ const Header: React.FC<HeaderProps> = ({ from }) => {
               </span>
               <Menu id="menu-appbar" anchorEl={anchorEl} anchorOrigin={{vertical: 'top', horizontal: 'right',}} keepMounted
                 transformOrigin={{vertical: 'top', horizontal: 'right',}} open={Boolean(anchorEl)} onClose={handleClose}>
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
+                <MenuItem onClick={handleProfileClick}>Profile</MenuItem>
                 <MenuItem onClick={handleClose}>Settings</MenuItem>
                 <MenuItem onClick={handleLogoutClick}>Logout</MenuItem>
               </Menu>

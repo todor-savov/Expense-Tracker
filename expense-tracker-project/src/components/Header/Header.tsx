@@ -6,7 +6,6 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import AccountCircle from '@mui/icons-material/AccountCircle';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import Navigation from '../Navigation/Navigation';
@@ -15,6 +14,7 @@ import { LoginOutlined } from '@mui/icons-material';
 import { signOutUser } from '../../service/authentication-service';
 import { useNavigate } from 'react-router-dom';
 import { getUserDetails } from '../../service/database-service';
+import "./Header.css";
 
 interface HeaderProps {
     from: string;
@@ -87,7 +87,7 @@ const Header: React.FC<HeaderProps> = ({ from }) => {
                 <Typography component="span">Welcome {currentUser?.firstName} {currentUser?.lastName}!  </Typography>
                 <IconButton size="large" aria-label="account of current user" aria-controls="menu-appbar" aria-haspopup="true"
                   onClick={handleMenu} color="inherit">
-                  <AccountCircle />
+                    <img id="profile-photo" src={currentUser?.photo} alt="profile" />
                 </IconButton>
               </span>
               <Menu id="menu-appbar" anchorEl={anchorEl} anchorOrigin={{vertical: 'top', horizontal: 'right',}} keepMounted

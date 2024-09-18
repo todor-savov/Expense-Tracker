@@ -48,15 +48,27 @@ export const createUser = async (userDetails: UserDetails): Promise<void|undefin
 /**
  * Retrieves user details from the database based on the provided email.
  * @param {string} email - The email of the user to retrieve details for.
- * @returns {Promise<Array<any>>} - A promise that resolves to an array of user details.
+ * @returns {Promise<UserDetails[]|[]>} - A promise that resolves to an array of user details.
  * @throws {Error} - If the user is not found in the database.
  */
-export const getUserDetails = async (email: string): Promise<Array<any>> => {
+
+interface UserDetails {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  username: string;
+  photo: string;
+  role: string;
+  isBlocked: boolean;
+}
+
+export const getUserDetails = async (email: string): Promise<UserDetails[]|[]> => {
   try {
     const snapshot = await get(query(ref(database, "users"), orderByChild("email"), equalTo(email)));
     if (snapshot.exists()) {
       const userDetails = Object.values(snapshot.val());
-      return userDetails;
+      return userDetails as UserDetails[];
     } else {
       throw new Error("User not found!");
     }

@@ -32,6 +32,7 @@ const Profile = ( { isUserChanged, setIsUserChanged }: ProfileProps ) => {
     const [firstNameError, setFirstNameError] = useState<string|null>(null);
     const [lastNameError, setLastNameError] = useState<string|null>(null);
     const [phoneError, setPhoneError] = useState<string|null>(null);
+    const [passwordError, setPasswordError] = useState<string|null>(null);
     const [fileToUpload, setFileToUpload] = useState<File|null>(null);
     const [newPhotoURL, setNewPhotoURL] = useState<string|null>(null);
     const [userToUpdate, setUserToUpdate] = useState<UserDetails|null>(null);
@@ -88,6 +89,7 @@ const Profile = ( { isUserChanged, setIsUserChanged }: ProfileProps ) => {
         const firstName: string = e.currentTarget['first-name'].value;
         const lastName: string = e.currentTarget['last-name'].value;
         const phone: string = e.currentTarget['phone'].value;
+        const password: string = e.currentTarget['password'].value;
 
         if (!firstName) {
             setFirstNameError('First Name cannot be empty');
@@ -103,6 +105,15 @@ const Profile = ( { isUserChanged, setIsUserChanged }: ProfileProps ) => {
             setPhoneError('Phone Number cannot be empty');
             return;
         } else setPhoneError(null);
+
+        if (!password) {
+            setPasswordError('Password cannot be empty');
+            return;
+        } else {
+            setPasswordError(null);
+            
+
+        }
 
         setUserToUpdate({ firstName, lastName, email: userDetails?.email as string, username: userDetails?.username as string,
                             phone, photo: newPhotoURL as string || userDetails?.photo as string,
@@ -162,6 +173,11 @@ const Profile = ( { isUserChanged, setIsUserChanged }: ProfileProps ) => {
                 <TextField error={!!phoneError} type="text" id="phone" label="Phone Number"
                     defaultValue={userDetails.phone} helperText={phoneError || "Editable"} required
                 />
+
+                <TextField error={!!passwordError} type="password" id="password" label="Password"
+                    helperText={passwordError || "Editable"} required
+                />
+
             </div>
             <Button id='update-profile-button' type="submit" endIcon={<Save />}></Button>
         </Box>

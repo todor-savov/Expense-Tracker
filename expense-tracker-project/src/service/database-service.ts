@@ -78,6 +78,14 @@ export const getUserDetails = async (email: string): Promise<UserDetails[]|[]> =
   }
 };
 
+export const updateUserDetails = async (userDetails: UserDetails, username: string): Promise<void|undefined> => {
+  try {
+    return await set(ref(database, `users/${username}`), userDetails);
+  } catch (error: any) {
+    console.log(error.message);
+  }
+}
+
 interface NewTransaction {
   date: string;
   name: string;

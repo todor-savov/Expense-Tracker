@@ -29,13 +29,40 @@
     gap: 10px;
 }
 
-#photo-name-container img {
-    width: 15%;
-    height: 15%;
-    object-fit: cover;
+#image-text-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#image-text-container img {
+    width: 100px;
+    height: 100px;
+    cursor: pointer;
     border-radius: 50%;
+    border: 2px solid #74C0FC;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#image-text-container img:hover {
+    transform: scale(1.1);
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+#image-text-container .change-photo-text {
+    margin-top: 10px;
+    font-size: 16px;
+    color: grey;
+    font-weight: bold;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    cursor: pointer;
+}
+
+#image-text-container img:hover + .change-photo-text {
+    opacity: 1;
 }
 
 #photo-name-container .MuiTextField-root {
@@ -86,11 +113,6 @@
 
     #photo-name-container {
         flex-direction: column;
-    }
-
-    #photo-name-container img {
-        width: 50%;
-        height: 50%;
     }
 
     #photo-name-container .MuiTextField-root {

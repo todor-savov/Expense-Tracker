@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useState, useContext, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -12,12 +13,12 @@ import Navigation from '../Navigation/Navigation';
 import AuthContext from '../../context/AuthContext';
 import { LoginOutlined } from '@mui/icons-material';
 import { signOutUser } from '../../service/authentication-service';
-import { useNavigate } from 'react-router-dom';
 import { getUserDetails } from '../../service/database-service';
 import "./Header.css";
 
 interface HeaderProps {
     from: string;
+    isUserChanged?: boolean;
 }
 
 interface UserDetails {
@@ -31,7 +32,7 @@ interface UserDetails {
     isBlocked: boolean;
 }
 
-const Header: React.FC<HeaderProps> = ({ from }) => {
+const Header = ({ from, isUserChanged }: HeaderProps) => {
   const { isLoggedIn, setLoginState } = useContext(AuthContext);
   const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
   const [isNavigationOpen, setIsNavigationOpen] = useState<boolean>(false);
@@ -43,8 +44,8 @@ const Header: React.FC<HeaderProps> = ({ from }) => {
         const userDetails = await getUserDetails(isLoggedIn.user);
         if (userDetails.length) setCurrentUser(userDetails[0]);
       }
-      if (isLoggedIn.status) fetchUserDetails();
-  }, []);
+      fetchUserDetails();
+  }, [isUserChanged]);
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);

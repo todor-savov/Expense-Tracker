@@ -11,8 +11,8 @@ import Header from './components/Header/Header.tsx';
 import Categories from './components/Categories/Categories.tsx';
 import HomePublic from './views/Home/HomePublic.tsx';
 import Register from './components/Register/Register.tsx';
+import ProfileView from './views/ProfileView/ProfileView.tsx';
 import './App.css';
-import Profile from './components/Profile/Profile.tsx';
 
 function App() {
   const [authValue, setAuthValue] = useState({status: false, user: ''});
@@ -75,12 +75,7 @@ function App() {
                       <Categories />
                     </Authenticated>
                   } />
-                  <Route path="/profile" element={
-                    <Authenticated>
-                      <div className="header-container"> <Header from={"Profile"} /> </div>
-                      <Profile />
-                    </Authenticated>
-                  } />
+                  <Route path="/profile" element={<Authenticated> <ProfileView /> </Authenticated>} />
                 </Routes>
         </AuthContext.Provider>
       </BrowserRouter>

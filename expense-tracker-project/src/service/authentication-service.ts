@@ -1,4 +1,5 @@
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, deleteUser, updatePassword, UserCredential } from 'firebase/auth';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, 
+        deleteUser, updatePassword, reauthenticateWithCredential, UserCredential, EmailAuthProvider } from 'firebase/auth';
 import { auth } from '../config/firebase-config.js';
 
 /**
@@ -54,16 +55,14 @@ export const signOutUser = async (): Promise<void|undefined> => {
     }
 }
 
-/**
- * Changes the password for the current user.
- * @param {string} newPassword - The new password to set.
- * @returns {Promise<void|undefined>} - A promise that resolves when the password is changed successfully, or undefined if unsuccessful.
- */
-export const changePassword = async (newPassword: string): Promise<void|undefined> => {
+export const changePassword = async (emailAddress: string, oldPassword: string, newPassword: string): Promise<void|undefined> => {
     try {
-        if (auth.currentUser) return await updatePassword(auth.currentUser, newPassword)
-        else throw new Error('No user is currently signed in.');
+        if (!auth.currentUser) throw new Error('User not found');
+        const credential = EmailAuthProvider.credential(emailAddress, oldPassword);
+        if (!credential) throw new Error('Invalid credentials');
+        await reauthenticateWithCredential(auth.currentUser, credential);
+        await updatePassword(auth.currentUser, newPassword);
     } catch (error: any) {
         console.log(error.message);
     }
-};
+}

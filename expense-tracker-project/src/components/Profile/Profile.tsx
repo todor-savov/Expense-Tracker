@@ -1,10 +1,11 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import AuthContext from "../../context/AuthContext";
-import { getUserDetails, updateUserDetails } from "../../service/database-service";
 import { Box, Button, TextField } from "@mui/material";
 import { Save } from "@mui/icons-material";
 import { VisuallyHiddenInput } from "../../common/utils";
+import { getUserDetails, updateUserDetails } from "../../service/database-service";
 import { uploadUserPhoto } from "../../service/storage-service";
+import { changePassword } from "../../service/authentication-service";
 import './Profile.css';
 
 interface UserDetails {
@@ -23,6 +24,11 @@ interface ProfileProps {
     setIsUserChanged: (isUserChanged: boolean) => void;
 }
 
+interface PasswordCredentials {
+    oldPassword: string;
+    newPassword: string;
+}
+
 const Profile = ( { isUserChanged, setIsUserChanged }: ProfileProps ) => {
     const { isLoggedIn } = useContext(AuthContext);
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -32,10 +38,12 @@ const Profile = ( { isUserChanged, setIsUserChanged }: ProfileProps ) => {
     const [firstNameError, setFirstNameError] = useState<string|null>(null);
     const [lastNameError, setLastNameError] = useState<string|null>(null);
     const [phoneError, setPhoneError] = useState<string|null>(null);
-    const [passwordError, setPasswordError] = useState<string|null>(null);
+    const [oldPasswordError, setOldPasswordError] = useState<string|null>(null);
+    const [newPasswordError, setNewPasswordError] = useState<string|null>(null);
     const [fileToUpload, setFileToUpload] = useState<File|null>(null);
     const [newPhotoURL, setNewPhotoURL] = useState<string|null>(null);
     const [userToUpdate, setUserToUpdate] = useState<UserDetails|null>(null);
+    const [passwordCredentials, setPasswordCredentials] = useState<PasswordCredentials|null>(null);
 
     useEffect(() => { 
         const fetchUserDetails = async () => {
@@ -84,12 +92,28 @@ const Profile = ( { isUserChanged, setIsUserChanged }: ProfileProps ) => {
         if (userToUpdate) updateUserData();
     }, [userToUpdate]);
 
+    useEffect(() => {
+        const handlePasswordUpdate = async () => {
+            try {
+                setLoading(true);
+                changePassword(isLoggedIn.user, passwordCredentials?.oldPassword as string, passwordCredentials?.newPassword as string);
+                setPasswordCredentials(null);
+                setLoading(false);
+            } catch (error: any) {
+                setError(error.message);
+                console.log(error.message);
+            }
+        }
+        if (passwordCredentials) handlePasswordUpdate();
+    }, [passwordCredentials]);
+
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const firstName: string = e.currentTarget['first-name'].value;
         const lastName: string = e.currentTarget['last-name'].value;
         const phone: string = e.currentTarget['phone'].value;
-        const password: string = e.currentTarget['password'].value;
+        const oldPassword: string = e.currentTarget['old-password'].value;
+        const newPassword: string = e.currentTarget['new-password'].value;
 
         if (!firstName) {
             setFirstNameError('First Name cannot be empty');
@@ -106,13 +130,27 @@ const Profile = ( { isUserChanged, setIsUserChanged }: ProfileProps ) => {
             return;
         } else setPhoneError(null);
 
-        if (!password) {
-            setPasswordError('Password cannot be empty');
+        if (oldPassword) {
+            if (!newPassword) {
+                setNewPasswordError('New Password cannot be empty');
+                return;
+            }
+        }
+
+        if (newPassword) {
+            if (!oldPassword) {
+                setOldPasswordError('Old Password cannot be empty');
+                return;
+            }
+        }
+
+        if (newPassword && newPassword.length < 6) {
+            setNewPasswordError('New password should be at least 6 characters long');
             return;
         } else {
-            setPasswordError(null);
-            
-
+            setOldPasswordError(null);
+            setNewPasswordError(null);            
+            setPasswordCredentials({oldPassword, newPassword});
         }
 
         setUserToUpdate({ firstName, lastName, email: userDetails?.email as string, username: userDetails?.username as string,
@@ -174,8 +212,12 @@ const Profile = ( { isUserChanged, setIsUserChanged }: ProfileProps ) => {
                     defaultValue={userDetails.phone} helperText={phoneError || "Editable"} required
                 />
 
-                <TextField error={!!passwordError} type="password" id="password" label="Password"
-                    helperText={passwordError || "Editable"} required
+                <TextField error={!!oldPasswordError} type="password" id="old-password" label="Old Password"
+                    helperText={oldPasswordError || "Editable"}
+                />
+
+                <TextField error={!!newPasswordError} type="password" id="new-password" label="New Password"
+                    helperText={newPasswordError || "Editable"}
                 />
 
             </div>

@@ -1,8 +1,10 @@
 import express from 'express';
 import fetch from 'node-fetch';
+const cors = import('cors');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+app.use(cors()); // Enable CORS for all routes
 
 app.get('/api/icons', async (req, res) => {
   const query = req.query.query || 'default';
@@ -12,8 +14,8 @@ app.get('/api/icons', async (req, res) => {
     const response = await fetch(`https://api.iconfinder.com/v4/icons/search?query=${query}&count=${count}`, {
       method: 'GET',
       headers: {
-        'Authorization': `Bearer TFSDEF1JlpHXluuAhZvOxRijfrEGZRE3mVm61M6ZEusHxRhVxTXDphHKp8N1baVk`,        
-        'Content-Type': 'application/json'
+        'accept': 'application/json',
+        'Authorization': `Bearer TFSDEF1JlpHXluuAhZvOxRijfrEGZRE3mVm61M6ZEusHxRhVxTXDphHKp8N1baVk`
       }
     });
 

@@ -10,8 +10,6 @@ app.get('/api/icons', async (req, res) => {
   const query = req.query.query || 'default';
   const count = req.query.count || 20;
 
-  console.log(`Fetching icons for query: ${query} and count: ${count}`);
-
   try {
     const response = await fetch(`https://api.iconfinder.com/v4/icons/search?query=${query}&count=${count}`, {
       method: 'GET',

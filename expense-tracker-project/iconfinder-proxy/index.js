@@ -1,6 +1,6 @@
 import express from 'express';
 import fetch from 'node-fetch';
-const cors = import('cors');
+import cors from 'cors';
 
 const app = express();
 const PORT = process.env.PORT || 3000;

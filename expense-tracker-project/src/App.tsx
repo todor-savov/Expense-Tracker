@@ -6,13 +6,16 @@ import Home from './views/Home/Home.tsx';
 import Login from './components/Login/Login.tsx';
 import Transactions from './views/Transactions.tsx';
 import AddTransaction from './components/AddTransaction/AddTransaction.tsx';
-import Overview from './components/Overview/Overview.tsx';
 import Header from './components/Header/Header.tsx';
-import Categories from './components/Categories/Categories.tsx';
 import HomePublic from './views/Home/HomePublic.tsx';
 import Register from './components/Register/Register.tsx';
 import ProfileView from './views/ProfileView/ProfileView.tsx';
 import './App.css';
+import CategoriesView from './views/CategoriesView/CategoriesView.tsx';
+import OverviewView from './views/OverviewView/OverviewView.tsx';
+import EditTransactionView from './views/EditTransactionView/EditTransactionView.tsx';
+import LoginView from './views/LoginView/LoginView.tsx';
+import RegisterView from './views/RegisterView/RegisterView.tsx';
 
 function App() {
   const [authValue, setAuthValue] = useState({status: false, user: ''});
@@ -27,21 +30,11 @@ function App() {
                       <HomePublic />
                     </>                  
                   } />
-                  <Route path="/login" element={
-                    <>
-                      <div className="header-container"> <Header from={"Home"} /> </div>
-                      <Login />
-                    </>
-                  } />
-                  <Route path="/register" element={
-                    <>
-                      <div className="header-container"> <Header from={"Home"} /> </div>
-                      <Register />
-                    </>                  
-                  } />
+                  <Route path="/login" element={<LoginView />} />
+                  <Route path="/register" element={<RegisterView />} />
                   <Route path="/home" element={
                     <Authenticated>
-                        <div className="header-container"> <Header from={"Home (Last 5 Transactions)"} /> </div>
+                        <div className="header-container"> <Header from={"Recent Transactions"} /> </div>
                         <Home />
                     </Authenticated>
                   } />
@@ -57,24 +50,9 @@ function App() {
                       <AddTransaction mode="new" />
                     </Authenticated>
                   } />
-                  <Route path="/edit-transaction/:id" element={
-                    <Authenticated>
-                      <div className="header-container"> <Header from={"Edit Transaction"} /> </div>
-                      <AddTransaction mode="edit" />
-                    </Authenticated>
-                  } />
-                  <Route path="/overview" element={
-                    <Authenticated>
-                      <div className="header-container"> <Header from={"Overview"} /> </div>
-                      <Overview />
-                    </Authenticated>
-                  } />
-                  <Route path="/categories" element={
-                    <Authenticated>
-                      <div className="header-container"> <Header from={"Categories"} /> </div>
-                      <Categories />
-                    </Authenticated>
-                  } />
+                  <Route path="/edit-transaction/:id" element={<Authenticated> <EditTransactionView /> </Authenticated> } />
+                  <Route path="/overview" element={<Authenticated> <OverviewView /> </Authenticated> } />
+                  <Route path="/categories" element={<Authenticated> <CategoriesView /> </Authenticated>} />
                   <Route path="/profile" element={<Authenticated> <ProfileView /> </Authenticated>} />
                 </Routes>
         </AuthContext.Provider>

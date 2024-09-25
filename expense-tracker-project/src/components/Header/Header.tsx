@@ -113,7 +113,7 @@ const Header = ({ from, isUserChanged }: HeaderProps) => {
     : <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          <IconButton size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }} onClick={() => setIsNavigationOpen(true)}>
+          <IconButton size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 1 }} onClick={() => setIsNavigationOpen(true)}>
             <MenuIcon />
           </IconButton>
           <Typography component="span"> Welcome {currentUser?.firstName}!  </Typography>
@@ -127,7 +127,7 @@ const Header = ({ from, isUserChanged }: HeaderProps) => {
                   </Badge>
                 </IconButton>
 
-                <IconButton size="large" aria-label="account of current user" aria-controls="menu-appbar" aria-haspopup="true"
+                <IconButton aria-label="account of current user" aria-controls="menu-appbar" aria-haspopup="true"
                   onClick={handleMenuClick} color="inherit">
                     <img id="profile-photo" src={currentUser?.photo} alt="profile" />
                 </IconButton>
@@ -144,11 +144,11 @@ const Header = ({ from, isUserChanged }: HeaderProps) => {
                     })}
                   </Typography>
               </Popover>
-              <Menu id="menu-appbar" anchorEl={anchorEl} anchorOrigin={{vertical: 'top', horizontal: 'right',}} keepMounted
+              <Menu id="menu-appbar" anchorEl={anchorEl} anchorOrigin={{vertical: 'bottom', horizontal: 'right',}} keepMounted
                 transformOrigin={{vertical: 'top', horizontal: 'right',}} open={isMenuOpen} onClose={handleMenuClose}>
-                <MenuItem onClick={handleProfileClick}><AccountCircle /> Profile </MenuItem>
-                <MenuItem onClick={handleMenuClose}><Settings /> Settings </MenuItem>
-                <MenuItem onClick={handleLogoutClick}><Logout /> Logout </MenuItem>
+                <MenuItem onClick={handleProfileClick}><AccountCircle sx={{marginRight: '7px'}} /> Profile </MenuItem>
+                <MenuItem onClick={handleMenuClose}><Settings sx={{marginRight: '7px'}} /> Settings </MenuItem>
+                <MenuItem onClick={handleLogoutClick}><Logout sx={{marginRight: '7px'}} /> Logout </MenuItem>
               </Menu>
             </div>
             : <IconButton size="large" aria-label="account of current user" aria-controls="menu-appbar" aria-haspopup="true"

@@ -11,11 +11,11 @@ import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import Navigation from '../Navigation/Navigation';
 import AuthContext from '../../context/AuthContext';
-import { AccountCircle, EmailTwoTone, LoginOutlined, Logout, Settings } from '@mui/icons-material';
+import { AccountCircle, Email, LoginOutlined, Logout, Settings } from '@mui/icons-material';
 import { signOutUser } from '../../service/authentication-service';
-import { getUserDetails } from '../../service/database-service';
+import { getTransactions, getUserDetails } from '../../service/database-service';
+import { Badge, Popover } from '@mui/material';
 import "./Header.css";
-import { Badge, Button, Popover } from '@mui/material';
 
 interface HeaderProps {
     from: string;
@@ -40,15 +40,39 @@ const Header = ({ from, isUserChanged }: HeaderProps) => {
   const [isBadgeOpen, setIsBadgeOpen] = useState<boolean>(false);
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [currentUser, setCurrentUser] = useState<UserDetails|null>(null);
+  const [notifications, setNotifications] = useState<string[]>([]);
+  const [notificationsCount, setNotificationsCount] = useState<number>(0);
   const navigate = useNavigate();
 
   useEffect(() => {
       const fetchUserDetails = async () => {
-        const userDetails = await getUserDetails(isLoggedIn.user);
-        if (userDetails.length) setCurrentUser(userDetails[0]);
+        try {
+          const userDetails = await getUserDetails(isLoggedIn.user);
+          if (userDetails.length) setCurrentUser(userDetails[0]);
+        } catch (error: any) {
+          console.log(error.message);
+        }
       }
       fetchUserDetails();
   }, [isUserChanged]);
+
+  useEffect(() => {
+    const fetchTransactions = async () => {
+      try {
+        const transactions = await getTransactions(isLoggedIn.user);
+        transactions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        const differenceInTime = new Date().getTime() - new Date(transactions[0].date).getTime();
+        const differenceInDays = differenceInTime / (1000 * 3600 * 24);
+        if (Math.floor(differenceInDays) > 3) {
+          setNotifications([...notifications, "You have not logged in any transactions in the last 3 days."]);
+          setNotificationsCount(notificationsCount + 1);
+        }
+      } catch (error: any) {
+        console.log(error.message);
+      }
+    }
+    fetchTransactions();
+  }, []);
 
   const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -97,9 +121,11 @@ const Header = ({ from, isUserChanged }: HeaderProps) => {
           {isLoggedIn.status ? 
             <div>
               <span>
-                <Button aria-describedby='simple-popover' aria-controls="simple-popover" variant="contained" onClick={handleBadgeClick}>
-                  <Badge color="secondary" badgeContent={3} invisible={false}> <EmailTwoTone /> </Badge>
-                </Button>
+                <IconButton aria-describedby='simple-popover' aria-controls="simple-popover" onClick={handleBadgeClick}>
+                  <Badge color="secondary" badgeContent={notificationsCount} invisible={false}>
+                    <Email sx={{color: 'white'}} />
+                  </Badge>
+                </IconButton>
 
                 <IconButton size="large" aria-label="account of current user" aria-controls="menu-appbar" aria-haspopup="true"
                   onClick={handleMenuClick} color="inherit">
@@ -110,7 +136,13 @@ const Header = ({ from, isUserChanged }: HeaderProps) => {
                   anchorOrigin={{ vertical: 'bottom', horizontal: 'right',}}
                   transformOrigin={{ vertical: 'top', horizontal: 'right',}}
               >
-                  <Typography sx={{ p: 2 }}>You have not logged in any transactions in the last 3 days.</Typography>
+                  <Typography sx={{ p: 2 }}> 
+                    {!notifications.length ? 
+                      "There are no notifications currently." : 
+                      notifications.map((notification, index) => {
+                      return <p key={index}> {notification} </p>
+                    })}
+                  </Typography>
               </Popover>
               <Menu id="menu-appbar" anchorEl={anchorEl} anchorOrigin={{vertical: 'top', horizontal: 'right',}} keepMounted
                 transformOrigin={{vertical: 'top', horizontal: 'right',}} open={isMenuOpen} onClose={handleMenuClose}>

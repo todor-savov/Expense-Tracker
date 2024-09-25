@@ -11,11 +11,11 @@ import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import Navigation from '../Navigation/Navigation';
 import AuthContext from '../../context/AuthContext';
-import { AccountBox, AccountCircle, Email, EmailOutlined, EmailRounded, EmailTwoTone, LoginOutlined, Logout, LogoutOutlined, LogoutRounded, MailLock, Settings, SportsBaseball, Twitter } from '@mui/icons-material';
+import { AccountCircle, EmailTwoTone, LoginOutlined, Logout, Settings } from '@mui/icons-material';
 import { signOutUser } from '../../service/authentication-service';
 import { getUserDetails } from '../../service/database-service';
 import "./Header.css";
-import { Badge, Button, Icon, Popover } from '@mui/material';
+import { Badge, Button, Popover } from '@mui/material';
 
 interface HeaderProps {
     from: string;

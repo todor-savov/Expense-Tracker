@@ -116,7 +116,7 @@ const Header = ({ from, isUserChanged }: HeaderProps) => {
           <IconButton size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 1 }} onClick={() => setIsNavigationOpen(true)}>
             <MenuIcon />
           </IconButton>
-          <Typography component="span"> Welcome {currentUser?.firstName}!  </Typography>
+          {isLoggedIn.status && <Typography component="span"> Welcome {currentUser?.firstName}! </Typography>}
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}> {from} </Typography>
           {isLoggedIn.status ? 
             <div>

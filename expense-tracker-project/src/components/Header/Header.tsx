@@ -116,10 +116,9 @@ const Header = ({ from, isUserChanged }: HeaderProps) => {
     : <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          <IconButton size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 1 }} onClick={() => setIsNavigationOpen(true)}>
+          <IconButton size="large" edge="start" color="inherit" aria-label="menu" onClick={() => setIsNavigationOpen(true)}>
             <MenuIcon />
           </IconButton>
-          {isLoggedIn.status && <Typography component="span"> Welcome {currentUser?.firstName}! </Typography>}
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}> {from} </Typography>
           {isLoggedIn.status ? 
             <div>
@@ -161,6 +160,11 @@ const Header = ({ from, isUserChanged }: HeaderProps) => {
           }
         </Toolbar>
       </AppBar>
+      {isLoggedIn.status && 
+        <Box className='welcome-box'>
+          <Typography component="span"> Welcome <strong>{currentUser?.firstName}</strong>! </Typography>
+        </Box>
+      }
     </Box>
   );
 }

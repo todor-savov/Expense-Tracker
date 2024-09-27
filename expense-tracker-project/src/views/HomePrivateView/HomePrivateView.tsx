@@ -6,7 +6,7 @@ const HomePrivateView = () => {
     return (
         <div>
             <div className="header-container">
-                <Header from={"Recent Transactions"} />
+                <Header from={"Latest Records"} />
             </div>
             <HomePrivate />
         </div>

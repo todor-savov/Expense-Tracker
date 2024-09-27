@@ -66,6 +66,9 @@ const Header = ({ from, isUserChanged }: HeaderProps) => {
         if (Math.floor(differenceInDays) > 3) {
           setNotifications([...notifications, "You have not logged in any transactions in the last 3 days."]);
           setNotificationsCount(notificationsCount + 1);
+        } else {
+          setNotifications([]);
+          setNotificationsCount(0);
         }
       } catch (error: any) {
         console.log(error.message);

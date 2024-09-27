@@ -53,7 +53,7 @@ const Header = ({ from, isUserChanged }: HeaderProps) => {
           console.log(error.message);
         }
       }
-      fetchUserDetails();
+      if (isLoggedIn.user) fetchUserDetails();
   }, [isUserChanged]);
 
   useEffect(() => {
@@ -71,7 +71,7 @@ const Header = ({ from, isUserChanged }: HeaderProps) => {
         console.log(error.message);
       }
     }
-    fetchTransactions();
+    if (isLoggedIn.user) fetchTransactions();
   }, []);
 
   const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {

@@ -6,7 +6,7 @@ import { Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faReceipt } from "@fortawesome/free-solid-svg-icons";
 import { getCategoryIcon, getPaymentIcon } from "../../common/utils";
-import './Home.css';
+import './HomePrivate.css';
 import { Add } from "@mui/icons-material";
 
 interface Column {

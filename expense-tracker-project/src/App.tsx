@@ -2,18 +2,17 @@ import { useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import AuthContext from './context/AuthContext.tsx';
 import Authenticated from './hoc/Authenticated.tsx';
-import Home from './views/Home/Home.tsx';
-import Transactions from './views/Transactions.tsx';
-import AddTransaction from './components/AddTransaction/AddTransaction.tsx';
-import Header from './components/Header/Header.tsx';
-import HomePublic from './views/Home/HomePublic.tsx';
+import HomePublicView from './views/HomePublicView/HomePublicView.tsx';
+import HomePrivateView from './views/HomePrivateView/HomePrivateView.tsx';
+import RegisterView from './views/RegisterView/RegisterView.tsx';
+import LoginView from './views/LoginView/LoginView.tsx';
 import ProfileView from './views/ProfileView/ProfileView.tsx';
-import './App.css';
+import TransactionsView from './views/TransactionsView/TransactionsView.tsx';
+import EditTransactionView from './views/EditTransactionView/EditTransactionView.tsx';
+import AddTransactionView from './views/AddTransactionView/AddTransactionView.tsx';
 import CategoriesView from './views/CategoriesView/CategoriesView.tsx';
 import OverviewView from './views/OverviewView/OverviewView.tsx';
-import EditTransactionView from './views/EditTransactionView/EditTransactionView.tsx';
-import LoginView from './views/LoginView/LoginView.tsx';
-import RegisterView from './views/RegisterView/RegisterView.tsx';
+import './App.css';
 
 function App() {
   const [authValue, setAuthValue] = useState({status: false, user: ''});
@@ -22,36 +21,16 @@ function App() {
       <BrowserRouter>
         <AuthContext.Provider value={{ isLoggedIn: authValue, setLoginState: setAuthValue }}>
                 <Routes>
-                  <Route path="/" element={
-                    <>
-                      <div className="header-container"> <Header from={"Home"} /> </div>
-                      <HomePublic />
-                    </>                  
-                  } />
-                  <Route path="/login" element={<LoginView />} />
+                  <Route path="/" element={<HomePublicView />} />
+                  <Route path="/home" element={<Authenticated> <HomePrivateView /> </Authenticated>} />
                   <Route path="/register" element={<RegisterView />} />
-                  <Route path="/home" element={
-                    <Authenticated>
-                        <div className="header-container"> <Header from={"Recent Transactions"} /> </div>
-                        <Home />
-                    </Authenticated>
-                  } />
-                  <Route path="/transactions" element={
-                    <Authenticated>
-                      <div className="header-container"> <Header from={"Transactions"} /> </div>
-                      <Transactions />
-                    </Authenticated>
-                  } />
-                  <Route path="/add-transaction" element={
-                    <Authenticated>
-                      <div className="header-container"> <Header from={"Add Transaction"} /> </div>
-                      <AddTransaction mode="new" />
-                    </Authenticated>
-                  } />
-                  <Route path="/edit-transaction/:id" element={<Authenticated> <EditTransactionView /> </Authenticated> } />
-                  <Route path="/overview" element={<Authenticated> <OverviewView /> </Authenticated> } />
-                  <Route path="/categories" element={<Authenticated> <CategoriesView /> </Authenticated>} />
+                  <Route path="/login" element={<LoginView />} />
                   <Route path="/profile" element={<Authenticated> <ProfileView /> </Authenticated>} />
+                  <Route path="/transactions" element={<Authenticated> <TransactionsView /> </Authenticated>} />
+                  <Route path="/add-transaction" element={<Authenticated> <AddTransactionView /> </Authenticated>} />
+                  <Route path="/edit-transaction/:id" element={<Authenticated> <EditTransactionView /> </Authenticated>} />
+                  <Route path="/categories" element={<Authenticated> <CategoriesView /> </Authenticated>} />
+                  <Route path="/overview" element={<Authenticated> <OverviewView /> </Authenticated>} />
                 </Routes>
         </AuthContext.Provider>
       </BrowserRouter>

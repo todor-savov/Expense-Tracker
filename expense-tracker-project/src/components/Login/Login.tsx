@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { signInUser } from '../../service/authentication-service.ts';
 import { getUserDetails } from '../../service/database-service.ts';
 import AuthContext from '../../context/AuthContext.tsx';
@@ -70,15 +70,16 @@ const Login = () => {
         <div className='loginContainer'>
             <form onSubmit={loginUser} className="login-form">
             <p><strong>Welcome back to Expense Tracker</strong></p>
+                <Link to="/forgot-password" className='forgot-password'>Forgot password?</Link>
                 {error && <div className='error-class'>{error}</div>}
                 <TextField type="email" id="email" name="email" label={'Email address'} className='input__field' required 
-                    sx={{marginBottom: '10px'}}
+                    sx={{marginBottom: '10px',  marginTop: '15px'}}
                 />
                 <TextField type="password" id="password" name="password" label={'Password'} className='input__field' required
                     sx={{marginBottom: '10px'}}
                 />
                 <button className='btn' type="submit">Login</button>
-                <h5>Don't have an account?<span onClick={()=> navigate("/register")} id='span-sign-up'> Sign Up</span></h5>
+                New user? Register <span onClick={()=> navigate("/register")} id='span-sign-up'>here.</span>
             </form>
         </div>
     )

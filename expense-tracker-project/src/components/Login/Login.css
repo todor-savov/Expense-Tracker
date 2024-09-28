@@ -56,3 +56,12 @@
       width: 90%;
     }
 }
+
+.forgot-password {
+    color: #1976d2;
+}
+  
+.forgot-password:hover {
+    text-decoration: underline;
+    color: #1565c0;
+}

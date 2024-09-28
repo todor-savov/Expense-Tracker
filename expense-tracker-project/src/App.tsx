@@ -13,6 +13,7 @@ import AddTransactionView from './views/AddTransactionView/AddTransactionView.ts
 import CategoriesView from './views/CategoriesView/CategoriesView.tsx';
 import OverviewView from './views/OverviewView/OverviewView.tsx';
 import './App.css';
+import ForgotPasswordView from './views/ForgotPasswordView/ForgotPasswordView.tsx';
 
 function App() {
   const [authValue, setAuthValue] = useState({status: false, user: ''});
@@ -22,9 +23,10 @@ function App() {
         <AuthContext.Provider value={{ isLoggedIn: authValue, setLoginState: setAuthValue }}>
                 <Routes>
                   <Route path="/" element={<HomePublicView />} />
-                  <Route path="/home" element={<Authenticated> <HomePrivateView /> </Authenticated>} />
                   <Route path="/register" element={<RegisterView />} />
                   <Route path="/login" element={<LoginView />} />
+                  <Route path="/forgot-password" element={<ForgotPasswordView />} />
+                  <Route path="/home" element={<Authenticated> <HomePrivateView /> </Authenticated>} />
                   <Route path="/profile" element={<Authenticated> <ProfileView /> </Authenticated>} />
                   <Route path="/transactions" element={<Authenticated> <TransactionsView /> </Authenticated>} />
                   <Route path="/add-transaction" element={<Authenticated> <AddTransactionView /> </Authenticated>} />

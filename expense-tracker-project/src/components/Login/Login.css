@@ -1,16 +1,14 @@
 .loginContainer {
     display: flex;
-    justify-content: right;
+    justify-content: center;
     align-items: center;
     padding: 20px;
-    background-image: url('../../assets/expense-tracker-app-icon.png');
-    background-size: cover;
 }
   
 .login-form {
     width: 100%;
     max-width: 400px;
-    background-color: rgba(255, 255, 255, 0.85); 
+    background-color: rgba(255, 255, 255, 255); 
     padding: 40px;
     border-radius: 10px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);

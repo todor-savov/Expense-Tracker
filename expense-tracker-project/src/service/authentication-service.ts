@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, 
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, signOut, 
         deleteUser, updatePassword, reauthenticateWithCredential, UserCredential, EmailAuthProvider } from 'firebase/auth';
 import { auth } from '../config/firebase-config.js';
 
@@ -64,5 +64,14 @@ export const changePassword = async (emailAddress: string, oldPassword: string, 
         await updatePassword(auth.currentUser, newPassword);
     } catch (error: any) {
         console.log(error.message);
+    }
+}
+
+export const sendResetLink = async (email: string): Promise<void|string> => {
+    try {
+        await sendPasswordResetEmail(auth, email);
+    } catch (error: any) {
+        console.log(error.message);
+        return error.message;
     }
 }

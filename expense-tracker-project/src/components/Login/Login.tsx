@@ -70,8 +70,8 @@ const Login = () => {
         <div className='loginContainer'>
             <form onSubmit={loginUser} className="login-form">
             <p><strong>Welcome back to Expense Tracker</strong></p>
-                <Link to="/forgot-password" className='forgot-password'>Forgot password?</Link>
                 {error && <div className='error-class'>{error}</div>}
+                <Link to="/forgot-password" className='forgot-password'>Forgot password?</Link>
                 <TextField type="email" id="email" name="email" label={'Email address'} className='input__field' required 
                     sx={{marginBottom: '10px',  marginTop: '15px'}}
                 />

@@ -14,6 +14,7 @@ import CategoriesView from './views/CategoriesView/CategoriesView.tsx';
 import OverviewView from './views/OverviewView/OverviewView.tsx';
 import './App.css';
 import ForgotPasswordView from './views/ForgotPasswordView/ForgotPasswordView.tsx';
+import ResetPasswordView from './views/ResetPasswordView/ResetPasswordView.tsx';
 
 function App() {
   const [authValue, setAuthValue] = useState({status: false, user: ''});
@@ -26,6 +27,7 @@ function App() {
                   <Route path="/register" element={<RegisterView />} />
                   <Route path="/login" element={<LoginView />} />
                   <Route path="/forgot-password" element={<ForgotPasswordView />} />
+                  <Route path="/reset-password" element={<ResetPasswordView />} />
                   <Route path="/home" element={<Authenticated> <HomePrivateView /> </Authenticated>} />
                   <Route path="/profile" element={<Authenticated> <ProfileView /> </Authenticated>} />
                   <Route path="/transactions" element={<Authenticated> <TransactionsView /> </Authenticated>} />

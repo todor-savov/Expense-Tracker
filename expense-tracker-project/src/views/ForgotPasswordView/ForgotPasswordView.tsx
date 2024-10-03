@@ -67,7 +67,7 @@ const ForgotPasswordView = () => {
                                 {error}
                             </p>
                             :
-                            <Button type="submit" variant="contained" color="primary"><strong>Send</strong></Button>
+                            <Button type="submit" variant="contained" color="primary" className="submit-button"><strong>Send</strong></Button>
                         )
                     )
                 }

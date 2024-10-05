@@ -1,5 +1,6 @@
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, signOut, 
-        deleteUser, updatePassword, reauthenticateWithCredential, UserCredential, EmailAuthProvider } from 'firebase/auth';
+        deleteUser, updatePassword, reauthenticateWithCredential, UserCredential, EmailAuthProvider, 
+        verifyPasswordResetCode, confirmPasswordReset} from 'firebase/auth';
 import { auth } from '../config/firebase-config.js';
 
 /**
@@ -55,6 +56,7 @@ export const signOutUser = async (): Promise<void|undefined> => {
     }
 }
 
+/* Handling password resets */
 export const changePassword = async (emailAddress: string, oldPassword: string, newPassword: string): Promise<void|undefined> => {
     try {
         if (!auth.currentUser) throw new Error('User not found');
@@ -75,3 +77,21 @@ export const sendResetLink = async (email: string): Promise<void|string> => {
         return error.message;
     }
 }
+
+export const verifyPasswordResetToken = async (oobCode: string): Promise<string|undefined> => {
+    try {
+        return await verifyPasswordResetCode(auth, oobCode);
+    } catch (error: any) {
+        console.log(error.message);
+    }
+}
+
+export const confirmPasswordResetWithToken = async (oobCode: string, newPassword: string): Promise<void|string> => {
+    try {
+        await confirmPasswordReset(auth, oobCode, newPassword);
+    } catch (error: any) {
+        console.log(error.message);
+        return error.message;
+    }
+}
+

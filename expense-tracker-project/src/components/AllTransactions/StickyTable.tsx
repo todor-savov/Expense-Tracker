@@ -216,11 +216,11 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionT
                                 if (sortParams.column === 'date') {
                                   const date1 = new Date(key1 as string);
                                   const date2 = new Date(key2 as string);
-                                  if (sortParams.ascending) return date1 > date2 ? 1 : -1;
-                                  else return date1 < date2 ? 1 : -1;
+                                  if (sortParams.ascending) return date1 >= date2 ? 1 : -1;
+                                  else return date1 <= date2 ? 1 : -1;
                                 } else {
-                                  if (sortParams.ascending) return key1 > key2 ? 1 : -1;
-                                  else return key1 < key2 ? 1 : -1;
+                                  if (sortParams.ascending) return key1 >= key2 ? 1 : -1;
+                                  else return key1 <= key2 ? 1 : -1;
                                 }
                             })
                             .map((transaction) =>
@@ -236,12 +236,12 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionT
                                                             : <FontAwesomeIcon icon={faReceipt} size="2xl" className="receipt-icon"
                                                                 onClick={() => setShowReceipt(`${value}`)} />                         
                                                         }
-                                                       {/*  {hoveredRow === transaction.id && 
+                                                        {hoveredRow === transaction.id && 
                                                               <span>
                                                                 <button className="edit-button" onClick={() => navigate(`/edit-transaction/${transaction.id}`)}><FontAwesomeIcon icon={faPenToSquare} size="sm" /></button>
                                                                 <button className="delete-button" onClick={() => setTransactionToDelete(transaction.id)}><FontAwesomeIcon icon={faTrashCan} size="sm" /></button>
                                                               </span>
-                                                        } */}
+                                                        }
                                                    </TableCell>
                                         } else if (column.id === 'category') {
                                             return <TableCell key={column.id} align={column.align}>

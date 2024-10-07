@@ -236,12 +236,12 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionT
                                                             : <FontAwesomeIcon icon={faReceipt} size="2xl" className="receipt-icon"
                                                                 onClick={() => setShowReceipt(`${value}`)} />                         
                                                         }
-                                                        {hoveredRow === transaction.id && 
+                                                       {/*  {hoveredRow === transaction.id && 
                                                               <span>
                                                                 <button className="edit-button" onClick={() => navigate(`/edit-transaction/${transaction.id}`)}><FontAwesomeIcon icon={faPenToSquare} size="sm" /></button>
                                                                 <button className="delete-button" onClick={() => setTransactionToDelete(transaction.id)}><FontAwesomeIcon icon={faTrashCan} size="sm" /></button>
                                                               </span>
-                                                        }
+                                                        } */}
                                                    </TableCell>
                                         } else if (column.id === 'category') {
                                             return <TableCell key={column.id} align={column.align}>

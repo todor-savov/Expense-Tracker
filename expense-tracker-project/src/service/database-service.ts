@@ -222,3 +222,19 @@ export const deleteCategory = async (categoryId: string): Promise<void|undefined
     console.log(error.message);
   }
 }
+
+interface Feedback {
+  user: string;
+  rating: number;
+  feedback: string;
+}
+
+export const addFeedback = async (feedback: Feedback): Promise<void|string> => {
+  try {
+    const response = await push(ref(database, 'feedbacks'), feedback);
+    update(ref(database, `feedbacks/${response.key}`), { id: response.key });
+  } catch (error: any) {
+    console.log(error.message);
+    return error.message;
+  }
+}

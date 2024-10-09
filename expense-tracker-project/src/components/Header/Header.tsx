@@ -19,7 +19,6 @@ import { addFeedback, getFeedbacks, getTransactions, getUserDetails } from '../.
 import Navigation from '../Navigation/Navigation';
 import AuthContext from '../../context/AuthContext';
 import "./Header.css";
-import { set } from 'firebase/database';
 
 interface HeaderProps {
     from: string;

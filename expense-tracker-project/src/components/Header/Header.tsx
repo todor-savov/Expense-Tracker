@@ -15,10 +15,11 @@ import { AccountCircle, Email, LoginOutlined, Logout, Settings } from '@mui/icon
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleCheck } from '@fortawesome/free-solid-svg-icons';
 import { signOutUser } from '../../service/authentication-service';
-import { addFeedback, getTransactions, getUserDetails } from '../../service/database-service';
+import { addFeedback, getFeedbacks, getTransactions, getUserDetails } from '../../service/database-service';
 import Navigation from '../Navigation/Navigation';
 import AuthContext from '../../context/AuthContext';
 import "./Header.css";
+import { set } from 'firebase/database';
 
 interface HeaderProps {
     from: string;
@@ -55,6 +56,7 @@ const Header = ({ from, isUserChanged }: HeaderProps) => {
   const [feedback, setFeedback] = useState<Feedback|null>(null);
   const [isFeedbackSubmitted, setIsFeedbackSubmitted] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [eligibleForFeedback, setEligibleForFeedback] = useState<boolean>(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -88,6 +90,19 @@ const Header = ({ from, isUserChanged }: HeaderProps) => {
       }
     }
     if (isLoggedIn.user) fetchTransactions();
+  }, []);
+
+  useEffect(() => {
+    const fetchFeedbacks = async () => {
+      try {
+        const feedbacks = await getFeedbacks(isLoggedIn.user);
+        if (feedbacks.length === 0) setEligibleForFeedback(true);
+        else setEligibleForFeedback(false);        
+      } catch (error: any) {
+        console.log(error.message);
+      }
+    }
+    if (isLoggedIn.user) fetchFeedbacks();    
   }, []);
 
   useEffect(() => {
@@ -134,7 +149,8 @@ const Header = ({ from, isUserChanged }: HeaderProps) => {
 
   const handleLogoutClick = () => {
     setIsMenuOpen(false);
-    setShowFeedbackForm(true);
+    if (eligibleForFeedback) setShowFeedbackForm(true);
+    else handleLogout();
   }
 
   const handleLogout = () => {

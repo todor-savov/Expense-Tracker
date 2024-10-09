@@ -238,3 +238,14 @@ export const addFeedback = async (feedback: Feedback): Promise<void|string> => {
     return error.message;
   }
 }
+
+export const getFeedbacks = async (email: string): Promise<Feedback[]|[]> => {
+  try {
+    const snapshot = await get(query(ref(database, "feedbacks"), orderByChild("user"), equalTo(email)));
+    if (snapshot.exists()) return Object.values(snapshot.val()) as Feedback[];
+    else return [];
+  } catch (error: any) {
+    console.log(error.message);
+    return [];
+  }
+}

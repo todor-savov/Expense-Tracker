@@ -62,7 +62,7 @@ const HomePublic = () => {
             <Box>
                 <Typography variant="h5"> Why Our Users Love Us </Typography>            
                 <Swiper modules={[Autoplay, Pagination]} autoplay={{ delay: 5000, disableOnInteraction: false, pauseOnMouseEnter: true }}
-                    spaceBetween={50} slidesPerView={1} pagination={{ clickable: true, bulletClass: 'swiper-pagination-bullet', bulletActiveClass: 'swiper-pagination-bullet-active' }}
+                    spaceBetween={50} slidesPerView={1} pagination={{ clickable: true, dynamicBullets: true, bulletClass: 'swiper-pagination-bullet', bulletActiveClass: 'swiper-pagination-bullet-active' }}
                     onSwiper={() => {}} onSlideChange={() => {}} className="swiper"
                 >
                     {[{

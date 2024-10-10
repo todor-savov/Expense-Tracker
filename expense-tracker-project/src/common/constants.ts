@@ -25,3 +25,5 @@ export const MAX_YEAR_SPAN = 3;
 export const DEFAULT_EVENT_IMAGE = 'https://leekduck.com/assets/img/events/events-default.jpg';
 export const SAVE_CATEGORY_ICON = 'https://img.icons8.com/ios/100/40C057/ok--v1.png';
 export const CANCEL_CATEGORY_ICON = 'https://img.icons8.com/color/96/cancel--v1.png';
+/* User images */
+export const TODOR_SAVOV_IMAGE = 'https://firebasestorage.googleapis.com/v0/b/expense-tracking-app-33495.appspot.com/o/users%2FIMG_0597.jpeg?alt=media&token=c0f116a5-bfa0-4a56-baeb-142247a94045';

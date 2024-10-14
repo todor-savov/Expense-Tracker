@@ -214,10 +214,11 @@ const Header = ({ from, isUserChanged }: HeaderProps) => {
                   <MenuItem onClick={handleLogoutClick}><Logout sx={{marginRight: '7px'}} /> Logout </MenuItem>
                 </Menu>
               </div>
-              : <IconButton size="large" aria-label="account of current user" aria-controls="menu-appbar" aria-haspopup="true"
-                  onClick={handleLoginClick} color="inherit">
-                  <LoginOutlined />
-                </IconButton>
+              : (from !== 'Home' &&
+                  <IconButton size="large" aria-label="account of current user" aria-controls="menu-appbar" aria-haspopup="true"
+                    onClick={handleLoginClick} color="inherit">
+                    <LoginOutlined />
+                  </IconButton>)
             }
           </Toolbar>
         </AppBar>

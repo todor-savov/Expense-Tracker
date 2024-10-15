@@ -249,3 +249,22 @@ export const getFeedbacks = async (email: string): Promise<Feedback[]|[]> => {
     return [];
   }
 }
+
+interface UserSettings { 
+  activityNotifications: string;
+  budgetNotifications: string;
+  currency: string;
+}
+
+export const updateUserSettings = async (email: string, settings: UserSettings): Promise<void|string> => {
+  try {
+    const snapshot = await get(query(ref(database, "users"), orderByChild("email"), equalTo(email)));
+    if (snapshot.exists()) {
+      const user = Object.keys(snapshot.val())[0];
+      return await update(ref(database, `users/${user}`), { settings });
+    } else throw new Error('User not found');
+  } catch (error: any) {
+    console.log(error.message);
+    return error.message;
+  }
+}

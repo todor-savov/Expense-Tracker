@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { signInUser } from '../../service/authentication-service.ts';
-import { getUserDetails } from '../../service/database-service.ts';
+import { getUserDetails, getUserSettings } from '../../service/database-service.ts';
 import AuthContext from '../../context/AuthContext.tsx';
 import { EMAIL_REGEX } from '../../common/constants.ts';
 import { TextField } from '@mui/material';
@@ -13,7 +13,7 @@ interface Form {
 }
 
 const Login = () => {
-    const { setLoginState } = useContext(AuthContext);
+    const { setLoginState, setSettings } = useContext(AuthContext);
     const [error, setError] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
     const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
@@ -31,7 +31,10 @@ const Login = () => {
                     if (!userDetails) throw new Error(`User details not found.`);
                     //if (userDetails[0].isBlocked) throw new Error(`Your account has been blocked. Please contact the administrator.`);
                     setLoading(false);
+                    const response = await getUserSettings(form.emailAddress);
+                    if (typeof response === "string") throw new Error(response);
                     setLoginState({status: true, user: form.emailAddress});
+                    setSettings(response);
                     navigate(location.state?.from.pathname || '/home');
                 } catch (error: any) {
                     setLoading(false);

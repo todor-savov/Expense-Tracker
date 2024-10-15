@@ -142,6 +142,14 @@ const Header = ({ from, isUserChanged }: HeaderProps) => {
     setIsBadgeOpen(false);
   }
 
+  const handleProfileClick = () => {
+    navigate('/profile');
+  }  
+
+  const handleSettingsClick = () => {
+    navigate('/settings');
+  }
+
   const handleLoginClick = () => {
     navigate('/login');
   }
@@ -165,10 +173,6 @@ const Header = ({ from, isUserChanged }: HeaderProps) => {
     const feedback = event.currentTarget['feedback-text'].value;    
     setFeedback({ user: isLoggedIn.user, rating: parseInt(rating), feedback });
   }
-
-  const handleProfileClick = () => {
-    navigate('/profile');
-  }  
 
   return (
     isNavigationOpen ? <Navigation setIsNavigationOpen={setIsNavigationOpen} /> 
@@ -210,7 +214,7 @@ const Header = ({ from, isUserChanged }: HeaderProps) => {
                 <Menu id="menu-appbar" anchorEl={anchorEl} anchorOrigin={{vertical: 'bottom', horizontal: 'right',}} keepMounted
                   transformOrigin={{vertical: 'top', horizontal: 'right',}} open={isMenuOpen} onClose={handleMenuClose}>
                   <MenuItem onClick={handleProfileClick}><AccountCircle sx={{marginRight: '7px'}} /> Profile </MenuItem>
-                  <MenuItem onClick={handleMenuClose}><Settings sx={{marginRight: '7px'}} /> Settings </MenuItem>
+                  <MenuItem onClick={handleSettingsClick}><Settings sx={{marginRight: '7px'}} /> Settings </MenuItem>
                   <MenuItem onClick={handleLogoutClick}><Logout sx={{marginRight: '7px'}} /> Logout </MenuItem>
                 </Menu>
               </div>

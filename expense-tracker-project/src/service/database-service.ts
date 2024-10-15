@@ -256,6 +256,20 @@ interface UserSettings {
   currency: string;
 }
 
+export const getUserSettings = async (email: string): Promise<UserSettings|null> => {
+  try {
+    const snapshot = await get(query(ref(database, "users"), orderByChild("email"), equalTo(email)));
+     if (snapshot.exists()) {
+      const user = Object.values(snapshot.val())[0] as UserDetails;
+      return user.settings;
+     }    
+    else throw new Error('User not found');
+  } catch (error: any) {
+    console.log(error.message);
+    return null;
+  }
+}
+
 export const updateUserSettings = async (email: string, settings: UserSettings): Promise<void|string> => {
   try {
     const snapshot = await get(query(ref(database, "users"), orderByChild("email"), equalTo(email)));

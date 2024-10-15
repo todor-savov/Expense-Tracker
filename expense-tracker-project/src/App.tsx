@@ -17,12 +17,21 @@ import ResetPasswordView from './views/ResetPasswordView/ResetPasswordView.tsx';
 import SettingsView from './views/SettingsView/SettingsView.tsx';
 import './App.css';
 
+interface UserSettings { 
+  activityNotifications: string;
+  budgetNotifications: string;
+  currency: string;
+}
+
 function App() {
   const [authValue, setAuthValue] = useState({status: false, user: ''});
+  const [userSettings, setUserSettings] = useState<UserSettings|null>(null);
 
   return (
       <BrowserRouter>
-        <AuthContext.Provider value={{ isLoggedIn: authValue, setLoginState: setAuthValue }}>
+        <AuthContext.Provider value={{  isLoggedIn: authValue, setLoginState: setAuthValue, 
+                                        settings: userSettings, setSettings: setUserSettings
+                                    }}>
                 <Routes>
                   <Route path="/" element={<HomePublicView />} />
                   <Route path="/register" element={<RegisterView />} />

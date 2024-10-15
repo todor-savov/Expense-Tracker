@@ -1,6 +1,24 @@
 import { database } from '../config/firebase-config.js';
 import { ref, get, set, push, update, query, equalTo, orderByChild, DataSnapshot } from "firebase/database";
 
+interface UserSettings { 
+  activityNotifications: string;
+  budgetNotifications: string;
+  currency: string;
+}
+
+interface UserDetails {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  username: string;
+  photo: string;
+  role: string;
+  isBlocked: boolean;
+  settings: UserSettings
+}
+
 /**
  * Checks if a user exists in the database.
  * @param {string} username - The username of the user to check.
@@ -26,17 +44,6 @@ export const checkIfUserExists = async (username: string, phone: string): Promis
  * @returns {Promise<void|undefined>} - A promise that resolves to void if the user is created successfully, or undefined if an error occurs.
  */
 
-interface UserDetails {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  username: string;
-  photo: string;
-  role: string;
-  isBlocked: boolean;
-}
-
 export const createUser = async (userDetails: UserDetails): Promise<void|undefined> => {
   try {
     return await set(ref(database, `users/${userDetails.username}`), userDetails);
@@ -51,17 +58,6 @@ export const createUser = async (userDetails: UserDetails): Promise<void|undefin
  * @returns {Promise<UserDetails[]|[]>} - A promise that resolves to an array of user details.
  * @throws {Error} - If the user is not found in the database.
  */
-
-interface UserDetails {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  username: string;
-  photo: string;
-  role: string;
-  isBlocked: boolean;
-}
 
 export const getUserDetails = async (email: string): Promise<UserDetails[]|[]> => {
   try {
@@ -248,12 +244,6 @@ export const getFeedbacks = async (email: string): Promise<Feedback[]|[]> => {
     console.log(error.message);
     return [];
   }
-}
-
-interface UserSettings { 
-  activityNotifications: string;
-  budgetNotifications: string;
-  currency: string;
 }
 
 export const getUserSettings = async (email: string): Promise<UserSettings|null> => {

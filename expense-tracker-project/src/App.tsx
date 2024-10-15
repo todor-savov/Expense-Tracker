@@ -12,9 +12,10 @@ import EditTransactionView from './views/EditTransactionView/EditTransactionView
 import AddTransactionView from './views/AddTransactionView/AddTransactionView.tsx';
 import CategoriesView from './views/CategoriesView/CategoriesView.tsx';
 import OverviewView from './views/OverviewView/OverviewView.tsx';
-import './App.css';
 import ForgotPasswordView from './views/ForgotPasswordView/ForgotPasswordView.tsx';
 import ResetPasswordView from './views/ResetPasswordView/ResetPasswordView.tsx';
+import SettingsView from './views/SettingsView/SettingsView.tsx';
+import './App.css';
 
 function App() {
   const [authValue, setAuthValue] = useState({status: false, user: ''});
@@ -35,6 +36,7 @@ function App() {
                   <Route path="/edit-transaction/:id" element={<Authenticated> <EditTransactionView /> </Authenticated>} />
                   <Route path="/categories" element={<Authenticated> <CategoriesView /> </Authenticated>} />
                   <Route path="/overview" element={<Authenticated> <OverviewView /> </Authenticated>} />
+                  <Route path="/settings" element={<Authenticated> <SettingsView /> </Authenticated>} />
                 </Routes>
         </AuthContext.Provider>
       </BrowserRouter>

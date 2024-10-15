@@ -246,7 +246,7 @@ export const getFeedbacks = async (email: string): Promise<Feedback[]|[]> => {
   }
 }
 
-export const getUserSettings = async (email: string): Promise<UserSettings|null> => {
+export const getUserSettings = async (email: string): Promise<UserSettings|string> => {
   try {
     const snapshot = await get(query(ref(database, "users"), orderByChild("email"), equalTo(email)));
      if (snapshot.exists()) {
@@ -256,7 +256,7 @@ export const getUserSettings = async (email: string): Promise<UserSettings|null>
     else throw new Error('User not found');
   } catch (error: any) {
     console.log(error.message);
-    return null;
+    return error.message;
   }
 }
 

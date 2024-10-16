@@ -8,6 +8,12 @@ import { uploadUserPhoto } from "../../service/storage-service";
 import { changePassword } from "../../service/authentication-service";
 import './Profile.css';
 
+interface UserSettings { 
+    activityNotifications: string;
+    budgetNotifications: string;
+    currency: string;
+}
+  
 interface UserDetails {
     firstName: string;
     lastName: string;
@@ -17,6 +23,7 @@ interface UserDetails {
     photo: string;
     role: string;
     isBlocked: boolean;
+    settings: UserSettings
 }
 
 interface ProfileProps {
@@ -155,7 +162,8 @@ const Profile = ( { isUserChanged, setIsUserChanged }: ProfileProps ) => {
 
         setUserToUpdate({ firstName, lastName, email: userDetails?.email as string, username: userDetails?.username as string,
                             phone, photo: newPhotoURL as string || userDetails?.photo as string,
-                            role: userDetails?.role as string, isBlocked: userDetails?.isBlocked as boolean
+                            role: userDetails?.role as string, isBlocked: userDetails?.isBlocked as boolean,
+                            settings: userDetails?.settings as UserSettings
         });
     }
 

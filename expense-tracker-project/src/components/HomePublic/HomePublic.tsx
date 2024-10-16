@@ -1,3 +1,5 @@
+import { useNavigate } from 'react-router-dom';
+import YOUR_APP_LOGO from '../../assets/app_logo.png';
 import CASH_REGISTER_ICON from '../../assets/cash_register_icon.png';
 import CATEGORY_ICON from '../../assets/category_icon.png';
 import TABLE_ICON from '../../assets/table_icon.png';
@@ -5,7 +7,7 @@ import GRAPH_ICON from '../../assets/graph_icon.png';
 import LATEST_TRANSACTIONS_ICON from '../../assets/latest_transactions_icon.png';
 import BUDGET_ICON from '../../assets/budget_icon.png';
 import { TODOR_SAVOV_IMAGE } from '../../common/constants';
-import { Box, Card, CardContent, Rating, Typography } from '@mui/material';
+import { Box, Button, Card, CardContent, Rating, Typography } from '@mui/material';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination } from 'swiper/modules';
 import 'swiper/css';
@@ -14,9 +16,30 @@ import 'swiper/css/autoplay';
 import './HomePublic.css';
 
 const HomePublic = () => {
+    const navigate = useNavigate();
     
     return (
         <Box>
+            <Box className="hero-section">
+                <Box className="hero-content">
+                    <Box className="logo-headline-container">
+                        <img src={YOUR_APP_LOGO} alt="App Logo" className="app-logo" />
+                        <Typography variant="h4" sx={{'font-size': '1.5rem', 'font-weight': 'bold'}}> 
+                            Take Control of Your Finances Today! 
+                        </Typography>
+                    </Box>
+                    <Box className="hero-buttons">
+                        <Button variant="contained" color="primary" onClick={() => navigate('/register')}>
+                            Register
+                        </Button>
+                        <Button variant="outlined" color="primary" onClick={() => navigate('/login')}>
+                            Login
+                        </Button>
+                    </Box>
+                </Box>
+                <Box className="hero-background" />
+            </Box>
+
             <Typography variant="h5">Why Choose Us?</Typography>
             <Box className='features'>
                 {[{

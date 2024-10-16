@@ -1,0 +1,52 @@
+.settings-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    background-color: #fff;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+}
+
+.update-settings-button {
+    width: 20%;
+    padding: 0.5rem;
+    border: none;
+    background-color: #007BFF;
+    color: #fff;
+    cursor: pointer;
+}
+
+.update-settings-button:hover {
+    background-color: #0056b3;
+}
+
+.feedback-message {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 1rem;
+}
+
+.success-message {
+    color: #1daa80;
+}
+
+.error-message {
+    color: #df2b0c;
+}
+
+@media (max-width: 768px) {
+    .update-settings-button {
+        width: 50%;
+    }
+}

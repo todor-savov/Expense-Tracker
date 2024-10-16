@@ -63,6 +63,11 @@ const Register = () => {
                         photo: form.photo,
                         role: 'author',
                         isBlocked: false,
+                        settings: {
+                            activityNotifications: 'enabled',
+                            budgetNotifications: 'enabled',
+                            currency: 'BGN',
+                        }                                                
                     });
                     
                     if (!creationStatus) {

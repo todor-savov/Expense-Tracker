@@ -5,9 +5,9 @@ import { getCategories, getPayments, getTransactions } from "../../service/datab
 import { Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faReceipt } from "@fortawesome/free-solid-svg-icons";
+import { Add } from "@mui/icons-material";
 import { getCategoryIcon, getPaymentIcon } from "../../common/utils";
 import './HomePrivate.css';
-import { Add } from "@mui/icons-material";
 
 interface Column {
     id: 'category' | 'date' | 'name' | 'amount' | 'payment' | 'receipt';
@@ -25,6 +25,7 @@ interface FetchedTransaction {
     payment: string;
     receipt: string;
     user: string;
+    currency: string;
 }
 
 interface Category {

@@ -19,13 +19,6 @@ interface UserDetails {
   settings: UserSettings
 }
 
-/**
- * Checks if a user exists in the database.
- * @param {string} username - The username of the user to check.
- * @param {string} email - The email of the user to check.
- * @param {string} phone - The phone number of the user to check.
- * @returns {Promise<Array<DataSnapshot>|string>} - A promise that resolves to an array of snapshots if the user exists, or a string if an error occurs.
- */
 export const checkIfUserExists = async (username: string, phone: string): Promise<Array<DataSnapshot>|string> => {
   try {
     const snapshot1 = await get(query(ref(database, "users"), orderByChild("username"), equalTo(username)));
@@ -38,12 +31,6 @@ export const checkIfUserExists = async (username: string, phone: string): Promis
   }
 }
 
-/**
- * Creates a new user in the database.
- * @param {UserDetails} userDetails - The details of the user to be created.
- * @returns {Promise<void|undefined>} - A promise that resolves to void if the user is created successfully, or undefined if an error occurs.
- */
-
 export const createUser = async (userDetails: UserDetails): Promise<void|undefined> => {
   try {
     return await set(ref(database, `users/${userDetails.username}`), userDetails);
@@ -51,13 +38,6 @@ export const createUser = async (userDetails: UserDetails): Promise<void|undefin
     console.log(error.message);
   }
 }
-
-/**
- * Retrieves user details from the database based on the provided email.
- * @param {string} email - The email of the user to retrieve details for.
- * @returns {Promise<UserDetails[]|[]>} - A promise that resolves to an array of user details.
- * @throws {Error} - If the user is not found in the database.
- */
 
 export const getUserDetails = async (email: string): Promise<UserDetails[]|[]> => {
   try {
@@ -90,6 +70,7 @@ interface NewTransaction {
   payment: string;
   receipt: string;
   user: string;
+  currency: string;
 }
 
 export const addTransaction = async (transactionDetails: NewTransaction): Promise<void|undefined> => {
@@ -110,6 +91,7 @@ interface FetchedTransaction {
   payment: string;
   receipt: string;
   user: string;
+  currency: string;
 }
 
 export const getTransactions = async (user: string): Promise<FetchedTransaction[]|[]> => {

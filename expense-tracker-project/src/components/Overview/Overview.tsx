@@ -21,6 +21,7 @@ interface FetchedTransaction {
     payment: string;
     receipt: string;
     user: string;
+    currency: string;
 }
 
 interface Data {

@@ -1,11 +1,12 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import AuthContext from "../../context/AuthContext";
+import { Button, Typography } from "@mui/material";
+import { Add } from "@mui/icons-material";
 import { deleteTransaction, getTransactions } from "../../service/database-service";
+import AuthContext from "../../context/AuthContext";
 import StickyTable from "./StickyTable";
 import './AllTransactions.css';
-import { Button } from "@mui/material";
-import { Add } from "@mui/icons-material";
+import { convertCurrency } from "../../service/exchange-rate-service";
 
 interface FetchedTransaction {
     id: string;
@@ -16,12 +17,13 @@ interface FetchedTransaction {
     payment: string;
     receipt: string;
     user: string;
+    currency: string;
 }
 
 const AllTransactions = () => {
-    const { isLoggedIn } = useContext(AuthContext);
+    const { isLoggedIn, settings } = useContext(AuthContext);
     const navigate = useNavigate();
-    const [transactions, setTransactions] = useState<FetchedTransaction[]>([]);
+    const [transactions, setTransactions] = useState<FetchedTransaction[]|[]>([]);
     const [transactionToDelete, setTransactionToDelete] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string|null>(null);
@@ -30,6 +32,7 @@ const AllTransactions = () => {
         const fetchTransactions = async () => {
             try {
                 const transactions = await getTransactions(isLoggedIn.user);
+                await convertCurrency('USD', settings?.currency as string, 1);                
                 setTransactions(transactions);
             } catch (error: any) {
                 console.log(error.message);
@@ -66,13 +69,20 @@ const AllTransactions = () => {
     return (
         <>
             {error && <p>{error}</p>}
+
+            <Typography variant="h6" sx={{ backgroundColor: 'white', marginBottom: '10px', display: 'flex', 
+                                    fontSize: '16px', fontStyle: 'italic' }}> 
+                The values in the "Amount" column are in {settings?.currency} currency.
+            </Typography>
+
             {transactions.length === 0 ? 
                 <div className="message-box">
                     <h2>No Transactions Found</h2>
                     <p>Start by adding your first transaction to keep track of your expenses.</p>
                 </div>
              : <StickyTable transactions={transactions} setTransactionToDelete={setTransactionToDelete} />
-            }
+            }            
+                        
             <Button onClick={() => navigate('/add-transaction')} variant="contained" sx={{marginTop: '10px'}}>
                 <Add />
             </Button>

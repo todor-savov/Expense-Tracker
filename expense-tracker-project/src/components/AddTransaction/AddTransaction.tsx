@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCalendarDays, faTags, faCalculator, faList, faCreditCard } from '@fortawesome/free-solid-svg-icons';
+import { faCalendarDays, faTags, faCalculator, faList, faCreditCard, faDollarSign } from '@fortawesome/free-solid-svg-icons';
 import { Box, Button, MenuItem, TextField } from '@mui/material';
 import { Save } from '@mui/icons-material';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
@@ -22,6 +22,7 @@ interface NewTransaction {
     payment: string;
     receipt: string;
     user: string;
+    currency: string;
 }
 
 interface FetchedTransaction {
@@ -33,6 +34,7 @@ interface FetchedTransaction {
     payment: string;
     receipt: string;
     user: string;
+    currency: string;
 }
 
 interface Category {
@@ -58,6 +60,7 @@ const AddTransaction = ({ mode }: { mode: string }) => {
     const [dateError, setDateError] = useState<string|null>(null);
     const [nameError, setNameError] = useState<string|null>(null);
     const [amountError, setAmountError] = useState<string|null>(null);
+    const [currencyError, setCurrencyError] = useState<string|null>(null);
     const [categoryError, setCategoryError] = useState<string|null>(null);
     const [paymentError, setPaymentError] = useState<string|null>(null);
     const [salesReceipt, setSalesReceipt] = useState<string|null>(null);
@@ -139,6 +142,7 @@ const AddTransaction = ({ mode }: { mode: string }) => {
             'expense-date': { value: string };
             'expense-name': { value: string };
             'expense-amount': { value: number };
+            'expense-currency': { value: string };
             'expense-category': { value: string };
             'expense-payment': { value: string };
         };
@@ -146,6 +150,7 @@ const AddTransaction = ({ mode }: { mode: string }) => {
         const date = target['expense-date'].value;
         const name = target['expense-name'].value;
         const amount = +target['expense-amount'].value;
+        const currency = target['expense-currency'].value;
         const category = target['expense-category'].value;
         const payment = target['expense-payment'].value; 
 
@@ -161,6 +166,10 @@ const AddTransaction = ({ mode }: { mode: string }) => {
             setAmountError('Amount error');
         }
 
+        if (currency.length > 3) {
+            setCurrencyError('Currency error');
+        }
+
         if (typeof category !== 'string') {
             setCategoryError('Category error');
         }
@@ -169,7 +178,7 @@ const AddTransaction = ({ mode }: { mode: string }) => {
             setPaymentError('Payment error');
         }
 
-        const expenseDetails = { date, name, amount, category, payment, receipt: receipt || '', user: isLoggedIn.user };
+        const expenseDetails = { date, name, amount, category, payment, receipt: receipt || '', user: isLoggedIn.user, currency };
 
         if (mode === 'edit') {
             if (id) setTransactionToEdit({ ...expenseDetails, id: id });
@@ -215,6 +224,16 @@ const AddTransaction = ({ mode }: { mode: string }) => {
                         {...fetchedTransaction ? { defaultValue: fetchedTransaction?.amount } : { placeholder: 'Amount' }} 
                         helperText={amountError || "Please select amount"} required
                     />
+                    
+                    <TextField error={!!currencyError} select id="expense-currency" name="expense-currency" label={<FontAwesomeIcon icon={faDollarSign} size="xl" style={{color: "#74C0FC",}} />}
+                            defaultValue={fetchedTransaction ? fetchedTransaction?.currency : ""}
+                            helperText={currencyError || "Please select currency"} required 
+                    >
+                            <MenuItem key="Currency" value="" disabled>Currency</MenuItem>
+                            <MenuItem key="BGN" value="BGN">BGN</MenuItem>
+                            <MenuItem key="USD" value="USD">USD</MenuItem>
+                            <MenuItem key="EUR" value="EUR">EUR</MenuItem>
+                    </TextField>
                 
                     {categories.length > 0 && 
                         <TextField error={!!categoryError} select id="expense-category" name="expense-category" label={<FontAwesomeIcon icon={faList} size="xl" style={{color: "#74C0FC",}} />}

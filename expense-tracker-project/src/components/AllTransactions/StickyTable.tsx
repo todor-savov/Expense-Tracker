@@ -65,7 +65,7 @@ interface Payment {
 }
 
 const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionToDelete }) => {
-  const { isLoggedIn } = useContext(AuthContext);
+  const { isLoggedIn, settings } = useContext(AuthContext);
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
   const [showReceipt, setShowReceipt] = useState<string>('');
@@ -254,8 +254,12 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionT
                                                    </TableCell>
                                         } else if (column.id === 'amount') {                                      
                                             return <TableCell key={column.id} align={column.align}>
-                                                        {(value as number).toFixed(2)}
-                                                   </TableCell>  
+                                                          <span>
+                                                            {`${transaction.currency === 'USD' ? '$' : 
+                                                                  (transaction.currency === 'EUR' ? '€' : 'BGN')} ${(value as number).toFixed(2)}
+                                                            `}
+                                                          </span>
+                                                   </TableCell>
                                         } else if (column.id === 'payment') {
                                             return <TableCell key={column.id} align={column.align}>
                                                       {getPaymentIcon(`${value}`, payments)}
@@ -271,7 +275,10 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionT
                           }
                         </TableBody>
                     </Table>
-                    <Box sx={{ margin: '2%', padding: '1%' }}> <strong>TOTAL: </strong> {sum.toFixed(2)}</Box>
+                    <Box sx={{ margin: '2%', padding: '1%' }}> 
+                          <strong>TOTAL: </strong>
+                          {`${settings?.currency === 'USD' ? '$' : (settings?.currency === 'EUR' ? '€' : 'BGN')} ${sum.toFixed(2)}`}                      
+                    </Box>
                 </TableContainer>
                 <TablePagination
                     rowsPerPageOptions={[10, 25, 100]}

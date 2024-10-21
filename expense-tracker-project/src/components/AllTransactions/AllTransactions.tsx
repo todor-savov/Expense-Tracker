@@ -2,11 +2,11 @@ import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Typography } from "@mui/material";
 import { Add } from "@mui/icons-material";
-import { deleteTransaction, getTransactions } from "../../service/database-service";
 import AuthContext from "../../context/AuthContext";
 import StickyTable from "./StickyTable";
+import { deleteTransaction, getTransactions } from "../../service/database-service";
+import { getExchangeRates } from "../../service/exchange-rate-service";
 import './AllTransactions.css';
-import { convertCurrency } from "../../service/exchange-rate-service";
 
 interface FetchedTransaction {
     id: string;
@@ -31,12 +31,25 @@ const AllTransactions = () => {
     useEffect(() => {
         const fetchTransactions = async () => {
             try {
+                setLoading(true);
                 const transactions = await getTransactions(isLoggedIn.user);
-                await convertCurrency('USD', settings?.currency as string, 1);                
-                setTransactions(transactions);
+                const exchangeRates = await getExchangeRates(settings?.currency as string);
+
+                const updatedTransactions = transactions.map((transaction: FetchedTransaction) => {
+                    if (transaction.currency !== settings?.currency) {
+                        const exchangeRate = 1 / exchangeRates[transaction.currency];
+                        transaction.amount = transaction.amount * exchangeRate;  
+                        transaction.currency = settings?.currency as string;                       
+                    }
+                    return transaction;
+                });
+
+                setTransactions(updatedTransactions);
+                setError(null);
+                setLoading(false);
             } catch (error: any) {
-                console.log(error.message);
                 setError(error.message);
+                console.log(error.message);
             }
         }
         fetchTransactions();

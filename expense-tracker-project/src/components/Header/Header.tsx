@@ -43,7 +43,7 @@ interface Feedback {
 }
 
 const Header = ({ from, isUserChanged }: HeaderProps) => {
-  const { isLoggedIn, setLoginState } = useContext(AuthContext);
+  const { isLoggedIn, setLoginState, settings } = useContext(AuthContext);
   const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
   const [isNavigationOpen, setIsNavigationOpen] = useState<boolean>(false);
   const [isBadgeOpen, setIsBadgeOpen] = useState<boolean>(false);
@@ -73,17 +73,16 @@ const Header = ({ from, isUserChanged }: HeaderProps) => {
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        const transactions = await getTransactions(isLoggedIn.user);
-        transactions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-        const differenceInTime = new Date().getTime() - new Date(transactions[0].date).getTime();
-        const differenceInDays = differenceInTime / (1000 * 3600 * 24);
-        if (Math.floor(differenceInDays) > 3) {
-          setNotifications([...notifications, "You have not logged in any transactions in the last 3 days."]);
-          setNotificationsCount(notificationsCount + 1);
-        } else {
-          setNotifications([]);
-          setNotificationsCount(0);
-        }
+          if (settings?.activityNotifications === 'enabled') {
+            const transactions = await getTransactions(isLoggedIn.user);
+            transactions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+            const differenceInTime = new Date().getTime() - new Date(transactions[0].date).getTime();
+            const differenceInDays = differenceInTime / (1000 * 3600 * 24);
+              if (Math.floor(differenceInDays) > 3) {
+                setNotifications([...notifications, "You have not logged in any transactions in the last 3 days."]);
+                setNotificationsCount(notificationsCount + 1);
+              } 
+          }          
       } catch (error: any) {
         console.log(error.message);
       }

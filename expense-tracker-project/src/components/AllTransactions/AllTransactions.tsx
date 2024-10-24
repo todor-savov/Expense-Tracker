@@ -50,6 +50,7 @@ const AllTransactions = () => {
             } catch (error: any) {
                 setError(error.message);
                 console.log(error.message);
+                setLoading(false);
             }
         }
         fetchTransactions();

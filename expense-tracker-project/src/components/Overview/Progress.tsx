@@ -1,8 +1,8 @@
 import { useContext, useEffect, useState } from "react";
 import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material";
+import { axisClasses, LineChart } from "@mui/x-charts";
 import { getTransactions } from "../../service/database-service";
 import AuthContext from "../../context/AuthContext";
-import { axisClasses, LineChart } from "@mui/x-charts";
 
 interface FetchedTransaction {
     id: string;
@@ -13,6 +13,7 @@ interface FetchedTransaction {
     payment: string;
     receipt: string;
     user: string;
+    currency: string;
 }
 
 interface Data {
@@ -21,7 +22,7 @@ interface Data {
 
 const Progress = () => {
     const { isLoggedIn } = useContext(AuthContext);
-    const [transactions, setTransactions] = useState<FetchedTransaction[]>([]);
+    const [transactions, setTransactions] = useState<FetchedTransaction[]|[]>([]);
     const [uniqueMonths, setUniqueMonths] = useState<string[]>([]);
     const [uniqueYears, setUniqueYears] = useState<string[]>([]);
     const [data, setData] = useState<Data|null>(null);
@@ -37,8 +38,9 @@ const Progress = () => {
                 setTransactions(transactions);
                 setLoading(false);
             } catch (error: any) {
-                console.log(error.message);
                 setError(error.message);
+                console.log(error.message);
+                setLoading(false);
             }
         }
         if (!transactions.length) fetchData();

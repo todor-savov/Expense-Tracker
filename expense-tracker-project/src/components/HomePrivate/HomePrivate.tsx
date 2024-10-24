@@ -2,10 +2,11 @@ import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../../context/AuthContext";
 import { getCategories, getPayments, getTransactions } from "../../service/database-service";
-import { Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import { getExchangeRates } from "../../service/exchange-rate-service";
+import { Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import { Add } from "@mui/icons-material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faReceipt } from "@fortawesome/free-solid-svg-icons";
-import { Add } from "@mui/icons-material";
 import { getCategoryIcon, getPaymentIcon } from "../../common/utils";
 import './HomePrivate.css';
 
@@ -43,7 +44,7 @@ interface Payment {
 }
 
 const HomePrivate = () => {
-    const { isLoggedIn } = useContext(AuthContext);
+    const { isLoggedIn, settings } = useContext(AuthContext);
     const [transactions, setTransactions] = useState<FetchedTransaction[]|[]>([]);
     const [categories, setCategories] = useState<Category[]|[]>([]);
     const [payments, setPayments] = useState<Payment[]|[]>([]);
@@ -60,17 +61,30 @@ const HomePrivate = () => {
         { id: 'payment', label: 'Payment', minWidth: 70 },
         { id: 'receipt', label: 'Receipt', minWidth: 120 }
     ];
-
+    
     useEffect(() => {
         const fetchTransactions = async () => {
             try {
                 setLoading(true);
                 const transactions = await getTransactions(isLoggedIn.user);
-                setTransactions(transactions);
+                const exchangeRates = await getExchangeRates(settings?.currency as string);
+
+                const updatedTransactions = transactions.map((transaction: FetchedTransaction) => {
+                    if (transaction.currency !== settings?.currency) {
+                        const exchangeRate = 1 / exchangeRates[transaction.currency];
+                        transaction.amount = transaction.amount * exchangeRate;  
+                        transaction.currency = settings?.currency as string;                       
+                    }
+                    return transaction;
+                });
+
+                setTransactions(updatedTransactions);
+                setError(null);
                 setLoading(false);
             } catch (error: any) {
-                console.log(error.message);
                 setError(error.message);
+                console.log(error.message);
+                setLoading(false);
             }
         }
         fetchTransactions();
@@ -101,6 +115,12 @@ const HomePrivate = () => {
             : transactions.length > 0 ?
             <>
                 {error && <p>{error}</p>}
+
+                <Typography variant="h6" sx={{ backgroundColor: 'white', marginBottom: '10px', display: 'flex', 
+                                    fontSize: '16px', fontStyle: 'italic' }}> 
+                    The values in the "Amount" column are in {settings?.currency} currency.
+                </Typography>
+
                  <Paper sx={{ width: '100%', overflow: 'hidden' }}>
                     <TableContainer sx={{maxWidth: '100%'}}>
                         <Table stickyHeader aria-label="sticky table">
@@ -139,10 +159,14 @@ const HomePrivate = () => {
                                                 return <TableCell key={column.id} align={column.align}>
                                                             {new Date(value).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
                                                         </TableCell>
-                                            } else if (column.id === 'amount') {                                      
+                                            } else if (column.id === 'amount') {                                                                                                                                  
                                                 return <TableCell key={column.id} align={column.align}>
-                                                            {(value as number).toFixed(2)}
-                                                        </TableCell>  
+                                                            <span>
+                                                                {`${transaction.currency === 'USD' ? '$' : 
+                                                                        (transaction.currency === 'EUR' ? '€' : 'BGN')} ${(value as number).toFixed(2)}
+                                                                `}
+                                                            </span>
+                                                        </TableCell>
                                             } else if (column.id === 'payment') {
                                                 return <TableCell key={column.id} align={column.align}>
                                                             {getPaymentIcon(`${value}`, payments)}

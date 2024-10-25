@@ -16,7 +16,7 @@ const PieActiveArc: React.FC<PieActiveArcProps> = ({ data }) => {
     <PieChart
       series={[
         {
-          arcLabel: (item) => `${item.value.toFixed(2)}%`,
+          arcLabel: (item) => `${item.value.toFixed(1)}%`,
           arcLabelMinAngle: 45,
           data,
           highlightScope: { faded: 'global', highlighted: 'item' },

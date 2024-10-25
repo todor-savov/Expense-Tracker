@@ -1,16 +1,17 @@
 import * as React from 'react';
 import { useEffect, useState, useContext } from 'react';
 import AuthContext from '../../context/AuthContext';
-import { Avatar, FormControlLabel, FormGroup, List, ListItem, ListItemAvatar, ListItemText, Switch } from '@mui/material';
+import { Avatar, FormControlLabel, FormGroup, List, ListItem, ListItemAvatar, ListItemText, Switch, Typography } from '@mui/material';
 import Tabs, { tabsClasses } from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import FunctionsIcon from '@mui/icons-material/Functions';
-import PieActiveArc from '../PieChart/PieChart';
-import { getCategories, getTransactions } from '../../service/database-service';
 import { getCategoryIcon } from '../../common/utils';
-import './Overview.css';
+import PieActiveArc from '../PieChart/PieChart';
 import Progress from './Progress';
+import { getCategories, getTransactions } from '../../service/database-service';
+import { getExchangeRates } from '../../service/exchange-rate-service';
+import './Overview.css';
 
 interface FetchedTransaction {
     id: string;
@@ -38,7 +39,7 @@ interface Category {
 }
 
 const Overview = () => {
-    const { isLoggedIn } = useContext(AuthContext);
+    const { isLoggedIn, settings } = useContext(AuthContext);
     const [outerValue, setOuterValue] = useState<number>(0);
     const [innerValue, setInnerValue] = useState<number>(0);
     const [transactions, setTransactions] = useState<FetchedTransaction[]|[]>([]);
@@ -52,18 +53,31 @@ const Overview = () => {
     const [switchLabel, setSwitchLabel] = useState<string>('Period Overview');
 
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchTransactions = async () => {
             try {
                 setLoading(true);
                 const transactions = await getTransactions(isLoggedIn.user);
-                setTransactions(transactions);
+                const exchangeRates = await getExchangeRates(settings?.currency as string);
+
+                const updatedTransactions = transactions.map((transaction: FetchedTransaction) => {
+                    if (transaction.currency !== settings?.currency) {
+                        const exchangeRate = 1 / exchangeRates[transaction.currency];
+                        transaction.amount = transaction.amount * exchangeRate;  
+                        transaction.currency = settings?.currency as string;                       
+                    }
+                    return transaction;
+                });
+
+                setTransactions(updatedTransactions);
+                setError(null);
                 setLoading(false);
             } catch (error: any) {
-                console.log(error.message);
                 setError(error.message);
+                console.log(error.message);
+                setLoading(false);
             }
         }
-        fetchData();
+        fetchTransactions();
     }, []);
 
     useEffect(() => {
@@ -137,7 +151,7 @@ const Overview = () => {
 
       {switchLabel === 'Period Overview' ? 
         (transactions.length > 0 ?
-        <Box className="overview-container">
+        <Box className="overview-container">            
             <Box className="overview-header">
                 <Tabs value={outerValue} onChange={handleOuterChange}>
                     <Tab key={0} label="Year" onClick={() => setView("yearly")} sx={{ backgroundColor: outerValue === 0 ? 'lightblue' : 'inherit' }} />
@@ -170,15 +184,19 @@ const Overview = () => {
                         }
                     </Tabs>
                 }
-            </Box>
+            </Box>            
 
             {pieData.length > 0 ? 
                 <>          
                     <Box className="pie-container">
                         <PieActiveArc data={ pieData.map((category) => {return {...category, value: +((category.value / totalSum)*100).toFixed(2)}}) } />
                     </Box>
-            
+                               
                     <List className='list-container'>
+                        <Typography variant="h6" sx={{ display: 'flex', marginBottom: '10px', fontSize: '16px', fontStyle: 'italic' }}>
+                                The provided values are in {settings?.currency} currency.
+                        </Typography>
+
                         <ListItem className="custom-list-item">
                             <ListItemAvatar>
                                 <Avatar> <FunctionsIcon /> </Avatar>
@@ -187,22 +205,28 @@ const Overview = () => {
                                 primary={<strong>Total</strong>}
                                 secondary={`${filteredTransactions.length} transaction(s)`}
                             />
-                            <ListItemText primary={totalSum.toFixed(2)} secondary={`100%`}/>
+                            <ListItemText 
+                                primary={`${settings?.currency === 'EUR' ? '€' : (settings?.currency === 'USD' ? '$' : 'BGN')} ${totalSum.toFixed(2)}`}        
+                                secondary={`100%`} />
                         </ListItem>
                         {pieData.map((data, index) => 
-                            <ListItem key={index} className="custom-list-item">
-                                <ListItemAvatar>
-                                    {getCategoryIcon(data.label, categories)}
-                                </ListItemAvatar>
-                                <ListItemText 
-                                    primary={<strong>{data.label}</strong>}
-                                    secondary={`${filteredTransactions.reduce((acc, transaction) => {
-                                                if (transaction.category === data.label) acc++;
-                                                    return acc;
-                                                }, 0)} transaction(s)`}
-                                />
-                                <ListItemText primary={data.value.toFixed(2)} secondary={`${((data.value / totalSum)*100).toFixed(2)}%`}/>
-                            </ListItem>
+                            <>
+                                <ListItem key={index} className="custom-list-item">
+                                    <ListItemAvatar>
+                                        {getCategoryIcon(data.label, categories)}
+                                    </ListItemAvatar>
+                                    <ListItemText 
+                                        primary={<strong>{data.label}</strong>}
+                                        secondary={`${filteredTransactions.reduce((acc, transaction) => {
+                                                    if (transaction.category === data.label) acc++;
+                                                        return acc;
+                                                    }, 0)} transaction(s)`}
+                                    />
+                                    <ListItemText 
+                                        primary={`${settings?.currency === 'EUR' ? '€' : (settings?.currency === 'USD' ? '$' : 'BGN')} ${data.value.toFixed(2)}`}                                                                                                            
+                                        secondary={`${((data.value / totalSum)*100).toFixed(1)}%`} />
+                                </ListItem>
+                            </>
                         )}
                     </List>
                 </> : 'Select a period to view transactions'

@@ -23,7 +23,7 @@ import "./Header.css";
 interface HeaderProps {
     from: string;
     isUserChanged?: boolean;
-}
+ }
 
 interface UserDetails {
     firstName: string;
@@ -49,8 +49,8 @@ const Header = ({ from, isUserChanged }: HeaderProps) => {
   const [isBadgeOpen, setIsBadgeOpen] = useState<boolean>(false);
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [currentUser, setCurrentUser] = useState<UserDetails|null>(null);
-  const [notifications, setNotifications] = useState<string[]>([]);
-  const [notificationsCount, setNotificationsCount] = useState<number>(0);
+  const [activityNotification, setActivityNotification] = useState<string>('');
+  const [activityNotificationCount, setActivityNotificationCount] = useState<number>(0);
   const [showFeedbackForm, setShowFeedbackForm] = useState<boolean>(false);
   const [feedback, setFeedback] = useState<Feedback|null>(null);
   const [isFeedbackSubmitted, setIsFeedbackSubmitted] = useState<boolean>(false);
@@ -72,23 +72,22 @@ const Header = ({ from, isUserChanged }: HeaderProps) => {
 
   useEffect(() => {
     const fetchTransactions = async () => {
-      try {
-          if (settings?.activityNotifications === 'enabled') {
-            const transactions = await getTransactions(isLoggedIn.user);
-            transactions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-            const differenceInTime = new Date().getTime() - new Date(transactions[0].date).getTime();
-            const differenceInDays = differenceInTime / (1000 * 3600 * 24);
-              if (Math.floor(differenceInDays) > 3) {
-                setNotifications([...notifications, "You have not logged in any transactions in the last 3 days."]);
-                setNotificationsCount(notificationsCount + 1);
-              } 
-          }          
+      try {          
+        const transactions = await getTransactions(isLoggedIn.user);
+        transactions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        const differenceInTime = new Date().getTime() - new Date(transactions[0].date).getTime();
+        const differenceInDays = differenceInTime / (1000 * 3600 * 24);
+        if (Math.floor(differenceInDays) > 3) {
+          setActivityNotification("You have not registered any transaction in the last 3 days.");
+          setActivityNotificationCount(1);
+        }           
       } catch (error: any) {
         console.log(error.message);
       }
     }
-    if (isLoggedIn.user) fetchTransactions();
-  }, []);
+    if (isLoggedIn.user && settings?.activityNotifications === 'enabled') fetchTransactions();
+    if (isLoggedIn.user && settings?.activityNotifications === 'disabled') setActivityNotificationCount(0);
+  }, [settings?.activityNotifications]);
 
   useEffect(() => {
     const fetchFeedbacks = async () => {
@@ -188,7 +187,7 @@ const Header = ({ from, isUserChanged }: HeaderProps) => {
               <div>
                 <span>
                   <IconButton aria-describedby='simple-popover' aria-controls="simple-popover" onClick={handleBadgeClick}>
-                    <Badge color="secondary" badgeContent={notificationsCount} invisible={false}>
+                    <Badge color="secondary" badgeContent={activityNotificationCount} invisible={false}>
                       <Email sx={{color: 'white'}} />
                     </Badge>
                   </IconButton>
@@ -203,11 +202,12 @@ const Header = ({ from, isUserChanged }: HeaderProps) => {
                     transformOrigin={{ vertical: 'top', horizontal: 'right',}}
                 >
                     <Typography sx={{ p: 2 }}> 
-                      {!notifications.length ? 
-                        "There are no notifications currently." : 
-                        notifications.map((notification, index) => {
-                        return <p key={index}> {notification} </p>
-                      })}
+                      { 
+                        settings?.activityNotifications === 'enabled' ?                          
+                          (activityNotification ? <p> {activityNotification} </p>
+                          : <p> There are no activity notifications. </p>)
+                        : <p> Activity notifications are disabled. </p>                                                                                                    
+                      }                                                                  
                     </Typography>
                 </Popover>
                 <Menu id="menu-appbar" anchorEl={anchorEl} anchorOrigin={{vertical: 'bottom', horizontal: 'right',}} keepMounted

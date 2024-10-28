@@ -1,7 +1,8 @@
 import { useContext, useEffect, useState } from "react";
-import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material";
+import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Typography } from "@mui/material";
 import { axisClasses, LineChart } from "@mui/x-charts";
 import { getTransactions } from "../../service/database-service";
+import { getExchangeRates } from "../../service/exchange-rate-service";
 import AuthContext from "../../context/AuthContext";
 
 interface FetchedTransaction {
@@ -21,7 +22,7 @@ interface Data {
 }
 
 const Progress = () => {
-    const { isLoggedIn } = useContext(AuthContext);
+    const { isLoggedIn, settings } = useContext(AuthContext);
     const [transactions, setTransactions] = useState<FetchedTransaction[]|[]>([]);
     const [uniqueMonths, setUniqueMonths] = useState<string[]>([]);
     const [uniqueYears, setUniqueYears] = useState<string[]>([]);
@@ -31,11 +32,23 @@ const Progress = () => {
     const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchTransactions = async () => {
             try {
                 setLoading(true);
                 const transactions = await getTransactions(isLoggedIn.user);
-                setTransactions(transactions);
+                const exchangeRates = await getExchangeRates(settings?.currency as string);
+
+                const updatedTransactions = transactions.map((transaction: FetchedTransaction) => {
+                    if (transaction.currency !== settings?.currency) {
+                        const exchangeRate = 1 / exchangeRates[transaction.currency];
+                        transaction.amount = transaction.amount * exchangeRate;  
+                        transaction.currency = settings?.currency as string;                       
+                    }
+                    return transaction;
+                });
+
+                setTransactions(updatedTransactions);
+                setError(null);
                 setLoading(false);
             } catch (error: any) {
                 setError(error.message);
@@ -43,7 +56,7 @@ const Progress = () => {
                 setLoading(false);
             }
         }
-        if (!transactions.length) fetchData();
+        if (!transactions.length) fetchTransactions();
     }, []);
 
     const handleChange = (event: SelectChangeEvent) => {
@@ -143,6 +156,11 @@ const Progress = () => {
 
                 {(transactions.length > 0 && timeSpan !== '') ?
                 <Box sx={{backgroundColor: 'white', boxShadow: 3, borderRadius: 2, width: '100%', padding: 1 }}>
+
+                    <Typography variant="h6" sx={{ marginBottom: '10px', display: 'flex', fontSize: '16px', fontStyle: 'italic' }}> 
+                        The values on the "Amount" axis are in {settings?.currency} currency.
+                    </Typography>
+
                     <LineChart
                         xAxis={[
                             {

@@ -16,6 +16,7 @@ import ForgotPasswordView from './views/ForgotPasswordView/ForgotPasswordView.ts
 import ResetPasswordView from './views/ResetPasswordView/ResetPasswordView.tsx';
 import SettingsView from './views/SettingsView/SettingsView.tsx';
 import './App.css';
+import FaqView from './views/FaqView/FaqView.tsx';
 
 interface UserSettings { 
   activityNotifications: string;
@@ -38,6 +39,7 @@ function App() {
                   <Route path="/login" element={<LoginView />} />
                   <Route path="/forgot-password" element={<ForgotPasswordView />} />
                   <Route path="/reset-password" element={<ResetPasswordView />} />
+                  <Route path="/faq" element={<FaqView />} />
                   <Route path="/home" element={<Authenticated> <HomePrivateView /> </Authenticated>} />
                   <Route path="/profile" element={<Authenticated> <ProfileView /> </Authenticated>} />
                   <Route path="/transactions" element={<Authenticated> <TransactionsView /> </Authenticated>} />

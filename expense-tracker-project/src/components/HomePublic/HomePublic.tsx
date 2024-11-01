@@ -24,7 +24,7 @@ const HomePublic = () => {
                 <Box className="hero-content">
                     <Box className="logo-headline-container">
                         <img src={YOUR_APP_LOGO} alt="App Logo" className="app-logo" />
-                        <Typography variant="h4" sx={{'font-size': '1.5rem', 'font-weight': 'bold'}}> 
+                        <Typography variant="h4" sx={{'fontSize': '1.5rem', 'fontWeight': 'bold'}}> 
                             Take Control of Your Finances Today! 
                         </Typography>
                     </Box>

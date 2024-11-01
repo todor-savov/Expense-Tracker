@@ -204,9 +204,9 @@ const Header = ({ from, isUserChanged }: HeaderProps) => {
                     <Typography sx={{ p: 2 }}> 
                       { 
                         settings?.activityNotifications === 'enabled' ?                          
-                          (activityNotification ? <p> {activityNotification} </p>
-                          : <p> There are no activity notifications. </p>)
-                        : <p> Activity notifications are disabled. </p>                                                                                                    
+                          (activityNotification ? activityNotification
+                          : "There are no activity notifications.")
+                        : "Activity notifications are disabled."       
                       }                                                                  
                     </Typography>
                 </Popover>

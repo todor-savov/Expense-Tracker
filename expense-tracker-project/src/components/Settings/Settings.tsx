@@ -17,6 +17,8 @@ interface UserSettings {
 const Settings = () => {
     const { isLoggedIn, settings, setSettings } = useContext(AuthContext);
     const [currency, setCurrency] = useState<string>(settings?.currency || 'BGN');
+    const [activityNotifications, setActivityNotifications] = useState<boolean>(settings?.activityNotifications === 'enabled');
+    const [budgetNotifications, setBudgetNotifications] = useState<boolean>(settings?.budgetNotifications === 'enabled');
     const [userSettings, setUserSettings] = useState<UserSettings|null>(null);
     const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
@@ -42,8 +44,6 @@ const Settings = () => {
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        const activityNotifications: boolean = event.currentTarget['enable-activity-notifications'].checked;
-        const budgetNotifications: boolean = event.currentTarget['enable-budget-notifications'].checked;
         setUserSettings({ activityNotifications: activityNotifications ? 'enabled' : 'disabled',
                             budgetNotifications: budgetNotifications ? 'enabled' : 'disabled',
                             currency: currency }); 
@@ -51,7 +51,6 @@ const Settings = () => {
     }
 
     const handleCurrencyChange = (event: SelectChangeEvent<unknown>) => {
-        event.preventDefault();
         const currency = event.target.value as string;
         setCurrency(currency);
     }
@@ -62,15 +61,19 @@ const Settings = () => {
                 <Typography variant="h5" sx={{ marginBottom: '20px', fontWeight: 'bold' }}>Choose your preferred settings:</Typography>
                 <FormGroup className="form-group">
                     <FormControlLabel control={
-                        <Switch name="enable-activity-notifications" sx={{ m: 1 }} 
-                            defaultChecked={settings?.activityNotifications === 'enabled' ? true : false}
+                        <Switch 
+                            checked={activityNotifications}
+                            onChange={(e) => setActivityNotifications(e.target.checked)} 
+                            sx={{ m: 1 }} 
                         />} 
                         label="Enable activity notifications"
                     />
 
                     <FormControlLabel control={
-                        <Switch name="enable-budget-notifications" sx={{ m: 1 }} 
-                            defaultChecked={settings?.budgetNotifications === 'enabled' ? true : false}                        
+                        <Switch 
+                            checked={budgetNotifications}
+                            onChange={(e) => setBudgetNotifications(e.target.checked)} 
+                            sx={{ m: 1 }}
                         />}
                         label="Enable budget notifications" 
                     />

@@ -207,26 +207,26 @@ const Overview = () => {
                             />
                             <ListItemText 
                                 primary={`${settings?.currency === 'EUR' ? '€' : (settings?.currency === 'USD' ? '$' : 'BGN')} ${totalSum.toFixed(2)}`}        
-                                secondary={`100%`} />
+                                secondary={`100%`} 
+                            />
                         </ListItem>
-                        {pieData.map((data, index) => 
-                            <>
-                                <ListItem key={index} className="custom-list-item">
-                                    <ListItemAvatar>
-                                        {getCategoryIcon(data.label, categories)}
-                                    </ListItemAvatar>
-                                    <ListItemText 
-                                        primary={<strong>{data.label}</strong>}
-                                        secondary={`${filteredTransactions.reduce((acc, transaction) => {
-                                                    if (transaction.category === data.label) acc++;
-                                                        return acc;
-                                                    }, 0)} transaction(s)`}
-                                    />
-                                    <ListItemText 
-                                        primary={`${settings?.currency === 'EUR' ? '€' : (settings?.currency === 'USD' ? '$' : 'BGN')} ${data.value.toFixed(2)}`}                                                                                                            
-                                        secondary={`${((data.value / totalSum)*100).toFixed(1)}%`} />
-                                </ListItem>
-                            </>
+                        {pieData.map((data, index) =>                             
+                            <ListItem key={index} className="custom-list-item">
+                                <ListItemAvatar>
+                                    {getCategoryIcon(data.label, categories)}
+                                </ListItemAvatar>
+                                <ListItemText 
+                                    primary={<strong>{data.label}</strong>}
+                                    secondary={`${filteredTransactions.reduce((acc, transaction) => {
+                                                if (transaction.category === data.label) acc++;
+                                                    return acc;
+                                                }, 0)} transaction(s)`}
+                                />
+                                <ListItemText 
+                                    primary={`${settings?.currency === 'EUR' ? '€' : (settings?.currency === 'USD' ? '$' : 'BGN')} ${data.value.toFixed(2)}`}                                                                                                            
+                                    secondary={`${((data.value / totalSum)*100).toFixed(1)}%`}
+                                />
+                            </ListItem>                            
                         )}
                     </List>
                 </> : 'Select a period to view transactions'

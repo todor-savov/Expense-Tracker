@@ -1,13 +1,14 @@
 import { useContext, useEffect, useState } from "react";
-import { Avatar, Box, Button, List, ListItem, ListItemAvatar, ListItemText, Modal, TextField, Typography } from "@mui/material";
+import { Avatar, Box, Button, List, ListItem, ListItemAvatar, ListItemText, Modal, TextField, Tooltip, Typography } from "@mui/material";
 import { searchIcons } from "../../service/icons-service";
 import { createCategory, deleteCategory, getCategories, updateCategory } from "../../service/database-service";
+import AuthContext from "../../context/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { CANCEL_CATEGORY_ICON, SAVE_CATEGORY_ICON } from "../../common/constants";
 import { GridAddIcon } from "@mui/x-data-grid";
 import { AddBox } from "@mui/icons-material";
-import AuthContext from "../../context/AuthContext";
+import { useMediaQuery } from '@mui/material';
 import "./Categories.css";
 
 interface Category {
@@ -39,6 +40,7 @@ const Categories = () => {
     const [categoryToDelete, setCategoryToDelete] = useState<string>("");
     const [editedCategory, setEditedCategory] = useState<Category|null>(null);
     const [categoryToUpdate, setCategoryToUpdate] = useState<Category|null>(null);
+    const isMobile = useMediaQuery('(max-width:600px)');
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -188,17 +190,33 @@ const Categories = () => {
             <Box className="categories-box">
                 {categories.length > 0 ?
                     <List className="categories-list">
+                        <Typography variant="h6" 
+                            sx={{ fontWeight: 'bold', color: '#3f51b5', letterSpacing: '1px', fontSize: '1.0rem' }}
+                        >
+                            Existing Categories
+                        </Typography>
+
                         {categories.map((category) => (
-                            <ListItem key={category.id} className="category-item" sx={{ width: 'auto' }}>
+                            <ListItem key={category.id} className={isMobile ? "category-item-mobile" : "category-item"}>
                                 <ListItemAvatar>
                                     <Avatar> <img src={category.imgSrc} alt={category.imgAlt} /> </Avatar>
                                 </ListItemAvatar>
-                                <ListItemText primary={category.type} secondary={
-                                    <span>
-                                        <Button onClick={() => handleEdit(category)}><FontAwesomeIcon icon={faPenToSquare} size="xl" /></Button>
-                                        <Button onClick={() => setCategoryToDelete(category.id)}><FontAwesomeIcon icon={faTrashCan} size="xl" /></Button>
-                                    </span>
-                                } />
+                                <ListItemText primary={<span> {category.type} </span>} />
+
+                                <Box sx={{ display: 'none', flexDirection: isMobile ? 'column' : 'row', gap: 1 }}
+                                    className="category-buttons"
+                                >
+                                    <Tooltip title="Edit" arrow>
+                                        <Button onClick={() => handleEdit(category)}>
+                                            <FontAwesomeIcon icon={faPenToSquare} size="lg" />
+                                        </Button>
+                                    </Tooltip>
+                                    <Tooltip title="Delete" arrow>
+                                        <Button onClick={() => setCategoryToDelete(category.id)}>
+                                            <FontAwesomeIcon icon={faTrashCan} size="lg" />
+                                        </Button>
+                                    </Tooltip>
+                                </Box>
                             </ListItem>
                         ))}
                     </List>
@@ -217,6 +235,13 @@ const Categories = () => {
 
             {(addCategoryMode || editedCategory) && 
                 <Box component="form" className="category-details" onSubmit={handleSubmit}>
+
+                    <Typography variant="h6" 
+                        sx={{ fontWeight: 'bold', color: '#3f51b5', letterSpacing: '1px', fontSize: '1.0rem' }}
+                    >
+                        {addCategoryMode ? "Add Category" : "Edit Category"}
+                    </Typography>
+
                     {/* First Row: Icon and Category Name */}
                     <div className="top-row">
                         {addCategoryMode && (

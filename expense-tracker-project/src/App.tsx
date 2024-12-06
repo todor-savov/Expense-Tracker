@@ -15,8 +15,9 @@ import OverviewView from './views/OverviewView/OverviewView.tsx';
 import ForgotPasswordView from './views/ForgotPasswordView/ForgotPasswordView.tsx';
 import ResetPasswordView from './views/ResetPasswordView/ResetPasswordView.tsx';
 import SettingsView from './views/SettingsView/SettingsView.tsx';
-import './App.css';
 import FaqView from './views/FaqView/FaqView.tsx';
+import AboutView from './views/AboutView/AboutView.tsx';
+import './App.css';
 
 interface UserSettings { 
   activityNotifications: string;
@@ -48,6 +49,7 @@ function App() {
                   <Route path="/categories" element={<Authenticated> <CategoriesView /> </Authenticated>} />
                   <Route path="/overview" element={<Authenticated> <OverviewView /> </Authenticated>} />
                   <Route path="/settings" element={<Authenticated> <SettingsView /> </Authenticated>} />
+                  <Route path="/about" element={<AboutView />} />
                 </Routes>
         </AuthContext.Provider>
       </BrowserRouter>

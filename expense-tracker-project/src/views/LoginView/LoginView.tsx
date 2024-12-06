@@ -1,5 +1,6 @@
 import Header from "../../components/Header/Header";
 import Login from "../../components/Login/Login";
+import Footer from "../../components/Footer/Footer";
 
 const LoginView = () => {
 
@@ -9,6 +10,7 @@ const LoginView = () => {
                 <Header from={"Home"} />
             </div>
             <Login />
+            <Footer />
         </div>
     );
 }

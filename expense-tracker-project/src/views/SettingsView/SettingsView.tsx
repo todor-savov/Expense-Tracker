@@ -1,5 +1,6 @@
 import Header from "../../components/Header/Header";
 import Settings from "../../components/Settings/Settings";
+import Footer from "../../components/Footer/Footer";
 
 const SettingsView = () => {
 
@@ -8,7 +9,8 @@ const SettingsView = () => {
             <div className="header-container">
                 <Header from={"Settings"} />
             </div>
-            <Settings />         
+            <Settings />  
+            <Footer />       
         </div>
     );
 }

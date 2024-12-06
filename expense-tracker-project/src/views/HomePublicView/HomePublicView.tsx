@@ -1,5 +1,6 @@
 import Header from "../../components/Header/Header";
 import HomePublic from "../../components/HomePublic/HomePublic";
+import Footer from "../../components/Footer/Footer";
 
 const HomePublicView = () => {
     
@@ -9,6 +10,7 @@ const HomePublicView = () => {
                 <Header from={"Home"} />
             </div>
             <HomePublic />
+            <Footer />
         </div>
     );
 }

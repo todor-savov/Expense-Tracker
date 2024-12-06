@@ -1,5 +1,6 @@
 import Header from "../../components/Header/Header";
 import HomePrivate from "../../components/HomePrivate/HomePrivate";
+import Footer from "../../components/Footer/Footer";
 
 const HomePrivateView = () => {
 
@@ -8,7 +9,8 @@ const HomePrivateView = () => {
             <div className="header-container">
                 <Header from={"Latest Records"} />
             </div>
-            <HomePrivate />
+            <HomePrivate />            
+            <Footer />
         </div>
     );
 }

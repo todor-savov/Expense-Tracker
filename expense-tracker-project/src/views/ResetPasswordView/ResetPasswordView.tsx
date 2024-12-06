@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { DIGIT_REGEX, LETTER_REGEX, PASSWORD_MAX_CHARS, PASSWORD_MIN_CHARS, SPECIAL_CHARS_REGEX } from "../../common/constants";
 import { confirmPasswordResetWithToken, verifyPasswordResetToken } from "../../service/authentication-service";
+import Header from "../../components/Header/Header";
 import { Box, CircularProgress, Stack, TextField, Typography } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleCheck, faCircleXmark } from "@fortawesome/free-solid-svg-icons";
-import Header from "../../components/Header/Header";
+import Footer from "../../components/Footer/Footer";
 import './ResetPasswordView.css';
 
 const ResetPasswordView = () => {   
@@ -126,6 +127,8 @@ const ResetPasswordView = () => {
                     {tokenError}
                 </Typography>)
             }
+
+            <Footer />
         </>
      );
 }

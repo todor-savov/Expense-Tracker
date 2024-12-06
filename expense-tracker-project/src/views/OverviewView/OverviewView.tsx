@@ -1,5 +1,6 @@
 import Header from "../../components/Header/Header";
 import Overview from "../../components/Overview/Overview";
+import Footer from "../../components/Footer/Footer";
 
 const OverviewView = () => {
 
@@ -9,6 +10,7 @@ const OverviewView = () => {
                 <Header from={"Overview"} /> 
             </div>
             <Overview />
+            <Footer />
         </div>
     );
 }

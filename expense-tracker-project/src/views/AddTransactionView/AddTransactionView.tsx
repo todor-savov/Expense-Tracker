@@ -1,5 +1,6 @@
-import AddTransaction from "../../components/AddTransaction/AddTransaction";
 import Header from "../../components/Header/Header";
+import AddTransaction from "../../components/AddTransaction/AddTransaction";
+import Footer from "../../components/Footer/Footer";
 
 const AddTransactionView = () => {
 
@@ -9,6 +10,7 @@ const AddTransactionView = () => {
                 <Header from={"Add Transaction"} />
             </div>
             <AddTransaction mode="new" />
+            <Footer />
         </div>
     );
 }

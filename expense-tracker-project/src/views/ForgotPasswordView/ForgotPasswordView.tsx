@@ -4,6 +4,7 @@ import Header from "../../components/Header/Header";
 import { Box, Button, CircularProgress, Stack, TextField } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleCheck, faCircleXmark } from "@fortawesome/free-solid-svg-icons";
+import Footer from "../../components/Footer/Footer";
 import './ForgotPasswordView.css';
 
 const ForgotPasswordView = () => {
@@ -72,6 +73,8 @@ const ForgotPasswordView = () => {
                     )
                 }
             </Box>
+
+            <Footer />
         </div>
     );
 }

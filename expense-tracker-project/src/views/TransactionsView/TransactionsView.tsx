@@ -1,5 +1,6 @@
-import AllTransactions from "../../components/AllTransactions/AllTransactions";
 import Header from "../../components/Header/Header";
+import AllTransactions from "../../components/AllTransactions/AllTransactions";
+import Footer from "../../components/Footer/Footer";
 
 const TransactionsView = () => {
 
@@ -9,7 +10,8 @@ const TransactionsView = () => {
                 <Header from={"Transactions"} />
             </div>
             <AllTransactions />
-        </div>
+            <Footer />
+        </div>        
     );
 };
 

@@ -114,14 +114,8 @@ const HomePrivate = () => {
                 </div>
             : transactions.length > 0 ?
             <>
-                {error && <p>{error}</p>}
-
-                <Typography variant="h6" sx={{ backgroundColor: 'white', marginBottom: '10px', display: 'flex', 
-                                    fontSize: '16px', fontStyle: 'italic' }}> 
-                    The values in the "Amount" column are in {settings?.currency} currency.
-                </Typography>
-
-                 <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+                {error && <p>{error}</p>}                
+                 <Paper sx={{ width: '100%', overflow: 'hidden' }}>                 
                     <TableContainer sx={{maxWidth: '100%'}}>
                         <Table stickyHeader aria-label="sticky table">
                             <TableHead>
@@ -182,6 +176,10 @@ const HomePrivate = () => {
                             </TableBody>
                         </Table>
                     </TableContainer>
+
+                    <Typography variant="h6" sx={{ fontSize: '16px', fontStyle: 'italic', padding: '10px' }}> 
+                        The values in the "Amount" column are in {settings?.currency} currency.
+                    </Typography>
                 </Paper>
             </>
             : 

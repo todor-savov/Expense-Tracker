@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarDays, faTags, faCalculator, faList, faCreditCard, faDollarSign } from '@fortawesome/free-solid-svg-icons';
 import { Box, Button, MenuItem, TextField } from '@mui/material';
-import { Save } from '@mui/icons-material';
+import { Cancel, Save } from '@mui/icons-material';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -266,8 +266,11 @@ const AddTransaction = ({ mode }: { mode: string }) => {
                 
                 <UploadReceipt setSalesReceipt={setSalesReceipt} transaction={fetchedTransaction} />
 
-                <Button id='add-expense' type="submit" endIcon={<Save />}>Save</Button>
-            </Box>
+                <span className='action-buttons'>
+                    <Button id='add-expense' type="submit" endIcon={<Save />}>Save</Button>
+                    <Button id='cancel-expense' onClick={() => navigate('/transactions')} endIcon={<Cancel />}>Cancel</Button>
+                </span>
+             </Box>
         :   <div className="message-box">
                 <p>Please ensure you have created at least one category to be able to add a new transaction.</p>
             </div>

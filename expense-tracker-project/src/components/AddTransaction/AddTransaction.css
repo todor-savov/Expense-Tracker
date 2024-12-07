@@ -48,20 +48,37 @@
     padding: 10px;
 }
 
-#add-expense {
+.action-buttons {
     grid-column: 1 / 3;
-    justify-self: center;
-    width: 30%;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px;
+}
+
+#add-expense, #cancel-expense {
+    width: 20%;
     padding: 15px;
     border: none;
     border-radius: 5px;
-    background: #0074cc;
     color: #fff;
     cursor: pointer;
 }
 
+#add-expense {
+    background: #058fe4;
+}
+
 #add-expense:hover {
-    background: #ff9800;
+    background: #60a6ec;
+}
+
+#cancel-expense {
+    background: #d94e1b;
+}
+
+#cancel-expense:hover {
+    background: #ec865b;
 }
 
 .spinner {

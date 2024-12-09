@@ -40,9 +40,7 @@ const ForgotPasswordView = () => {
     
     return (
         <div>
-            <div className="header-container">
-                <Header from={"Forgotten password"} />
-            </div>
+            <Header from={"Forgotten password"} />
      
             <Box component="form" onSubmit={handleSubmit} className="forgot-password-form">
                 <TextField id="email" name="email" label="Email address" variant="outlined" required 

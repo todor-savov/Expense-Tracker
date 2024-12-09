@@ -8,9 +8,7 @@ const ProfileView = () => {
 
     return (
         <div>
-            <div className="header-container">
-                <Header from={"Profile"} isUserChanged={isUserChanged} /> 
-            </div>
+            <Header from={"Profile"} isUserChanged={isUserChanged} /> 
             <Profile isUserChanged={isUserChanged} setIsUserChanged={setIsUserChanged} />
             <Footer />
         </div>

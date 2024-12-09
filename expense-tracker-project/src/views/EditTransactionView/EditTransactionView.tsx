@@ -6,9 +6,7 @@ const EditTransactionView = () => {
     
     return (
         <div>
-            <div className="header-container">
-                <Header from={"Edit Transaction"} />
-            </div>
+            <Header from={"Edit Transaction"} />
             <AddTransaction mode="edit" />
             <Footer />
         </div>

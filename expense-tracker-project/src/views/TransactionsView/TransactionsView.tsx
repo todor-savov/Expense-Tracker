@@ -6,9 +6,7 @@ const TransactionsView = () => {
 
     return (
         <div>
-            <div className="header-container">
-                <Header from={"Transactions"} />
-            </div>
+            <Header from={"Transactions"} />
             <AllTransactions />
             <Footer />
         </div>        

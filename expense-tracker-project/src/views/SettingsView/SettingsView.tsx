@@ -6,9 +6,7 @@ const SettingsView = () => {
 
     return (       
         <div>
-            <div className="header-container">
-                <Header from={"Settings"} />
-            </div>
+            <Header from={"Settings"} />
             <Settings />  
             <Footer />       
         </div>

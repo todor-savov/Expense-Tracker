@@ -6,9 +6,7 @@ const LoginView = () => {
 
     return (
         <div>
-            <div className="header-container">
-                <Header from={"Home"} />
-            </div>
+            <Header from={"Home"} />
             <Login />
             <Footer />
         </div>

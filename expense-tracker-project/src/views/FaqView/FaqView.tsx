@@ -6,9 +6,7 @@ const FaqView = () => {
     
     return (    
         <div>
-            <div className="header-container">
-                <Header from={"Frequently Asked Questions"} />
-            </div>
+            <Header from={"Frequently Asked Questions"} />
             <FAQ />
             <Footer />
         </div>

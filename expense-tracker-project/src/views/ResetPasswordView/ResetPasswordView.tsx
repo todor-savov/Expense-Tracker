@@ -76,9 +76,7 @@ const ResetPasswordView = () => {
     
     return (             
         <>  
-            <div className="header-container">
-                <Header from={"Reset Password"} />
-            </div>
+            <Header from={"Reset Password"} />
 
             {isTokenValid === true ? 
                 <div className="reset-container">

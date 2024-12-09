@@ -6,9 +6,7 @@ const AboutView  = () => {
 
     return (
         <div>
-            <div className="header-container">
-                <Header from={"About the author"} />
-            </div>
+            <Header from={"About the author"} />
             <About />
             <Footer />
         </div>

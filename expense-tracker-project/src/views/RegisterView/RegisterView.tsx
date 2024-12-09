@@ -6,9 +6,7 @@ const RegisterView = () => {
 
     return (
         <div>
-            <div className="header-container">
-                <Header from={"Home"} />
-            </div>
+            <Header from={"Home"} />
             <Register />
             <Footer />
         </div>

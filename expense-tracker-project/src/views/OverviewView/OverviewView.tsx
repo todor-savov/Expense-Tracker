@@ -6,9 +6,7 @@ const OverviewView = () => {
 
     return (
         <div>
-            <div className="header-container">
-                <Header from={"Overview"} /> 
-            </div>
+            <Header from={"Overview"} /> 
             <Overview />
             <Footer />
         </div>

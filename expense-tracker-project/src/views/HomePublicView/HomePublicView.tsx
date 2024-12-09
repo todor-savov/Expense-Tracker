@@ -6,9 +6,7 @@ const HomePublicView = () => {
     
     return (
         <div>
-            <div className="header-container">
-                <Header from={"Home"} />
-            </div>
+            <Header from={"Home"} />
             <HomePublic />
             <Footer />
         </div>

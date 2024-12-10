@@ -90,11 +90,7 @@ const AllTransactions = () => {
                     <p>Start by adding your first transaction to keep track of your expenses.</p>
                 </div>
              : <StickyTable transactions={transactions} setTransactionToDelete={setTransactionToDelete} />
-            }            
-
-            <Button onClick={() => navigate('/add-transaction')} variant="contained" sx={{marginTop: '10px'}}>
-                <Add />
-            </Button>
+            }                       
         </>
     );
 }

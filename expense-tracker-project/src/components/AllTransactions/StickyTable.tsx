@@ -11,9 +11,9 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import { IconButton, InputAdornment, Typography } from '@mui/material';
+import { Button, IconButton, InputAdornment, Typography } from '@mui/material';
 import { ClearIcon } from '@mui/x-date-pickers';
-import { ArrowUpward, ArrowDownward } from '@mui/icons-material';
+import { ArrowUpward, ArrowDownward, Add } from '@mui/icons-material';
 import SearchIcon from '@mui/icons-material/Search';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare, faReceipt, faTrashCan } from '@fortawesome/free-solid-svg-icons';
@@ -285,6 +285,10 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionT
                           <strong>TOTAL: </strong>
                           {`${settings?.currency === 'USD' ? '$' : (settings?.currency === 'EUR' ? '€' : 'BGN')} ${sum.toFixed(2)}`}                      
                     </Box>
+
+                    <Button onClick={() => navigate('/add-transaction')} variant="contained" sx={{marginTop: '5px'}}>
+                      <Add />
+                    </Button>            
                 </TableContainer>
                 <TablePagination
                     rowsPerPageOptions={[10, 25, 100]}

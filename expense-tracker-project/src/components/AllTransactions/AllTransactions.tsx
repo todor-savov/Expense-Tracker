@@ -1,7 +1,4 @@
 import { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Button } from "@mui/material";
-import { Add } from "@mui/icons-material";
 import AuthContext from "../../context/AuthContext";
 import StickyTable from "./StickyTable";
 import { deleteTransaction, getTransactions } from "../../service/database-service";
@@ -22,7 +19,6 @@ interface FetchedTransaction {
 
 const AllTransactions = () => {
     const { isLoggedIn, settings } = useContext(AuthContext);
-    const navigate = useNavigate();
     const [transactions, setTransactions] = useState<FetchedTransaction[]|[]>([]);
     const [transactionToDelete, setTransactionToDelete] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);

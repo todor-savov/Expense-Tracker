@@ -49,10 +49,7 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
-    padding: 25px !important; 
-    background-color: #f9f9f9;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 25px !important;
 }
 
 .categories-list img {
@@ -61,7 +58,7 @@
 
 .category-item {
     display: flex;
-    border: 1px solid #ccc;
+    border: 1px solid #f9f6f6;
     border-radius: 5px;
 }
 

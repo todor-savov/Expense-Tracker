@@ -1,0 +1,34 @@
+.footer-container-right a {
+    color: #fff;
+    transition: background-color 0.3s;
+}
+
+.footer-container-right a:hover {
+    background-color: #5ba7ea;
+    scale: 1.2;
+}
+
+.footer-container-left {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-grow: 1;
+    gap: 2rem;
+}
+
+.footer-container-left button {
+    font-size: 1.2rem;
+    font-family: 'Poppins', sans-serif;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+}
+
+.footer-container-left button:hover {
+    scale: 1.2;
+}
+
+.footer-container-right {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}

@@ -114,10 +114,10 @@ const HomePrivate = () => {
                 </div>
             : transactions.length > 0 ?
             <>
-                {error && <p>{error}</p>}                
-                 <Paper sx={{ width: '100%', overflow: 'hidden' }}>                 
-                    <TableContainer sx={{maxWidth: '100%'}}>
-                        <Table stickyHeader aria-label="sticky table">
+                {error && <p>{error}</p>}
+                 <Paper sx={{ width: '100%', overflow: 'hidden', backgroundColor: 'transparent' }}>
+                    <TableContainer>
+                        <Table aria-label="sticky table">
                             <TableHead>
                                 <TableRow>
                                     {columns.map((column) => 
@@ -133,7 +133,7 @@ const HomePrivate = () => {
                                     const date2 = new Date(t2['date'] as string);
                                     return date1 < date2 ? 1 : -1;
                                 })
-                                .slice(0, 5)
+                                .slice(0, 10)
                                 .map((transaction) =>
                                     <TableRow hover role="checkbox" tabIndex={-1} key={transaction.id}>
                                         {columns.map((column) => {

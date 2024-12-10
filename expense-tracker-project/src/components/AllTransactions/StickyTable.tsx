@@ -175,16 +175,14 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionT
   };
 
   return (
-    <>
-    {showReceipt ? 
-            <div className="receipt-content" onClick={() => setShowReceipt('')}>
-                <img src={showReceipt} alt="receipt" />
-            </div>
-            :
-            <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-                <TableContainer sx={{maxWidth: '100%'}}>
+    <>    
+        <div className={showReceipt ? "receipt-content" : 'receipt-content-hide'} onClick={() => setShowReceipt('')}>
+            <img src={showReceipt} alt="receipt" />
+        </div>
+        <Paper sx={{ width: '100%', overflow: 'hidden', backgroundColor: 'transparent' }}>
+                <TableContainer>
                     {loadSearchFilters()}
-                    <Table stickyHeader aria-label="sticky table">
+                    <Table aria-label="sticky table">
                         <TableHead>
                             <TableRow>
                               {columns.map(column => 
@@ -299,8 +297,7 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionT
                     onPageChange={handleChangePage}
                     onRowsPerPageChange={handleChangeRowsPerPage}
                 />          
-            </Paper>
-    }
+        </Paper>
     </>
   );
 }

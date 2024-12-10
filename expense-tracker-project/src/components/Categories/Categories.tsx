@@ -190,9 +190,7 @@ const Categories = () => {
             <Box className="categories-box">
                 {categories.length > 0 ?
                     <List className="categories-list">
-                        <Typography variant="h6" 
-                            sx={{ fontWeight: 'bold', color: '#3f51b5', letterSpacing: '1px', fontSize: '1.0rem' }}
-                        >
+                        <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#3f51b5', letterSpacing: '1px', fontSize: '1.0rem' }}>
                             Existing Categories
                         </Typography>
 
@@ -219,88 +217,84 @@ const Categories = () => {
                                 </Box>
                             </ListItem>
                         ))}
+
+                        {(!addCategoryMode && !editedCategory) && 
+                            <Box>
+                                <Button onClick={handleAddCategoryButtonClick}><AddBox style={{fontSize: 40 }} /></Button>
+                            </Box>
+                        }
+
+                        {(addCategoryMode || editedCategory) && 
+                            <Box component="form" className="category-details" onSubmit={handleSubmit}>
+                                <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#3f51b5', letterSpacing: '1px', fontSize: '1rem' }}>
+                                    {addCategoryMode ? "Add Category" : "Edit Category"}
+                                </Typography>
+
+                                {/* First Row: Icon and Category Name */}
+                                <div className="top-row">
+                                    {addCategoryMode && (
+                                        selectedIcon ? 
+                                        <img src={selectedIcon} alt="category-icon" onClick={() => setShowIconSearch(true)} className="selected-icon" /> :
+                                        <div className="icon-placeholder" onClick={() => setShowIconSearch(true)}>
+                                            <GridAddIcon style={{ fontSize: 50, color: "#9e9e9e" }} />
+                                            <Typography variant="caption">Select an icon</Typography>
+                                        </div>
+                                    )}
+
+                                    {editedCategory && <img src={selectedIcon ? selectedIcon : editedCategory.imgSrc} alt="category-icon" onClick={() => setShowIconSearch(true)} 
+                                        className="selected-icon" />}
+
+                                    {addCategoryMode && 
+                                        <TextField type="text" id="category-name" label="Category Name" 
+                                            variant="outlined" required 
+                                        />
+                                    }
+
+                                    {editedCategory &&
+                                        <TextField type="text" id="category-name" label="Category Name" 
+                                            variant="outlined" required value={editedCategory.type} 
+                                            onChange={(e) => setEditedCategory({ ...editedCategory, type: e.target.value })} 
+                                        />
+                                    }
+                                </div>
+
+                                {/* Second Row: Buttons */}
+                                <div className="bottom-row">
+                                    <Button type="submit">
+                                        <img width="100" height="100" src={SAVE_CATEGORY_ICON} alt="save-button"/>
+                                    </Button>
+                                    <Button onClick={handleCancelButtonClick}>
+                                        <img width="48" height="48" src={CANCEL_CATEGORY_ICON} alt="cancel-button"/>
+                                    </Button>
+                                </div>
+
+                                <Modal aria-describedby="transition-modal-description" open={showIconSearch} onClose={() => setShowIconSearch(false)} 
+                                    closeAfterTransition>
+                                    <Box className='icon-search'>
+                                        <TextField type="text" fullWidth id="search-input" helperText={"Search for category icons (provided by IconFinder)"} 
+                                            onChange={(e) => setSearchTerm(e.target.value)} label="Search" variant="outlined" />
+
+                                        <Box id="transition-modal-description">
+                                            {foundIcons.length > 0 ?
+                                                <Box className="icon-grid">
+                                                    {foundIcons.map((icon, index) => {
+                                                        const imageURL = icon.raster_sizes[icon.raster_sizes.length - 1].formats[0].preview_url;
+                                                        return <img key={index} onClick={() => handleIconSelect(imageURL)} src={imageURL} alt={icon.tags[0]} />
+                                                    })}
+                                                </Box>
+                                                : 'No icons found'
+                                            }
+                                        </Box>
+                                    </Box>
+                                </Modal>
+                            </Box>
+                        }
                     </List>
                     :   <div className="message-box">
                             <h2>No Categories Found</h2>
                         </div>
                 }
-
                 {error && <p>{error}</p>}
-
-                {(!addCategoryMode && !editedCategory) && 
-                    <Box>
-                        <Button onClick={handleAddCategoryButtonClick}><AddBox style={{fontSize: 40 }} /></Button>
-                    </Box>
-                }
-
-            {(addCategoryMode || editedCategory) && 
-                <Box component="form" className="category-details" onSubmit={handleSubmit}>
-
-                    <Typography variant="h6" 
-                        sx={{ fontWeight: 'bold', color: '#3f51b5', letterSpacing: '1px', fontSize: '1.0rem' }}
-                    >
-                        {addCategoryMode ? "Add Category" : "Edit Category"}
-                    </Typography>
-
-                    {/* First Row: Icon and Category Name */}
-                    <div className="top-row">
-                        {addCategoryMode && (
-                            selectedIcon ? 
-                            <img src={selectedIcon} alt="category-icon" onClick={() => setShowIconSearch(true)} className="selected-icon" /> :
-                            <div className="icon-placeholder" onClick={() => setShowIconSearch(true)}>
-                                <GridAddIcon style={{ fontSize: 50, color: "#9e9e9e" }} />
-                                <Typography variant="caption">Select an icon</Typography>
-                            </div>
-                        )}
-
-                        {editedCategory && <img src={selectedIcon ? selectedIcon : editedCategory.imgSrc} alt="category-icon" onClick={() => setShowIconSearch(true)} 
-                            className="selected-icon" />}
-
-                        {addCategoryMode && 
-                            <TextField type="text" id="category-name" label="Category Name" 
-                                variant="outlined" required 
-                            />
-                        }
-
-                        {editedCategory &&
-                            <TextField type="text" id="category-name" label="Category Name" 
-                                variant="outlined" required value={editedCategory.type} 
-                                onChange={(e) => setEditedCategory({ ...editedCategory, type: e.target.value })} 
-                            />
-                        }
-                    </div>
-
-                    {/* Second Row: Buttons */}
-                    <div className="bottom-row">
-                        <Button type="submit">
-                            <img width="100" height="100" src={SAVE_CATEGORY_ICON} alt="save-button"/>
-                        </Button>
-                        <Button onClick={handleCancelButtonClick}>
-                            <img width="48" height="48" src={CANCEL_CATEGORY_ICON} alt="cancel-button"/>
-                        </Button>
-                    </div>
-
-                    <Modal aria-describedby="transition-modal-description" open={showIconSearch} onClose={() => setShowIconSearch(false)} 
-                        closeAfterTransition>
-                        <Box className='icon-search'>
-                            <TextField type="text" fullWidth id="search-input" helperText={"Search for category icons (provided by IconFinder)"} 
-                                onChange={(e) => setSearchTerm(e.target.value)} label="Search" variant="outlined" />
-
-                            <Box id="transition-modal-description">
-                                {foundIcons.length > 0 ?
-                                    <Box className="icon-grid">
-                                        {foundIcons.map((icon, index) => {
-                                            const imageURL = icon.raster_sizes[icon.raster_sizes.length - 1].formats[0].preview_url;
-                                            return <img key={index} onClick={() => handleIconSelect(imageURL)} src={imageURL} alt={icon.tags[0]} />
-                                        })}
-                                    </Box>
-                                    : 'No icons found'
-                                }
-                            </Box>
-                        </Box>
-                    </Modal>
-                </Box>
-            }
             </Box>
         );
 }

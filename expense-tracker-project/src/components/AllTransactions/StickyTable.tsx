@@ -11,7 +11,7 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import { IconButton, InputAdornment } from '@mui/material';
+import { IconButton, InputAdornment, Typography } from '@mui/material';
 import { ClearIcon } from '@mui/x-date-pickers';
 import { ArrowUpward, ArrowDownward } from '@mui/icons-material';
 import SearchIcon from '@mui/icons-material/Search';
@@ -275,7 +275,13 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionT
                           }
                         </TableBody>
                     </Table>
-                    <Box sx={{ margin: '2%', padding: '1%' }}> 
+
+                    <Typography variant="h6" sx={{ display: 'flex', justifyContent: 'center', padding: '0.5rem',
+                        fontSize: '16px', fontStyle: 'italic' }}> 
+                        The values in the "Amount" column are in {settings?.currency} currency.
+                    </Typography>
+
+                    <Box sx={{ padding: '1%' }}> 
                           <strong>TOTAL: </strong>
                           {`${settings?.currency === 'USD' ? '$' : (settings?.currency === 'EUR' ? '€' : 'BGN')} ${sum.toFixed(2)}`}                      
                     </Box>
@@ -288,7 +294,7 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionT
                     page={page}
                     onPageChange={handleChangePage}
                     onRowsPerPageChange={handleChangeRowsPerPage}
-                />
+                />          
             </Paper>
     }
     </>

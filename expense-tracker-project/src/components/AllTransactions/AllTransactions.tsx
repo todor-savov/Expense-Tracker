@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, Typography } from "@mui/material";
+import { Button } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import AuthContext from "../../context/AuthContext";
 import StickyTable from "./StickyTable";
@@ -82,12 +82,7 @@ const AllTransactions = () => {
 
     return (
         <>
-            {error && <p>{error}</p>}
-
-            <Typography variant="h6" sx={{ backgroundColor: 'white', marginBottom: '10px', display: 'flex', 
-                                    fontSize: '16px', fontStyle: 'italic' }}> 
-                The values in the "Amount" column are in {settings?.currency} currency.
-            </Typography>
+            {error && <p>{error}</p>}            
 
             {transactions.length === 0 ? 
                 <div className="message-box">
@@ -96,7 +91,7 @@ const AllTransactions = () => {
                 </div>
              : <StickyTable transactions={transactions} setTransactionToDelete={setTransactionToDelete} />
             }            
-                        
+
             <Button onClick={() => navigate('/add-transaction')} variant="contained" sx={{marginTop: '10px'}}>
                 <Add />
             </Button>

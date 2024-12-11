@@ -229,7 +229,7 @@ const Profile = ( { isUserChanged, setIsUserChanged }: ProfileProps ) => {
                 />
 
             </div>
-            <Button id='update-profile-button' type="submit" endIcon={<Save />}></Button>
+            <Button id='update-profile-button' type="submit">Update</Button>
         </Box>
     )
 }

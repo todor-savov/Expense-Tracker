@@ -1,12 +1,10 @@
 .profile-container {
     display: flex;
     flex-direction: column;
-    max-width: 75%;
     align-items: center;
     padding: 20px;
     margin: 0 auto;
     background-color: #f9f9f9;
-    border-radius: 10px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -70,10 +68,10 @@
 }
 
 #update-profile-button {
-    margin-top: 20px;
-    width: 100%;
-    background-color: #007BFF;
     color: #fff;
+    font-weight: bold;
+    padding: 10px 30px;
+    background-color: #007BFF;
     transition: background-color 0.3s ease;
 }
 

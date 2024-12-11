@@ -141,7 +141,7 @@ const Progress = () => {
     return (
         <>
             {error && <p>{error}</p>}
-            <Box>
+            <Box sx={{backgroundColor: 'white'}}>
                 <Box className="overview-header">
                     <FormControl sx={{ m: 1, minWidth: 200 }}>
                         <InputLabel id="demo-simple-select-helper-label">Time Span</InputLabel>

@@ -114,7 +114,7 @@ const HomePrivate = () => {
                     <img src={showReceipt} alt="receipt" />
                 </div>
                 {error && <p>{error}</p>}
-                 <Paper sx={{ width: '100%', overflow: 'hidden', backgroundColor: 'transparent' }}>
+                 <Paper sx={{ width: '100%', overflow: 'hidden' }}>
                     <TableContainer>
                         <Table aria-label="sticky table">
                             <TableHead>

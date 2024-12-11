@@ -179,7 +179,7 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionT
         <div className={showReceipt ? "receipt-content" : 'receipt-content-hide'} onClick={() => setShowReceipt('')}>
             <img src={showReceipt} alt="receipt" />
         </div>
-        <Paper sx={{ width: '100%', overflow: 'hidden', backgroundColor: 'transparent' }}>
+        <Paper sx={{ width: '100%', overflow: 'hidden' }}>
                 <TableContainer>
                     {loadSearchFilters()}
                     <Table aria-label="sticky table">

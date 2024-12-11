@@ -42,6 +42,7 @@
 .categories-box {
     display: flex;
     flex-direction: column;
+    background-color: white;
     gap: 16px;
 }
 
@@ -58,7 +59,7 @@
 
 .category-item {
     display: flex;
-    border: 1px solid #f9f6f6;
+    border: 1px solid #8b8989;
     border-radius: 5px;
 }
 

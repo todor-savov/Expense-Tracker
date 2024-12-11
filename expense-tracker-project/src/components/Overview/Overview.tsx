@@ -144,14 +144,15 @@ const Overview = () => {
     return (
       <>
       {error && <p>{error}</p>}
-        <FormGroup className='switch-button'>
-            <FormControlLabel control={<Switch />} label={switchLabel} 
-                onChange={() => setSwitchLabel(switchLabel === 'Period Overview' ? 'Progress Over Time' : 'Period Overview')} />
-        </FormGroup>
-
+      
       {switchLabel === 'Period Overview' ? 
         (transactions.length > 0 ?
-        <Box className="overview-container">            
+        <Box className="overview-container">     
+            <FormGroup className='switch-button'>
+                <FormControlLabel control={<Switch />} label={switchLabel} 
+                    onChange={() => setSwitchLabel(switchLabel === 'Period Overview' ? 'Progress Over Time' : 'Period Overview')} />
+            </FormGroup>
+
             <Box className="overview-header">
                 <Tabs value={outerValue} onChange={handleOuterChange}>
                     <Tab key={0} label="Year" onClick={() => setView("yearly")} sx={{ backgroundColor: outerValue === 0 ? 'lightblue' : 'inherit' }} />
@@ -236,7 +237,14 @@ const Overview = () => {
         :   <div className="message-box">
                 <h2>No Transactions Found</h2>
             </div>)
-        : <Progress />
+        : <div className='progress-container'>        
+            <FormGroup className='switch-button'>
+                <FormControlLabel control={<Switch />} label={switchLabel} 
+                    onChange={() => setSwitchLabel(switchLabel === 'Period Overview' ? 'Progress Over Time' : 'Period Overview')} />
+            </FormGroup>
+
+            <Progress />
+        </div>
       }
     </>
   );  

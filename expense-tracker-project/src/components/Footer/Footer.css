@@ -1,3 +1,9 @@
+.footer-container-right {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
 .footer-container-right a {
     color: #fff;
     transition: background-color 0.3s;
@@ -25,10 +31,4 @@
 
 .footer-container-left button:hover {
     scale: 1.2;
-}
-
-.footer-container-right {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
 }

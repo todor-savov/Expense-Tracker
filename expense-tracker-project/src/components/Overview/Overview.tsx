@@ -144,7 +144,7 @@ const Overview = () => {
     return (
       <>
       {error && <p>{error}</p>}
-        <FormGroup>
+        <FormGroup className='switch-button'>
             <FormControlLabel control={<Switch />} label={switchLabel} 
                 onChange={() => setSwitchLabel(switchLabel === 'Period Overview' ? 'Progress Over Time' : 'Period Overview')} />
         </FormGroup>
@@ -210,6 +210,7 @@ const Overview = () => {
                                 secondary={`100%`} 
                             />
                         </ListItem>
+                        
                         {pieData.map((data, index) =>                             
                             <ListItem key={index} className="custom-list-item">
                                 <ListItemAvatar>

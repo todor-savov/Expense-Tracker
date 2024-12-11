@@ -141,7 +141,7 @@ const Progress = () => {
     return (
         <>
             {error && <p>{error}</p>}
-            <Box className="overview-container">
+            <Box>
                 <Box className="overview-header">
                     <FormControl sx={{ m: 1, minWidth: 200 }}>
                         <InputLabel id="demo-simple-select-helper-label">Time Span</InputLabel>
@@ -155,8 +155,7 @@ const Progress = () => {
                 </Box>
 
                 {(transactions.length > 0 && timeSpan !== '') ?
-                <Box sx={{backgroundColor: 'white', boxShadow: 3, borderRadius: 2, width: '100%', padding: 1 }}>
-
+                <Box sx={{ padding: 1 }}>
                     <Typography variant="h6" sx={{ marginBottom: '10px', display: 'flex', fontSize: '16px', fontStyle: 'italic' }}> 
                         The values on the "Amount" axis are in {settings?.currency} currency.
                     </Typography>

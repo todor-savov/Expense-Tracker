@@ -239,8 +239,10 @@ const Overview = () => {
             </div>)
         : <div className='progress-container'>        
             <FormGroup className='switch-button'>
-                <FormControlLabel control={<Switch />} label={switchLabel} 
-                    onChange={() => setSwitchLabel(switchLabel === 'Period Overview' ? 'Progress Over Time' : 'Period Overview')} />
+                <FormControlLabel control={<Switch checked={switchLabel === 'Progress Over Time' ? true : false} />} 
+                    onChange={() => setSwitchLabel(switchLabel === 'Period Overview' ? 'Progress Over Time' : 'Period Overview')} 
+                    label={switchLabel}
+                />
             </FormGroup>
 
             <Progress />

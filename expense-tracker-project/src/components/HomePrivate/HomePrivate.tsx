@@ -108,12 +108,11 @@ const HomePrivate = () => {
         )
     }
 
-    return ( showReceipt ? 
-                <div className='receipt-content' onClick={() => setShowReceipt('')}>
+    return ( transactions.length > 0 ?
+            <>
+                <div className={showReceipt ? "receipt-content" : 'receipt-content-hide'} onClick={() => setShowReceipt('')}>
                     <img src={showReceipt} alt="receipt" />
                 </div>
-            : transactions.length > 0 ?
-            <>
                 {error && <p>{error}</p>}
                  <Paper sx={{ width: '100%', overflow: 'hidden', backgroundColor: 'transparent' }}>
                     <TableContainer>

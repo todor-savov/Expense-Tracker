@@ -290,13 +290,18 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionT
                 </TableContainer>
                 <TablePagination
                     rowsPerPageOptions={[10, 25, 100]}
-                    component="div"
+                    component="div"                   
                     count={filteredTransactions.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onPageChange={handleChangePage}
                     onRowsPerPageChange={handleChangeRowsPerPage}
-                />          
+                    classes={{
+                              root: 'pagination',
+                              selectLabel: 'pagination-select-label',
+                              displayedRows: 'pagination-displayed-rows',
+                            }}
+                />
         </Paper>
     </>
   );

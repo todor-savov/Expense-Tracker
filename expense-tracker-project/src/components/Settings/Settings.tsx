@@ -98,7 +98,7 @@ const Settings = () => {
                     : (isFormSubmitted ? 
                         (error ? 
                             <>
-                                <button className="update-settings-button" type="submit"><Save /></button>                                    
+                                <button className="update-settings-button" type="submit">Update</button>
                                 <Typography variant="body2" align="center" className="feedback-message error-message">
                                     <FontAwesomeIcon icon={faCircleXmark} size="2xl" />      
                                     Settings update has failed.                                   
@@ -110,7 +110,7 @@ const Settings = () => {
                                     Settings update has been successful.
                                 </Typography>
                         )
-                        : <button className="update-settings-button" type="submit"><Save /></button>                                                   
+                        : <button className="update-settings-button" type="submit">Update</button>
                         )                    
                 }
             </Box>

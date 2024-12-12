@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { Box, CircularProgress, FormControl, FormControlLabel, FormGroup, InputLabel, MenuItem, Select, 
         SelectChangeEvent, Stack, Switch, Typography } from "@mui/material";
-import { Save } from "@mui/icons-material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleCheck, faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import AuthContext from "../../context/AuthContext";
@@ -56,7 +55,6 @@ const Settings = () => {
     }
 
     return (
-        <div>
             <Box component={"form"} onSubmit={handleSubmit} className="settings-container">
                 <Typography variant="h5" sx={{ marginBottom: '20px', fontWeight: 'bold' }}>Choose your preferred settings:</Typography>
                 <FormGroup className="form-group">
@@ -114,7 +112,6 @@ const Settings = () => {
                         )                    
                 }
             </Box>
-        </div>
     );
 }
 

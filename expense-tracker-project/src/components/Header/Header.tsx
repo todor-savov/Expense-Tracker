@@ -174,8 +174,8 @@ const Header = ({ from, isUserChanged }: HeaderProps) => {
 
   return (
     isNavigationOpen ? <Navigation setIsNavigationOpen={setIsNavigationOpen} /> 
-    : <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="static">
+    : <Box>
+        <AppBar position="sticky">
           <Toolbar>
             {from !== 'Home' &&
               <IconButton size="large" edge="start" color="inherit" aria-label="menu" onClick={() => setIsNavigationOpen(true)}>
@@ -211,7 +211,8 @@ const Header = ({ from, isUserChanged }: HeaderProps) => {
                     </Typography>
                 </Popover>
                 <Menu id="menu-appbar" anchorEl={anchorEl} anchorOrigin={{vertical: 'bottom', horizontal: 'right',}} keepMounted
-                  transformOrigin={{vertical: 'top', horizontal: 'right',}} open={isMenuOpen} onClose={handleMenuClose}>
+                  transformOrigin={{vertical: 'top', horizontal: 'right',}} open={isMenuOpen} onClose={handleMenuClose}>                  
+                  <Box className='welcome-box'> <Typography component="span"> Welcome <strong>{currentUser?.firstName}</strong>! </Typography> </Box>          
                   <MenuItem onClick={handleProfileClick}><AccountCircle sx={{marginRight: '7px'}} /> Profile </MenuItem>
                   <MenuItem onClick={handleSettingsClick}><Settings sx={{marginRight: '7px'}} /> Settings </MenuItem>
                   <MenuItem onClick={handleLogoutClick}><Logout sx={{marginRight: '7px'}} /> Logout </MenuItem>
@@ -224,13 +225,7 @@ const Header = ({ from, isUserChanged }: HeaderProps) => {
                   </IconButton>)
             }
           </Toolbar>
-        </AppBar>
-
-        {isLoggedIn.status && 
-          <Box className='welcome-box'>
-            <Typography component="span"> Welcome <strong>{currentUser?.firstName}</strong>! </Typography>
-          </Box>
-        }
+        </AppBar>     
 
         {showFeedbackForm && 
           <div className="feedback-form-overlay">

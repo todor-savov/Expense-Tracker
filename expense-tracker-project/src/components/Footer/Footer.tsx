@@ -8,7 +8,7 @@ const Footer = () => {
 
     return (
         <footer>
-            <AppBar position="fixed" sx={{ top: 'auto', bottom: 0 }}>
+            <AppBar position="static">
                 <Toolbar>
                     <Box className="footer-container-left">
                         <IconButton color="inherit" aria-label="menu" onClick={() => navigate('/about')}>

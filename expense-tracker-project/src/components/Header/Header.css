@@ -7,12 +7,9 @@
 .welcome-box {
    display: flex;
    justify-content: center;
-   margin: 0px 0px 0px auto;
-   padding: 5px 10px;
+   margin: 0.4rem;
+   padding: 0.5rem;
    border-radius: 3px;
-   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-   background-color: #f5f5f5;
-   max-width: fit-content;
 }
 
 .welcome-box span {

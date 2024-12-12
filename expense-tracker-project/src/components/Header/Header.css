@@ -1,3 +1,10 @@
+.header-container {
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 50;
+}
+
 #profile-photo {
     width: 30px;
     height: 30px;

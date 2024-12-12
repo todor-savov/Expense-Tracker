@@ -174,7 +174,7 @@ const Header = ({ from, isUserChanged }: HeaderProps) => {
 
   return (
     isNavigationOpen ? <Navigation setIsNavigationOpen={setIsNavigationOpen} /> 
-    : <Box>
+    : <Box className='header-container'>
         <AppBar position="sticky">
           <Toolbar>
             {from !== 'Home' &&

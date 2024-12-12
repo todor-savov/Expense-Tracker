@@ -77,55 +77,55 @@ const ResetPasswordView = () => {
     return (             
         <>  
             <Header from={"Reset Password"} />
+            <div className="central-container">
+                {isTokenValid === true ? 
+                    <div className="reset-container">
+                        <Box component="form" className="reset-form" onSubmit={handleSubmit}>
+                            <Typography variant="h5" sx={{'marginBottom': '1.5rem'}}>Reset Password</Typography>
+                            
+                            <TextField type="password" required id="newPassword" name="newPassword" label="New Password"                            
+                                sx={{'marginBottom': '1.2rem', 'marginLeft': '0.5rem', 'marginRight': '0.5rem'}} error={!!newPasswordError} 
+                                helperText={newPasswordError || "Your new password"} className="reset-input"
+                            />
 
-            {isTokenValid === true ? 
-                <div className="reset-container">
-                    <Box component="form" className="reset-form" onSubmit={handleSubmit}>
-                        <Typography variant="h5" sx={{'marginBottom': '1.5rem'}}>Reset Password</Typography>
-                        
-                        <TextField type="password" required id="newPassword" name="newPassword" label="New Password"                            
-                            sx={{'marginBottom': '1.2rem', 'marginLeft': '0.5rem', 'marginRight': '0.5rem'}} error={!!newPasswordError} 
-                            helperText={newPasswordError || "Your new password"} className="reset-input"
-                        />
-
-                        <TextField type="password" required id="confirmPassword" name="confirmPassword" label="Confirm Password" 
-                            sx={{'marginBottom': '0.8rem', 'marginLeft': '0.5rem', 'marginRight': '0.5rem'}} error={!!confirmPasswordError}                         
-                            helperText={confirmPasswordError || "Confirm your new password"} className="reset-input"
-                        />
-                        
-                        {loading ?
-                            <Stack sx={{ color: 'grey.500' }} spacing={2} direction="row">
-                                <CircularProgress color="success" />
-                            </Stack>
-                            :                                                
-                            (!resetStatus ? <button type="submit" className="reset-button">Reset Password</button>
-                                : (resetStatus === 'success' ? 
-                                    <p className="success">
-                                        <FontAwesomeIcon icon={faCircleCheck} size="2xl" style={{color: "#1daa80", 
-                                            marginRight: "0.7rem", marginTop: "0.5rem"}} />
-                                        Password reset has been successful.
-                                        <br />
-                                        You can log in from upper right corner now.
-                                     </p>
-                                    : 
-                                    <p className="error">                                                                    
-                                        <FontAwesomeIcon icon={faCircleXmark} size="2xl" style={{color: "#df2b0c",
-                                            marginRight: "0.7rem", marginTop: "0.5rem"}} />      
-                                        Password reset has failed.
-                                    </p>                                                            
+                            <TextField type="password" required id="confirmPassword" name="confirmPassword" label="Confirm Password" 
+                                sx={{'marginBottom': '0.8rem', 'marginLeft': '0.5rem', 'marginRight': '0.5rem'}} error={!!confirmPasswordError}                         
+                                helperText={confirmPasswordError || "Confirm your new password"} className="reset-input"
+                            />
+                            
+                            {loading ?
+                                <Stack sx={{ color: 'grey.500' }} spacing={2} direction="row">
+                                    <CircularProgress color="success" />
+                                </Stack>
+                                :                                                
+                                (!resetStatus ? <button type="submit" className="reset-button">Reset Password</button>
+                                    : (resetStatus === 'success' ? 
+                                        <p className="success">
+                                            <FontAwesomeIcon icon={faCircleCheck} size="2xl" style={{color: "#1daa80", 
+                                                marginRight: "0.7rem", marginTop: "0.5rem"}} />
+                                            Password reset has been successful.
+                                            <br />
+                                            You can log in from upper right corner now.
+                                        </p>
+                                        : 
+                                        <p className="error">                                                                    
+                                            <FontAwesomeIcon icon={faCircleXmark} size="2xl" style={{color: "#df2b0c",
+                                                marginRight: "0.7rem", marginTop: "0.5rem"}} />      
+                                            Password reset has failed.
+                                        </p>                                                            
+                                    )
                                 )
-                            )
-                        }                                                                
-                    </Box>
-                </div>
-            : 
-                (isTokenValid === false &&
-                <Typography variant="h6" component="p" sx={{'marginLeft': '1.5rem', 'marginRight': '1.5rem', 'fontSize': '1.0rem'}} className="invalid-token">                
-                    <FontAwesomeIcon icon={faCircleXmark} size="lg" style={{ marginRight: "0.5rem" }} />
-                    {tokenError}
-                </Typography>)
-            }
-
+                            }                                                                
+                        </Box>
+                    </div>
+                : 
+                    (isTokenValid === false &&
+                    <Typography variant="h6" component="p" sx={{'marginLeft': '1.5rem', 'marginRight': '1.5rem', 'fontSize': '1.0rem'}} className="invalid-token">                
+                        <FontAwesomeIcon icon={faCircleXmark} size="lg" style={{ marginRight: "0.5rem" }} />
+                        {tokenError}
+                    </Typography>)
+                }
+            </div>
             <Footer />
         </>
      );

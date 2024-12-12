@@ -5,11 +5,13 @@ import Footer from "../../components/Footer/Footer";
 const AboutView  = () => {
 
     return (
-        <div>
+        <>
             <Header from={"About the author"} />
-            <About />
+            <div className="central-container">
+                <About />
+            </div>
             <Footer />
-        </div>
+        </>
     );
 }
 

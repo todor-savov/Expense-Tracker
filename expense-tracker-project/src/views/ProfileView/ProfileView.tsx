@@ -7,11 +7,13 @@ const ProfileView = () => {
     const [isUserChanged, setIsUserChanged] = useState<boolean>(false);
 
     return (
-        <div>
+        <>
             <Header from={"Profile"} isUserChanged={isUserChanged} /> 
-            <Profile isUserChanged={isUserChanged} setIsUserChanged={setIsUserChanged} />
+            <div className="central-container">
+                <Profile isUserChanged={isUserChanged} setIsUserChanged={setIsUserChanged} />
+            </div>
             <Footer />
-        </div>
+        </>
     );
 }
 

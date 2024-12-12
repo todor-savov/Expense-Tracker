@@ -5,11 +5,13 @@ import Footer from "../../components/Footer/Footer";
 const LoginView = () => {
 
     return (
-        <div>
+        <>
             <Header from={"Home"} />
-            <Login />
+            <div className="central-container">
+                <Login />
+            </div>
             <Footer />
-        </div>
+        </>
     );
 }
 

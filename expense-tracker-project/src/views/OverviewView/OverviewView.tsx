@@ -5,11 +5,13 @@ import Footer from "../../components/Footer/Footer";
 const OverviewView = () => {
 
     return (
-        <div>
+        <>
             <Header from={"Overview"} /> 
-            <Overview />
+            <div className="central-container">
+                <Overview />
+            </div>
             <Footer />
-        </div>
+        </>
     );
 }
 

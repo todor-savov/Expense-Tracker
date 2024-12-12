@@ -5,11 +5,13 @@ import Footer from "../../components/Footer/Footer";
 const HomePrivateView = () => {
 
     return (
-        <div>
+        <>
             <Header from={"Latest Records"} />
-            <HomePrivate />            
+            <div className="central-container">
+                <HomePrivate />  
+            </div> 
             <Footer />
-        </div>
+        </>
     );
 }
 

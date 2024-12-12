@@ -5,11 +5,13 @@ import Footer from "../../components/Footer/Footer";
 const CategoriesView = () => {
     
     return (
-        <div>
+        <>
             <Header from={"Categories"} /> 
-            <Categories />
+            <div className="central-container">
+                <Categories />
+            </div>
             <Footer />
-        </div>
+        </>
     );
 }
 

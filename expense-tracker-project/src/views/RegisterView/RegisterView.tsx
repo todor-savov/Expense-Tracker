@@ -5,11 +5,13 @@ import Footer from "../../components/Footer/Footer";
 const RegisterView = () => {
 
     return (
-        <div>
+        <>
             <Header from={"Home"} />
-            <Register />
+            <div className="central-container">
+                <Register />
+            </div>
             <Footer />
-        </div>
+        </>
     );
 }
 

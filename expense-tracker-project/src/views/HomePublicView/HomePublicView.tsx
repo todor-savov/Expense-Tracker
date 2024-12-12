@@ -5,11 +5,13 @@ import Footer from "../../components/Footer/Footer";
 const HomePublicView = () => {
     
     return (
-        <div>
+        <>
             <Header from={"Home"} />
-            <HomePublic />
+            <div className="central-container">
+                <HomePublic />
+            </div>
             <Footer />
-        </div>
+        </>
     );
 }
 

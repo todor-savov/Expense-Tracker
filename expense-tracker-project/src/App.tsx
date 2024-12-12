@@ -34,6 +34,7 @@ function App() {
         <AuthContext.Provider value={{  isLoggedIn: authValue, setLoginState: setAuthValue, 
                                         settings: userSettings, setSettings: setUserSettings
                                     }}>
+            <div className="main-layout">
                 <Routes>
                   <Route path="/" element={<HomePublicView />} />
                   <Route path="/register" element={<RegisterView />} />
@@ -51,6 +52,7 @@ function App() {
                   <Route path="/settings" element={<Authenticated> <SettingsView /> </Authenticated>} />
                   <Route path="/about" element={<AboutView />} />
                 </Routes>
+            </div>
         </AuthContext.Provider>
       </BrowserRouter>
   )

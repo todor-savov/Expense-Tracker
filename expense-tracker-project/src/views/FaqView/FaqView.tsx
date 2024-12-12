@@ -5,11 +5,13 @@ import Footer from "../../components/Footer/Footer";
 const FaqView = () => {
     
     return (    
-        <div>
+        <>
             <Header from={"Frequently Asked Questions"} />
-            <FAQ />
+            <div className="central-container">
+                <FAQ />
+            </div>
             <Footer />
-        </div>
+        </>
     );
 }
 

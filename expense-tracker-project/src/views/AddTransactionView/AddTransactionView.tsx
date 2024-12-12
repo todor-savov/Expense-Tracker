@@ -5,11 +5,13 @@ import Footer from "../../components/Footer/Footer";
 const AddTransactionView = () => {
 
     return (
-        <div>
+        <>
             <Header from={"Add Transaction"} />
-            <AddTransaction mode="new" />
+            <div className="central-container">
+                <AddTransaction mode="new" />
+            </div>
             <Footer />
-        </div>
+        </>
     );
 }
 

@@ -5,11 +5,13 @@ import Footer from "../../components/Footer/Footer";
 const SettingsView = () => {
 
     return (       
-        <div>
+        <>
             <Header from={"Settings"} />
-            <Settings />  
+            <div className="central-container">
+                <Settings />  
+            </div>
             <Footer />       
-        </div>
+        </>
     );
 }
 

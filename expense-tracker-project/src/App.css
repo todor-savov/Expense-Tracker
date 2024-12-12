@@ -3,6 +3,17 @@
   text-align: center;
 }
 
+.main-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.central-container {
+    display: flex;
+    flex: 1;
+}
+
 .logo {
   height: 6em;
   padding: 1.5em;

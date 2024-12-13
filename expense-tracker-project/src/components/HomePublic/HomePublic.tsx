@@ -19,7 +19,7 @@ const HomePublic = () => {
     const navigate = useNavigate();
     
     return (
-        <Box>
+        <Box sx={{ width: '100%' }}>
             <Box className="hero-section">
                 <Box className="hero-content">
                     <Box className="logo-headline-container">

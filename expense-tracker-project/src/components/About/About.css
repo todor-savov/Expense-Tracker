@@ -1,0 +1,160 @@
+.main-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-radius: 14px;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 1.5rem;
+}
+
+.first-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 4px;
+    gap: 4px;
+}
+
+#avatar-photo {
+    width: 25%;
+    height: auto;
+    border-radius: 10%;
+}
+
+.text-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.second-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#container-scroll {
+    overflow: hidden;
+}
+
+.scroll {
+    display: flex;
+    animation: loop 10s linear infinite;
+}
+
+@keyframes loop {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+#tech-stack {
+    font-size: 0.7rem;
+    font-weight: bold;
+    margin-right: 0.9rem;
+}
+
+.tech-icon {
+    width: 1rem;
+    height: 1rem;
+}
+
+.item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.5rem 0.9rem;
+    gap: 3px;
+}
+
+.item:hover {
+    cursor: pointer;
+    scale: 1.2;
+}
+
+.item p {
+    font-size: 0.5rem;
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+    #tech-stack {
+        font-size: 1rem;
+    }
+
+    .tech-icon {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+
+    .item p {
+        font-size: 0.7rem;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {     
+    #tech-stack {
+        font-size: 1.3rem;
+    }
+
+    .tech-icon {
+        width: 2rem;
+        height: 2rem;
+    }
+
+    .item p {
+        font-size: 1rem;
+    }   
+}
+
+/* This targets Nest Hub 1024 x 600 specifically */
+@media (aspect-ratio: 1024/600) {
+    .first-container {
+        flex-direction: row;
+    }
+
+    #tech-stack {
+        font-size: 1rem;
+    }
+
+    .tech-icon {
+        width: 1.3rem;
+        height: 1.3rem;
+    }
+
+    .item p {
+        font-size: 0.6rem;
+    }
+}
+
+/* Known Issue: Layout might not render perfectly on Google Nest Hub (1280x800). 
+   Device-specific queries were tested but did not work due to resolution/DPR mismatch. */
+
+@media (min-width: 1025px) {
+    .first-container {
+        flex-direction: row;
+    }
+
+    #about-me-text {
+        font-size: 1.4rem;
+        text-align: justify;
+        margin-left: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    #tech-stack {
+        font-size: 1.3rem;
+    }
+
+    .tech-icon {
+        width: 2rem;
+        height: 2rem;
+    }
+
+    .item p {
+        font-size: 1rem;
+    }
+}

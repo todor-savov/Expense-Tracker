@@ -11,6 +11,7 @@
 
 .central-container {
     display: flex;
+    justify-content: center;
     flex: 1;
 }
 

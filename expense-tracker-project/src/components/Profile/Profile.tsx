@@ -1,7 +1,6 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import AuthContext from "../../context/AuthContext";
 import { Box, Button, TextField } from "@mui/material";
-import { Save } from "@mui/icons-material";
 import { VisuallyHiddenInput } from "../../common/utils";
 import { getUserDetails, updateUserDetails } from "../../service/database-service";
 import { uploadUserPhoto } from "../../service/storage-service";

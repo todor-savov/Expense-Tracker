@@ -40,9 +40,10 @@
 }
 
 .categories-box {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    background-color: white;
+    justify-content: center;
     gap: 16px;
 }
 
@@ -59,7 +60,7 @@
 
 .category-item {
     display: flex;
-    border: 1px solid #8b8989;
+    border: 1px solid #f9f6f6;
     border-radius: 5px;
 }
 
@@ -92,14 +93,12 @@
 
 .category-details .top-row {
     display: flex;
-    flex-direction: row;
     gap: 16px;
     align-items: center;
 }
 
 .category-details .bottom-row {
     display: flex;
-    flex-direction: row;
     gap: 16px; 
 }
 
@@ -129,9 +128,7 @@
     background-color: #f0f0f0;
 }
 
-.selected-icon {
-    width: 100px;
-    height: 100px;
+.selected-icon {  
     cursor: pointer;
     border-radius: 10px;
     transition: transform 0.2s ease;

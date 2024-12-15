@@ -14,16 +14,24 @@
     scale: 1.2;
 }
 
+.footer-container-right svg {
+    font-size: 1rem;
+}
+
+#personal-name {
+    font-size: 0.6rem;
+}
+
 .footer-container-left {
     display: flex;
     justify-content: flex-start;
     align-items: center;
     flex-grow: 1;
-    gap: 2rem;
+    gap: 1rem;
 }
 
 .footer-container-left button {
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-family: 'Poppins', sans-serif;
     padding: 0.5rem 1rem;
     cursor: pointer;

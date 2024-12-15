@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { AppBar, Toolbar, Box, IconButton, Tooltip } from "@mui/material";
+import { AppBar, Toolbar, Box, IconButton, Tooltip, Typography } from "@mui/material";
 import { Copyright, Email, GitHub, LinkedIn } from "@mui/icons-material";
 import './Footer.css';
 
@@ -20,7 +20,10 @@ const Footer = () => {
                     </Box>
 
                     <Box className="footer-container-right">
-                        <Copyright /> 2024 Todor Savov
+                        <Copyright /> 
+                        <Typography id='personal-name' variant="body2" color="inherit" align="center">
+                            2024 Todor Savov
+                        </Typography>
                         
                         <Tooltip title="GitHub" placement="top" arrow>
                             <IconButton

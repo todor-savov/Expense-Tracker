@@ -177,7 +177,7 @@ const Header = ({ from, isUserChanged }: HeaderProps) => {
     : <Box className='header-container'>
         <AppBar position="sticky">
           <Toolbar>
-            {from !== 'Home' &&
+            {( isLoggedIn.status && from !== 'Reset Password') &&
               <IconButton size="large" edge="start" color="inherit" aria-label="menu" onClick={() => setIsNavigationOpen(true)}>
                 <MenuIcon />
               </IconButton>

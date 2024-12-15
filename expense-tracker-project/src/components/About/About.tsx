@@ -41,9 +41,7 @@ const About = () => {
                 </Box>
             </Box>
 
-            <Box className="second-container">
-                <Typography variant="h5" gutterBottom id='tech-stack'> Tech Skills </Typography>
-                
+            <Box className="second-container">                
                 <div id='container-scroll'>
                     <div className='scroll'>
                         {techStack.map((tech, index) => (

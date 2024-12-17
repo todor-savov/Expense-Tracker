@@ -1,0 +1,14 @@
+#alert-dialog-title {
+    text-align: center;
+}
+
+#alert-dialog-description {
+    text-align: center;
+    color: red;
+}
+
+#delete-confirm-button {
+    background-color: rgb(214, 19, 19);
+    color: white;
+    margin: 0 auto;
+}

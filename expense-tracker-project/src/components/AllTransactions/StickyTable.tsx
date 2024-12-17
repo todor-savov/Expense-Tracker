@@ -20,6 +20,7 @@ import { faPenToSquare, faReceipt, faTrashCan } from '@fortawesome/free-solid-sv
 import { getCategoryIcon, getPaymentIcon } from '../../common/utils';
 import { getCategories, getPayments } from '../../service/database-service.ts';
 import AuthContext from '../../context/AuthContext';
+import ConfirmDialog from '../ConfirmDialog/ConfirmDialog.tsx';
 
 interface Column {
   id: 'category' | 'date' | 'name' | 'amount' | 'payment' | 'receipt';
@@ -64,6 +65,11 @@ interface Payment {
   type: string;
 }
 
+interface Dialog {
+  open: boolean,
+  transactionId: string|null
+}
+
 const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionToDelete }) => {
   const { isLoggedIn, settings } = useContext(AuthContext);
   const [page, setPage] = useState<number>(0);
@@ -77,6 +83,7 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionT
   const [sum, setSum] = useState<number>(0);
   const [categories, setCategories] = useState<Category[]|[]>([]);
   const [payments, setPayments] = useState<Payment[]|[]>([]);
+  const [dialog, setDialog] = useState<Dialog>({ open: false, transactionId: null });
   const navigate = useNavigate();
 
   const columns: readonly Column[] = [
@@ -179,6 +186,7 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionT
         <div className={showReceipt ? "receipt-content" : 'receipt-content-hide'} onClick={() => setShowReceipt('')}>
             <img src={showReceipt} alt="receipt" />
         </div>
+        { dialog.open && <ConfirmDialog setTransactionToDelete={setTransactionToDelete} dialog={dialog} setDialog={setDialog} /> }
             <Paper sx={{ flex: 1 }}>
                 <TableContainer>
                     {loadSearchFilters()}
@@ -238,7 +246,7 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionT
                                                         {hoveredRow === transaction.id && 
                                                               <span>
                                                                 <button className="edit-button" onClick={() => navigate(`/edit-transaction/${transaction.id}`)}><FontAwesomeIcon icon={faPenToSquare} size="sm" /></button>
-                                                                <button className="delete-button" onClick={() => setTransactionToDelete(transaction.id)}><FontAwesomeIcon icon={faTrashCan} size="sm" /></button>
+                                                                <button className="delete-button" onClick={() => setDialog({ open: true, transactionId: transaction.id })}><FontAwesomeIcon icon={faTrashCan} size="sm" /></button>
                                                               </span>
                                                         }
                                                    </TableCell>

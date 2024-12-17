@@ -9,6 +9,7 @@ import { CANCEL_CATEGORY_ICON, SAVE_CATEGORY_ICON } from "../../common/constants
 import { GridAddIcon } from "@mui/x-data-grid";
 import { AddBox } from "@mui/icons-material";
 import { useMediaQuery } from '@mui/material';
+import ConfirmDialog from "../ConfirmDialog/ConfirmDialog";
 import "./Categories.css";
 
 interface Category {
@@ -26,6 +27,11 @@ interface NewCategory {
     user: string;
 }
 
+interface Dialog {
+    open: boolean,
+    id: string|null
+}
+
 const Categories = () => {
     const { isLoggedIn } = useContext(AuthContext);
     const [categories, setCategories] = useState<Category[]|[]>([]);
@@ -40,6 +46,7 @@ const Categories = () => {
     const [categoryToDelete, setCategoryToDelete] = useState<string>("");
     const [editedCategory, setEditedCategory] = useState<Category|null>(null);
     const [categoryToUpdate, setCategoryToUpdate] = useState<Category|null>(null);
+    const [dialog, setDialog] = useState<Dialog>({ open: false, id: null });
     const isMobile = useMediaQuery('(max-width:600px)');
 
     useEffect(() => {
@@ -188,6 +195,7 @@ const Categories = () => {
 
     return (
             <Box className="categories-box">
+                { dialog.open && <ConfirmDialog dialog={dialog} setDialog={setDialog} deleteHandler={setCategoryToDelete} /> }
                 {categories.length > 0 ?
                     <List className="categories-list">
                         <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#3f51b5', letterSpacing: '1px', fontSize: '1.0rem' }}>
@@ -210,7 +218,7 @@ const Categories = () => {
                                         </Button>
                                     </Tooltip>
                                     <Tooltip title="Delete" arrow>
-                                        <Button onClick={() => setCategoryToDelete(category.id)}>
+                                        <Button onClick={() => setDialog({ open: true, id: category.id })}>
                                             <FontAwesomeIcon icon={faTrashCan} size="lg" />
                                         </Button>
                                     </Tooltip>

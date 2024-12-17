@@ -4,20 +4,20 @@ import './ConfirmDialog.css';
 interface ConfirmDialogProps {
     dialog: {
         open: boolean;
-        transactionId: string | null;
+        id: string | null;
     },
-    setDialog: (dialog: { open: boolean; transactionId: string | null }) => void;
-    setTransactionToDelete: (transactionId: string) => void
+    setDialog: (dialog: { open: boolean; id: string | null }) => void;
+    deleteHandler: (id: string) => void
 }
 
-const ConfirmDialog = ({ setTransactionToDelete, dialog, setDialog }: ConfirmDialogProps) => {
+const ConfirmDialog = ({ deleteHandler, dialog, setDialog }: ConfirmDialogProps) => {
 
     const handleDialogClose = () => {
-        setDialog({ open: false, transactionId: null });
+        setDialog({ open: false, id: null });
     }
     
     const handleDialogConfirmation = () => {
-        setTransactionToDelete(dialog.transactionId as string);
+        deleteHandler(dialog.id as string);
         handleDialogClose();
     }
 
@@ -25,7 +25,7 @@ const ConfirmDialog = ({ setTransactionToDelete, dialog, setDialog }: ConfirmDia
         <Dialog open={dialog.open} onClose={handleDialogClose} aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description">
             <DialogTitle id="alert-dialog-title">
-              {"Are you sure you want to delete this transaction?"}
+              {"Are you sure you want to delete this item?"}
             </DialogTitle>
             <DialogContent>
               <DialogContentText id="alert-dialog-description">

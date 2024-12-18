@@ -6,7 +6,7 @@ const LoginView = () => {
 
     return (
         <>
-            <Header from={"Home"} />
+            <Header from={"Login"} />
             <div className="central-container">
                 <Login />
             </div>

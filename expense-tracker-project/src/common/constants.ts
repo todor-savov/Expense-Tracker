@@ -27,3 +27,9 @@ export const SAVE_CATEGORY_ICON = 'https://img.icons8.com/ios/100/40C057/ok--v1.
 export const CANCEL_CATEGORY_ICON = 'https://img.icons8.com/color/96/cancel--v1.png';
 /* User images */
 export const TODOR_SAVOV_IMAGE = 'https://firebasestorage.googleapis.com/v0/b/expense-tracking-app-33495.appspot.com/o/users%2FIMG_0597.jpeg?alt=media&token=c0f116a5-bfa0-4a56-baeb-142247a94045';
+export const EXPENSE_NAME_MIN_CHARS = 1;
+export const EXPENSE_NAME_MAX_CHARS = 25;
+export const AMOUNT_MIN_CHARS = 1;
+export const AMOUNT_MAX_CHARS = 10;
+export const ALPHA_NUMERIC_SPACE_REGEX = /^[a-zA-Z0-9\s]+$/;
+

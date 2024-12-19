@@ -21,14 +21,14 @@ interface FetchedTransaction {
 interface UploadReceiptProps {
     setSalesReceipt: (url: string) => void;
     transaction: FetchedTransaction|null;
-}
+    setError: (error: string|null) => void;
+ }
 
-const UploadReceipt: React.FC<UploadReceiptProps> = ({ setSalesReceipt, transaction }) => {
+const UploadReceipt: React.FC<UploadReceiptProps> = ({ setSalesReceipt, transaction, setError }) => {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [fileToUpload, setFileToUpload] = useState<File|null>(null);
     const [receiptURL, setReceiptURL] = useState<string|null>(null);
     const [loading, setLoading] = useState<boolean>(false);
-    const [error, setError] = useState<string|null>(null);
 
     useEffect(() => {
         const uploadHandler = async () => {
@@ -49,6 +49,12 @@ const UploadReceipt: React.FC<UploadReceiptProps> = ({ setSalesReceipt, transact
     const handleUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
         event.preventDefault();
         const file: File|null = (fileInputRef.current?.files) ? fileInputRef.current.files[0] : null;
+
+        if (file?.type !== 'image/jpeg' && file?.type !== 'image/png') {            
+            setError('Invalid file type. Please upload a valid image file.');
+            return;
+        }
+
         if (file) setFileToUpload(file);
     }
 
@@ -62,7 +68,6 @@ const UploadReceipt: React.FC<UploadReceiptProps> = ({ setSalesReceipt, transact
 
     return (
         <>
-            {error && <p>{error}</p>}
             <div className='upload-receipt'>
                 <Button component="label" role={undefined} variant="contained" tabIndex={-1} 
                     startIcon={<span><FontAwesomeIcon icon={faReceipt} size="2xl" style={{color: "#74C0FC",}}/> Sales Receipt</span>}>       

@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarDays, faTags, faCalculator, faList, faCreditCard, faDollarSign } from '@fortawesome/free-solid-svg-icons';
-import { Box, Button, MenuItem, TextField } from '@mui/material';
+import { Box, Button, MenuItem, TextField, Typography } from '@mui/material';
 import { Cancel, Save } from '@mui/icons-material';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
@@ -12,6 +12,7 @@ import { addTransaction, getCategories, getPayments, getTransaction, updateTrans
 import UploadReceipt from '../UploadReceipt/UploadReceipt';
 import AuthContext from '../../context/AuthContext';
 import { getCategoryIcon, getPaymentIcon } from '../../common/utils';
+import { ALPHA_NUMERIC_SPACE_REGEX, AMOUNT_MIN_CHARS, AMOUNT_MAX_CHARS, EXPENSE_NAME_MIN_CHARS, EXPENSE_NAME_MAX_CHARS } from '../../common/constants';
 import './AddTransaction.css';
 
 interface NewTransaction {
@@ -57,12 +58,8 @@ const AddTransaction = ({ mode }: { mode: string }) => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string|null>(null);
-    const [dateError, setDateError] = useState<string|null>(null);
     const [nameError, setNameError] = useState<string|null>(null);
     const [amountError, setAmountError] = useState<string|null>(null);
-    const [currencyError, setCurrencyError] = useState<string|null>(null);
-    const [categoryError, setCategoryError] = useState<string|null>(null);
-    const [paymentError, setPaymentError] = useState<string|null>(null);
     const [salesReceipt, setSalesReceipt] = useState<string|null>(null);
     const [newTransaction, setNewTransaction] = useState<NewTransaction|null>(null);
     const [fetchedTransaction, setFetchedTransaction] = useState<FetchedTransaction|null>(null);
@@ -132,6 +129,8 @@ const AddTransaction = ({ mode }: { mode: string }) => {
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        setNameError(null);
+        setAmountError(null);
 
         const receipt = (mode === 'edit') ? 
             (fetchedTransaction ? 
@@ -154,29 +153,15 @@ const AddTransaction = ({ mode }: { mode: string }) => {
         const category = target['expense-category'].value;
         const payment = target['expense-payment'].value; 
 
-        if (name.length > 30) {
-            setNameError('Name error');
+        if (name.length < EXPENSE_NAME_MIN_CHARS || name.length > EXPENSE_NAME_MAX_CHARS || !ALPHA_NUMERIC_SPACE_REGEX.test(name)) {
+            setNameError(`${EXPENSE_NAME_MIN_CHARS}-${EXPENSE_NAME_MAX_CHARS} characters/digits/space allowed`);
+            return;
         }
 
-        if (date.length > 30) {
-            setDateError('Date error');
-        }
-
-        if (typeof amount !== 'number') {
-            setAmountError('Amount error');
-        }
-
-        if (currency.length > 3) {
-            setCurrencyError('Currency error');
-        }
-
-        if (typeof category !== 'string') {
-            setCategoryError('Category error');
-        }
-
-        if (typeof payment !== 'string') {
-            setPaymentError('Payment error');
-        }
+        if (amount.toString().length < AMOUNT_MIN_CHARS || amount.toString().length > AMOUNT_MAX_CHARS || amount < 0) {
+            setAmountError(`${AMOUNT_MIN_CHARS}-${AMOUNT_MAX_CHARS} positive digits allowed`);
+            return;
+        }       
 
         const expenseDetails = { date, name, amount, category, payment, receipt: receipt || '', user: isLoggedIn.user, currency };
 
@@ -198,7 +183,6 @@ const AddTransaction = ({ mode }: { mode: string }) => {
             <Box component="form" sx={{'& .MuiTextField-root': { m: 1, width: '25ch' },}} noValidate
                 autoComplete="off" onSubmit={handleSubmit} className="expense-form"
             >
-                {error && <p>{error}</p>}
                 <div className='input-fields'>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DemoContainer components={['DatePicker']}>
@@ -207,8 +191,7 @@ const AddTransaction = ({ mode }: { mode: string }) => {
                                     label={<FontAwesomeIcon icon={faCalendarDays} size="xl" style={{color: "#74C0FC",}} />}
                                     slotProps={{textField: {
                                             id: "expense-date",
-                                            error: !!dateError,
-                                            helperText: dateError || "Please select a date", 
+                                            helperText: "Please select a date", 
                                             required: true
                                     }}}
                                 />
@@ -225,9 +208,9 @@ const AddTransaction = ({ mode }: { mode: string }) => {
                         helperText={amountError || "Please select amount"} required
                     />
                     
-                    <TextField error={!!currencyError} select id="expense-currency" name="expense-currency" label={<FontAwesomeIcon icon={faDollarSign} size="xl" style={{color: "#74C0FC",}} />}
+                    <TextField select id="expense-currency" name="expense-currency" label={<FontAwesomeIcon icon={faDollarSign} size="xl" style={{color: "#74C0FC",}} />}
                             defaultValue={fetchedTransaction ? fetchedTransaction?.currency : ""}
-                            helperText={currencyError || "Please select currency"} required 
+                            helperText={"Please select currency"} required 
                     >
                             <MenuItem key="Currency" value="" disabled>Currency</MenuItem>
                             <MenuItem key="BGN" value="BGN">BGN</MenuItem>
@@ -236,9 +219,9 @@ const AddTransaction = ({ mode }: { mode: string }) => {
                     </TextField>
                 
                     {categories.length > 0 && 
-                        <TextField error={!!categoryError} select id="expense-category" name="expense-category" label={<FontAwesomeIcon icon={faList} size="xl" style={{color: "#74C0FC",}} />}
+                        <TextField select id="expense-category" name="expense-category" label={<FontAwesomeIcon icon={faList} size="xl" style={{color: "#74C0FC",}} />}
                             defaultValue={fetchedTransaction ? fetchedTransaction?.category : ""}
-                            helperText={categoryError || "Please select category"} required 
+                            helperText={"Please select category"} required 
                         >
                             <MenuItem key="Category" value="" disabled>Category</MenuItem>
                             {categories.map((category: Category) => (
@@ -250,9 +233,9 @@ const AddTransaction = ({ mode }: { mode: string }) => {
                     }
                 
                     {payments.length > 0 &&
-                        <TextField error={!!paymentError} select id="expense-payment" name="expense-payment" label={<FontAwesomeIcon icon={faCreditCard} size="xl" style={{color: "#74C0FC",}} />}
+                        <TextField select id="expense-payment" name="expense-payment" label={<FontAwesomeIcon icon={faCreditCard} size="xl" style={{color: "#74C0FC",}} />}
                             defaultValue={fetchedTransaction ? fetchedTransaction?.payment : ""}
-                            helperText={paymentError || "Please select payment method"} required 
+                            helperText={"Please select payment method"} required 
                         >
                             <MenuItem key="Payment" value="" disabled>Payment Method</MenuItem>
                             {payments.map((payment: Payment) => (
@@ -264,12 +247,14 @@ const AddTransaction = ({ mode }: { mode: string }) => {
                     }
                 </div>
                 
-                <UploadReceipt setSalesReceipt={setSalesReceipt} transaction={fetchedTransaction} />
+                <UploadReceipt setSalesReceipt={setSalesReceipt} setError={setError} transaction={fetchedTransaction} />
+
+                {error && <Typography variant="body1" id="error-input-fields">{error}</Typography>}
 
                 <span className='action-buttons'>
                     <Button id='add-expense' type="submit" endIcon={<Save />}>Save</Button>
                     <Button id='cancel-expense' onClick={() => navigate('/transactions')} endIcon={<Cancel />}>Cancel</Button>
-                </span>
+                </span>                
              </Box>
         :   <div className="message-box">
                 <p>Please ensure you have created at least one category to be able to add a new transaction.</p>

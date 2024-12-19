@@ -47,6 +47,11 @@
     padding: 10px;
 }
 
+#error-input-fields {
+    grid-column: 1 / 3;
+    color: red;
+}
+
 .action-buttons {
     grid-column: 1 / 3;
     display: flex;

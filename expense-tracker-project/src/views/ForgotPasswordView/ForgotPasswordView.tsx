@@ -1,32 +1,33 @@
 import { useEffect, useState } from "react";
 import { sendResetLink } from "../../service/authentication-service";
 import Header from "../../components/Header/Header";
-import { Box, Button, CircularProgress, Stack, TextField } from "@mui/material";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleCheck, faCircleXmark } from "@fortawesome/free-solid-svg-icons";
+import { Alert, Box, Button, CircularProgress, Snackbar, Stack, TextField } from "@mui/material";
 import Footer from "../../components/Footer/Footer";
+import { EMAIL_REGEX } from '../../common/constants';
 import './ForgotPasswordView.css';
 
 const ForgotPasswordView = () => {
     const [email, setEmail] = useState<string|null>(null);
     const [error, setError] = useState<string|null>(null);
+    const [successMessage, setSuccessMessage] = useState<string|null>(null);
     const [loading, setLoading] = useState<boolean>(false);
-    const [success, setSuccess] = useState<string|null>(null);
+    const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
 
     useEffect(() => {
         const sendPasswordResetLink = async () => {
             try {
+                setError(null);
+                setSuccessMessage(null);
                 setLoading(true);
                 const response = await sendResetLink(email as string);
                 if (response) throw new Error('Failure to send the reset link.');
-                setSuccess(`If an account with this email exists, a password reset link has been sent to it.`);
-                setError(null);
+                setSuccessMessage(`If an account with this email exists, a password reset link has been sent to it.`);
             } catch (error: any) {
-                setError(error.message);
-                setSuccess(null);
+                setError('An error occurred while sending the password reset link.');
                 console.log(error.message);
             } finally {
                 setLoading(false);
+                setOpenSnackbar(true);
             }
         }
         if (email) sendPasswordResetLink();
@@ -35,7 +36,18 @@ const ForgotPasswordView = () => {
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
         const email = (event.target as HTMLFormElement).email.value;
+
+        if (!EMAIL_REGEX.test(email)) {
+            setError(`${email} is not a valid email address.`);
+            setOpenSnackbar(true);
+            return;
+        }
+
         setEmail(email);
+    }
+
+    const handleSnackbarClose = () => {
+        setOpenSnackbar(false);
     }
     
     return (
@@ -44,33 +56,24 @@ const ForgotPasswordView = () => {
             <div className="central-container">
                 <Box component="form" onSubmit={handleSubmit} className="forgot-password-form">
                     <TextField id="email" name="email" label="Email address" variant="outlined" required 
-                        helperText={"Send a password reset link to the provided email address"} className="text-field" />
+                        helperText={"Send a password reset link to the provided email address"} />
                         
                     {loading ?
-                        <Stack sx={{ color: 'grey.500' }} spacing={2} direction="row">
-                            <CircularProgress color="success" />
+                        <Stack sx={{ color: 'grey.500' }} spacing={2} direction="row" id='spinning-circle'>
+                            <CircularProgress color="success" size='3rem' />
                         </Stack>
-                        :
-                        (success ? 
-                            <p className="success">
-                                <FontAwesomeIcon icon={faCircleCheck} size="2xl" style={{color: "#1daa80", 
-                                    marginRight: "0.7rem", marginTop: "0.5rem"}} />
-                                {success}
-                            </p>
-                            :                    
-                            (error ?
-                                <p className="error">                                                                    
-                                    <FontAwesomeIcon icon={faCircleXmark} size="2xl" style={{color: "#df2b0c",
-                                        marginRight: "0.7rem", marginTop: "0.5rem"
-                                    }} />                                
-                                    {error}
-                                </p>
-                                :
-                                <Button type="submit" variant="contained" color="primary" className="submit-button"><strong>Send</strong></Button>
-                            )
-                        )
+                        :                         
+                        <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleSnackbarClose}
+                            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} sx={{ marginBottom: 8 }}
+                        >
+                            <Alert onClose={handleSnackbarClose} severity={error ? 'error' : 'success'} variant="filled">
+                                {error ? error : successMessage}
+                            </Alert>
+                        </Snackbar>
                     }
-                </Box>            
+
+                    {!loading && <Button type="submit" variant="contained" color="primary"><strong>Send</strong></Button>}                        
+                </Box>
             </div>
             <Footer />
         </>

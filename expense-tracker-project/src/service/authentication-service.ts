@@ -57,7 +57,7 @@ export const signOutUser = async (): Promise<void|undefined> => {
 }
 
 /* Handling password resets */
-export const changePassword = async (emailAddress: string, oldPassword: string, newPassword: string): Promise<void|undefined> => {
+export const changePassword = async (emailAddress: string, oldPassword: string, newPassword: string): Promise<void|string> => {
     try {
         if (!auth.currentUser) throw new Error('User not found');
         const credential = EmailAuthProvider.credential(emailAddress, oldPassword);
@@ -66,6 +66,7 @@ export const changePassword = async (emailAddress: string, oldPassword: string, 
         await updatePassword(auth.currentUser, newPassword);
     } catch (error: any) {
         console.log(error.message);
+        return error.message;
     }
 }
 

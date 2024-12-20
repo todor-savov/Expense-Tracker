@@ -32,4 +32,5 @@ export const EXPENSE_NAME_MAX_CHARS = 25;
 export const AMOUNT_MIN_CHARS = 1;
 export const AMOUNT_MAX_CHARS = 10;
 export const ALPHA_NUMERIC_SPACE_REGEX = /^[a-zA-Z0-9\s]+$/;
-
+export const ALPHA_SPACE_REGEX = /^[a-zA-Z\s]+$/;
+export const LETTERS_ONLY_REGEX = /^[a-zA-Z]+$/;

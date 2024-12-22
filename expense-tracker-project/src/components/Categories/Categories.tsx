@@ -1,14 +1,14 @@
 import { useContext, useEffect, useState } from "react";
-import { Avatar, Box, Button, List, ListItem, ListItemAvatar, ListItemText, Modal, TextField, Tooltip, Typography } from "@mui/material";
+import { Alert, Avatar, Box, Button, CircularProgress, List, ListItem, ListItemAvatar, ListItemText, Modal, Snackbar, Stack, TextField, Tooltip, Typography } from "@mui/material";
+import { useMediaQuery } from '@mui/material';
 import { searchIcons } from "../../service/icons-service";
 import { createCategory, deleteCategory, getCategories, updateCategory } from "../../service/database-service";
 import AuthContext from "../../context/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
-import { CANCEL_CATEGORY_ICON, SAVE_CATEGORY_ICON } from "../../common/constants";
-import { GridAddIcon } from "@mui/x-data-grid";
 import { AddBox } from "@mui/icons-material";
-import { useMediaQuery } from '@mui/material';
+import { GridAddIcon } from "@mui/x-data-grid";
+import { CANCEL_CATEGORY_ICON, SAVE_CATEGORY_ICON, CATEGORY_NAME_MIN_LENGTH, CATEGORY_NAME_MAX_LENGTH, SPECIAL_CHARS_REGEX } from "../../common/constants";
 import ConfirmDialog from "../ConfirmDialog/ConfirmDialog";
 import "./Categories.css";
 
@@ -41,38 +41,44 @@ const Categories = () => {
     const [newCategory, setNewCategory] = useState<NewCategory|null>(null);
     const [selectedIcon, setSelectedIcon] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
-    const [error, setError] = useState<string>("");
+    const [error, setError] = useState<string|null>(null);
     const [showIconSearch, setShowIconSearch] = useState<boolean>(false);
-    const [categoryToDelete, setCategoryToDelete] = useState<string>("");
+    const [categoryToDelete, setCategoryToDelete] = useState<string|null>(null);
     const [editedCategory, setEditedCategory] = useState<Category|null>(null);
     const [categoryToUpdate, setCategoryToUpdate] = useState<Category|null>(null);
     const [dialog, setDialog] = useState<Dialog>({ open: false, id: null });
+    const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
+    const [successMessage, setSuccessMessage] = useState<string|null>(null);
     const isMobile = useMediaQuery('(max-width:600px)');
 
     useEffect(() => {
         const fetchCategories = async () => {
             try {
+                setError(null);
                 setLoading(true);
                 const categories = await getCategories(isLoggedIn.user);
                 if (categories.length > 0) setCategories(categories);
-                setLoading(false);
             } catch (error: any) {
-                console.error(error);
                 setError(error.message);
+                console.log(error.message);
+            } finally {
+                setLoading(false);
             }
         }
-        if (categories.length === 0) fetchCategories();
-    }, [categories]);
+        fetchCategories();
+    }, []);
 
     useEffect(() => {
         const search = async () => {
             try {
+                setError(null);
+                setFoundIcons([]);
                 const response = await searchIcons(searchTerm);
-                if (!response) throw new Error("No response");
+                if (!response) throw new Error("Error fetching icons");
                 setFoundIcons(response.icons);
             } catch (error: any) {
-                console.error(error);
                 setError(error.message);
+                console.log(error.message);
             }
         }
         if (searchTerm) search();
@@ -81,31 +87,44 @@ const Categories = () => {
     useEffect(() => {
         const addNewCategory = async () => {   
             try {
+                setError(null);
+                setSuccessMessage(null);
                 setLoading(true);
                 const response = await createCategory(newCategory as NewCategory);
-                if (response) throw new Error("Failed to create category");
-                setCategories([]);
-                setLoading(false);
+                if (!response) throw new Error("Failed to create category");
+                setSuccessMessage("Category created successfully");
+                setCategories([...categories, { id: response, type: newCategory?.type || "", imgSrc: newCategory?.imgSrc 
+                    || "", imgAlt: newCategory?.imgAlt || "", user: newCategory?.user || "" }]);
             } catch (error: any) {
-                console.error(error);
                 setError(error.message);
-            }
+                console.log(error.message);
+            } finally {
+                setLoading(false);
+                setNewCategory(null);
+                setOpenSnackbar(true);
+            }        
         }
-        if (newCategory) addNewCategory() 
+        if (newCategory) addNewCategory();                                
     }, [newCategory]);
 
     useEffect(() => {
         const handleCategoryUpdate = async () => {
             try {
+                setError(null);
+                setSuccessMessage(null);
                 setLoading(true);
                 const response = await updateCategory(categoryToUpdate as Category, categoryToUpdate?.id);
                 if (response) throw new Error("Failed to update category");
-                setCategoryToUpdate(null);
-                setCategories([]);
-                setLoading(false);
+                setSuccessMessage("Category updated successfully");
+                const updatedCategories = categories.map(category => category.id === categoryToUpdate?.id ? categoryToUpdate : category);
+                setCategories(updatedCategories);
             } catch (error: any) {
-                console.error(error);
                 setError(error.message);
+                console.log(error.message);
+            } finally {
+                setLoading(false);
+                setCategoryToUpdate(null);
+                setOpenSnackbar(true);
             }
         }
         if (categoryToUpdate) handleCategoryUpdate();
@@ -114,15 +133,21 @@ const Categories = () => {
     useEffect(() => {   
         const handleCategoryDelete = async () => {
             try {
+                setError(null);
+                setSuccessMessage(null);
                 setLoading(true);
-                const response = await deleteCategory(categoryToDelete);
+                const response = await deleteCategory(categoryToDelete as string);
                 if (response) throw new Error("Failed to delete category");
-                setCategories([]);
-                setCategoryToDelete("");
-                setLoading(false);
+                setSuccessMessage("Category deleted successfully");
+                const updatedCategories = categories.filter(category => category.id !== categoryToDelete);
+                setCategories(updatedCategories);
             } catch (error: any) {
-                console.error(error);
                 setError(error.message);
+                console.log(error.message);
+            } finally {
+                setLoading(false);
+                setCategoryToDelete(null);
+                setOpenSnackbar(true);
             }
         }
         if (categoryToDelete) handleCategoryDelete();
@@ -130,25 +155,37 @@ const Categories = () => {
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        const target = e.target as typeof e.target & { "category-name": { value: string }; };
+        const categoryName = target["category-name"].value;
 
-        const target = e.target as typeof e.target & {
-            "category-name": { value: string };
-        };
+        if (categoryName.length < CATEGORY_NAME_MIN_LENGTH || categoryName.length > CATEGORY_NAME_MAX_LENGTH 
+            || SPECIAL_CHARS_REGEX.test(categoryName)) {
+            setError(`Category name must be between ${CATEGORY_NAME_MIN_LENGTH}-${CATEGORY_NAME_MAX_LENGTH} characters (space/digits allowed)`);
+            setOpenSnackbar(true);
+            return;
+        }
 
+        if (categories.some(category => category.type === categoryName)) {
+            setError("Category name already exists");
+            setOpenSnackbar(true);
+            return;
+        }
+    
         if (addCategoryMode) {
-            const categoryName = target["category-name"].value;
-            if (categoryName && selectedIcon) {
+            if (categoryName && selectedIcon) {                
                 setNewCategory({ type: categoryName, imgSrc: selectedIcon, imgAlt: categoryName, user: isLoggedIn.user });
                 setAddCategoryMode(false);
                 setSelectedIcon("");
                 setSearchTerm("");
                 setFoundIcons([]);
             }
-            else setError("Please select a category icon and provide a name");
+            else {
+                setError("Please select a category icon and provide a name");
+                setOpenSnackbar(true);
+            }
         }
 
         if (editedCategory) {
-            const categoryName = target["category-name"].value;
             if (categoryName) {
                 setCategoryToUpdate({id: editedCategory.id, type: categoryName, 
                     imgSrc: selectedIcon ? selectedIcon : editedCategory.imgSrc, 
@@ -159,7 +196,10 @@ const Categories = () => {
                 setSearchTerm("");
                 setFoundIcons([]);
             }
-            else setError("Please select a category icon and provide a name");
+            else {
+                setError("Please select a category icon and provide a name");
+                setOpenSnackbar(true);
+            }
         }
     }
 
@@ -183,14 +223,10 @@ const Categories = () => {
         setAddCategoryMode(false);
         setSelectedIcon(category.imgSrc);
         setEditedCategory(category);
-    }
+    }  
 
-    if (loading) {
-        return (
-            <div className='spinnerContainer'>
-                <div className='spinner'></div>
-            </div>
-        )
+    const handleSnackbarClose = () => {
+        setOpenSnackbar(false);
     }
 
     return (
@@ -198,9 +234,7 @@ const Categories = () => {
                 { dialog.open && <ConfirmDialog dialog={dialog} setDialog={setDialog} deleteHandler={setCategoryToDelete} /> }
                 {categories.length > 0 ?
                     <List className="categories-list">
-                        <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#3f51b5', letterSpacing: '1px', fontSize: '1.0rem' }}>
-                            Existing Categories
-                        </Typography>
+                        <Typography variant="h6"> Existing Categories </Typography>
 
                         {categories.map((category) => (
                             <ListItem key={category.id} className={isMobile ? "category-item-mobile" : "category-item"}>
@@ -209,9 +243,7 @@ const Categories = () => {
                                 </ListItemAvatar>
                                 <ListItemText primary={<span> {category.type} </span>} />
 
-                                <Box sx={{ display: 'none', flexDirection: isMobile ? 'column' : 'row', gap: 1 }}
-                                    className="category-buttons"
-                                >
+                                <Box sx={{ display: 'none', flexDirection: isMobile ? 'column' : 'row', gap: 1 }} className="category-buttons">
                                     <Tooltip title="Edit" arrow>
                                         <Button onClick={() => handleEdit(category)}>
                                             <FontAwesomeIcon icon={faPenToSquare} size="lg" />
@@ -224,19 +256,11 @@ const Categories = () => {
                                     </Tooltip>
                                 </Box>
                             </ListItem>
-                        ))}
+                        ))}                                                 
 
-                        {(!addCategoryMode && !editedCategory) && 
-                            <Box>
-                                <Button onClick={handleAddCategoryButtonClick}><AddBox style={{fontSize: 40 }} /></Button>
-                            </Box>
-                        }
-
-                        {(addCategoryMode || editedCategory) && 
+                        {(addCategoryMode || editedCategory) &&                             
                             <Box component="form" className="category-details" onSubmit={handleSubmit}>
-                                <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#3f51b5', letterSpacing: '1px', fontSize: '1rem' }}>
-                                    {addCategoryMode ? "Add Category" : "Edit Category"}
-                                </Typography>
+                                <Typography variant="h6"> {addCategoryMode ? "Add Category" : "Edit Category"} </Typography>
 
                                 {/* First Row: Icon and Category Name */}
                                 <div className="top-row">
@@ -249,14 +273,12 @@ const Categories = () => {
                                         </div>
                                     )}
 
-                                    {editedCategory && <img src={selectedIcon ? selectedIcon : editedCategory.imgSrc} alt="category-icon" onClick={() => setShowIconSearch(true)} 
-                                        className="selected-icon" />}
-
                                     {addCategoryMode && 
-                                        <TextField type="text" id="category-name" label="Category Name" 
-                                            variant="outlined" required 
-                                        />
+                                        <TextField type="text" id="category-name" label="Category Name" variant="outlined" required />
                                     }
+
+                                    {editedCategory && <img src={selectedIcon ? selectedIcon : editedCategory.imgSrc} alt="category-icon" onClick={() => setShowIconSearch(true)} 
+                                        className="selected-icon" />}                                    
 
                                     {editedCategory &&
                                         <TextField type="text" id="category-name" label="Category Name" 
@@ -301,8 +323,23 @@ const Categories = () => {
                     :   <div className="message-box">
                             <h2>No Categories Found</h2>
                         </div>
+                }              
+
+                {loading ?
+                        <Stack sx={{ color: 'grey.500' }} spacing={2} direction="row" id='spinning-circle'>
+                            <CircularProgress color="success" size='3rem' />
+                        </Stack> 
+                        : (!addCategoryMode && !editedCategory) && 
+                        <Button onClick={handleAddCategoryButtonClick} id='add-category-button'><AddBox style={{fontSize: 40 }} /></Button>
                 }
-                {error && <p>{error}</p>}
+                        
+                <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleSnackbarClose}
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} sx={{ marginBottom: 8 }}
+                >
+                    <Alert onClose={handleSnackbarClose} severity={error ? 'error' : 'success'} variant="filled">
+                        {error ? error : successMessage}
+                    </Alert>
+                </Snackbar>
             </Box>
         );
 }

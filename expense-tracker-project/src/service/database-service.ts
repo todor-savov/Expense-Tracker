@@ -176,29 +176,36 @@ export const getPayments = async (): Promise<Payment[]|[]> => {
   }
 }
 
-export const createCategory = async (category: NewCategory): Promise<void|undefined> => {
+export const createCategory = async (category: NewCategory): Promise<string|void> => {
   try {
     const response = await push(ref(database, 'categories'), category);
-    update(ref(database, `categories/${response.key}`), { id: response.key });    
+    if (response && response.key) {
+      update(ref(database, `categories/${response.key}`), { id: response.key });
+      return response.key;
+    } else {
+      throw new Error('Category not created');
+    }
   } catch (error: any) {
     console.log(error.message);
   }
 }
 
-export const updateCategory = async (categoryDetails: Category, categoryId: string|undefined): Promise<void|undefined> => {
+export const updateCategory = async (categoryDetails: Category, categoryId: string|undefined): Promise<void|string> => {
   try {
     if (!categoryId) return;
     return await set(ref(database, `categories/${categoryId}`), categoryDetails);
   } catch (error: any) {
     console.log(error.message);
+    return error.message;
   }
 }
 
-export const deleteCategory = async (categoryId: string): Promise<void|undefined> => {
+export const deleteCategory = async (categoryId: string): Promise<void|string> => {
   try {
     return await set(ref(database, `categories/${categoryId}`), null);
   } catch (error: any) {
     console.log(error.message);
+    return error.message;
   }
 }
 

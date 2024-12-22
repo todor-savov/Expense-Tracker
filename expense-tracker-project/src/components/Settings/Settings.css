@@ -28,23 +28,22 @@
     background-color: #0056b3;
 }
 
-.feedback-message {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-top: 1rem;
-}
-
-.success-message {
-    color: #1daa80;
-}
-
-.error-message {
-    color: #df2b0c;
-}
-
 @media (max-width: 768px) {
     .update-settings-button {
         width: 50%;
     }
+}
+
+#settings-header {
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.switch {
+    margin: 0.5rem;
+}
+
+#currency-select {
+    width: 100%;
+    margin: 0.2rem;
 }

@@ -14,12 +14,12 @@
     border-radius: 10px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
 }
-  
+
 .btn {
     width: 100%;
     color: white;
     background-color: #007bff;
-    margin-top: 1rem;
+    margin-top: 1.5rem;
     margin-bottom: 1rem;
     padding: 1rem 2rem;
     border: none;
@@ -42,4 +42,5 @@
 
 .forgot-password {
     color: #1976d2;
+    margin-bottom: 1rem;
 }

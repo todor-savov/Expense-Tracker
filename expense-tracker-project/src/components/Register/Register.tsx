@@ -7,7 +7,7 @@ import { NAME_MIN_CHARS, NAME_MAX_CHARS, USERNAME_MIN_LENGTH, USERNAME_MAX_LENGT
         PASSWORD_MIN_CHARS, PASSWORD_MAX_CHARS, EMAIL_REGEX, PHONE_REGEX, PHONE_DIGITS, 
         DIGIT_REGEX, LETTER_REGEX, ALPHA_NUMERIC_REGEX, SPECIAL_CHARS_REGEX, DEFAULT_IMAGE, 
         } from '../../common/constants.js';
-import { TextField } from '@mui/material';
+import { Alert, CircularProgress, Snackbar, Stack, TextField } from '@mui/material';
 import './Register.css';
 
 interface Form {
@@ -22,45 +22,35 @@ interface Form {
 
 const Register = () => {
     const { setLoginState } = useContext(AuthContext);
-    const [error, setError] = useState<string>('');
+    const [form, setForm] = useState<Form|null>(null);
     const [loading, setLoading] = useState<boolean>(false);
-    const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
-    const [form, setForm] = useState<Form>({
-        firstName: '',
-        lastName: '',
-        emailAddress: '',
-        phoneNumber: '',
-        username: '',
-        password: '',
-        photo: '',
-    });
+    const [error, setError] = useState<string|null>(null);
+    const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
     const navigate = useNavigate();
 
     useEffect(() => {
             const registrationHandler = async () => {
                 try {
+                    setError(null);
                     setLoading(true);
-                    const userCredentials = await registerUser(form.emailAddress, form.password);
-                    if (!userCredentials) throw new Error(`User with ${form.emailAddress} email address could not be created.`);
-                    const response = await checkIfUserExists(form.username, form.phoneNumber);
-                    if (typeof response === 'string') throw new Error(response);
-                    const [user, phone] = response;
+                    const userCredentials = await registerUser(form?.emailAddress as string, form?.password as string);
+                    if (!userCredentials) throw new Error(`User with ${form?.emailAddress} email address could not be registered.`);
+                    const response = await checkIfUserExists(form?.username as string, form?.phoneNumber as string);
+                    if (typeof response === 'string') throw new Error('Error checking for existing user.');
 
+                    const [user, phone] = response;
                     if (user.exists() || phone.exists()) {
-                        setLoading(false);
                         handleUserDelete();
+                        throw new Error(`Existing username/phone number.`);
                     }
 
-                    if (user.exists()) return setError(`Username already exists.`);
-                    if (phone.exists()) return setError(`Phone number already in use.`);
-
-                    const creationStatus = await createUser({
-                        firstName: form.firstName, 
-                        lastName: form.lastName, 
-                        email: form.emailAddress, 
-                        phone: form.phoneNumber,
-                        username: form.username, 
-                        photo: form.photo,
+                    const status = await createUser({
+                        firstName: form?.firstName as string, 
+                        lastName: form?.lastName as string, 
+                        email: form?.emailAddress as string,
+                        phone: form?.phoneNumber as string,
+                        username: form?.username as string, 
+                        photo: form?.photo as string,
                         role: 'author',
                         isBlocked: false,
                         settings: {
@@ -69,109 +59,124 @@ const Register = () => {
                             currency: 'BGN',
                         }                                                
                     });
-                    
-                    if (!creationStatus) {
+                                     
+                    if (!status) {
                         setLoading(false);
-                        setLoginState({status: true, user: form.emailAddress});
+                        setLoginState({ status: true, user: form?.emailAddress as string });
                         navigate('/home');
+                    } else {
+                        handleUserDelete();
+                        throw new Error('Error creating user.');
                     }
                 } catch (error: any) {
                     setLoading(false);
                     setError(error.message);
+                    console.log(error.message);
+                    setOpenSnackbar(true);
                 }
             }
-            if (isFormSubmitted) registrationHandler();
+            if (form) registrationHandler();
      }, [form]);
 
-    const register = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
 
-        const firstName: string = event.currentTarget.firstName.value;
-        const lastName: string = event.currentTarget.lastName.value;
-        const emailAddress: string = event.currentTarget.email.value;
-        const phoneNumber: string = event.currentTarget.phone.value;
-        const username: string = event.currentTarget.username.value;
-        const password: string = event.currentTarget.password.value;
+        const firstName: string = e.currentTarget.firstName.value;
+        const lastName: string = e.currentTarget.lastName.value;
+        const emailAddress: string = e.currentTarget.email.value;
+        const phoneNumber: string = e.currentTarget.phone.value;
+        const username: string = e.currentTarget.username.value;
+        const password: string = e.currentTarget.password.value;
         
         if (firstName.length < NAME_MIN_CHARS || firstName.length > NAME_MAX_CHARS 
             || !LETTER_REGEX.test(firstName) || DIGIT_REGEX.test(firstName) || SPECIAL_CHARS_REGEX.test(firstName)) {
-            setError(`First name must contain upper- and lowercase letters only and must be between ${NAME_MIN_CHARS}-${NAME_MAX_CHARS} characters long.`);
+            setError(`First name must contain ${NAME_MIN_CHARS}-${NAME_MAX_CHARS} characters, upper- and/or lowercase letters only.`);
+            setOpenSnackbar(true);
             return;
         }
 
         if (lastName.length < NAME_MIN_CHARS || lastName.length > NAME_MAX_CHARS 
             || !LETTER_REGEX.test(lastName) || DIGIT_REGEX.test(lastName) || SPECIAL_CHARS_REGEX.test(lastName)) {
-            setError(`Last name must contain upper- and lowercase letters only and must be between ${NAME_MIN_CHARS}-${NAME_MAX_CHARS} characters long.`); 
+            setError(`Last name must contain ${NAME_MIN_CHARS}-${NAME_MAX_CHARS} characters, upper- and/or lowercase letters only.`);
+            setOpenSnackbar(true);
             return;
         }
 
         if (!EMAIL_REGEX.test(emailAddress)) {
             setError(`${emailAddress} is not a valid email address.`);
+            setOpenSnackbar(true);
             return;
         }
 
         if (!PHONE_REGEX.test(phoneNumber)) {
             setError(`Phone number must contain ${PHONE_DIGITS} digits exactly.`);
+            setOpenSnackbar(true);
             return;
         }
 
         if (username.length < USERNAME_MIN_LENGTH || username.length > USERNAME_MAX_LENGTH || !ALPHA_NUMERIC_REGEX.test(username)) {
             setError(`${username} is not a valid username.`);
+            setOpenSnackbar(true);
             return;
         }
 
         if (password.length < PASSWORD_MIN_CHARS || password.length > PASSWORD_MAX_CHARS || !LETTER_REGEX.test(password)
             || !DIGIT_REGEX.test(password) || !SPECIAL_CHARS_REGEX.test(password)) {
             setError(`The provided password is invalid.`);
+            setOpenSnackbar(true);
             return;
         }
 
         setForm({ firstName, lastName, emailAddress, phoneNumber, username, password, photo: DEFAULT_IMAGE});
-        setIsFormSubmitted(true);
     }
 
-    if (loading) {
-        return (
-            <div className='spinner'></div>
-        )
+    const handleSnackbarClose = () => {
+        setOpenSnackbar(false);
     }
 
     return (
         <div className='registerContainer'>
-            <form onSubmit={register} className="register-form">
-            <p>User Registration</p>
-                {error && <div className='error-message'>{error}</div>}
-
+            <form onSubmit={handleSubmit} className="register-form">                
                 <TextField type="text" id="firstName" name="firstName" label={'First Name'} className='input__field' required
-                    helperText={<i>{NAME_MIN_CHARS}-{NAME_MAX_CHARS} symbols</i>} 
+                    helperText={<i>{NAME_MIN_CHARS}-{NAME_MAX_CHARS} symbols</i>}
                 />
 
                 <TextField type="text" id="lastName" name="lastName" label={'Last Name'} className='input__field' required
-                    helperText={<i>{NAME_MIN_CHARS}-{NAME_MAX_CHARS} symbols</i>} 
+                    helperText={<i>{NAME_MIN_CHARS}-{NAME_MAX_CHARS} symbols</i>}
                 /> 
 
                 <TextField type="email" id="email" name="email" label={'Email'} className='input__field' required 
                     helperText={<i>Standard email symbols, @ and domain</i>} 
                 />
-                <br />
 
                 <TextField type="text" id="phone" name="phone" label={'Phone'} className='input__field' required
                     helperText={<i>{PHONE_DIGITS} digits exactly</i>} 
                 /> 
 
                 <TextField type="text" id="username" name="username" label={'Username'} className='input__field' required
-                    helperText={<i>{USERNAME_MIN_LENGTH}-{USERNAME_MAX_LENGTH} symbols, letters OR digits</i>}
+                    helperText={<i>{USERNAME_MIN_LENGTH}-{USERNAME_MAX_LENGTH} symbols, letters or digits</i>}
                 /> 
 
                 <TextField type="password" id="password" name="password" label={'Password'} className='input__field' required
                     helperText={<i>{PASSWORD_MIN_CHARS}-{PASSWORD_MAX_CHARS} symbols, ONE digit, letter AND a special symbol</i>} 
                 /> 
 
-                <button className='submit-button' type="submit">Register</button>
+                {loading ?
+                    <Stack sx={{ color: 'grey.500' }} spacing={2} direction="row" id='spinning-circle'>
+                        <CircularProgress color="success" size='3rem' />
+                    </Stack>
+                    :   
+                    <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleSnackbarClose}
+                        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} sx={{ marginBottom: 6 }}
+                    >
+                        <Alert onClose={handleSnackbarClose} severity='error' variant="filled"> {error} </Alert>
+                    </Snackbar>
+                }
+
+                {!loading && <button className='register-button' type="submit">Register</button>}
             </form>
         </div>
     )
-
 }
 
 export default Register;

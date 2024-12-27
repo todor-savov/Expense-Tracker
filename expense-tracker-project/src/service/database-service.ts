@@ -31,11 +31,12 @@ export const checkIfUserExists = async (username: string, phone: string): Promis
   }
 }
 
-export const createUser = async (userDetails: UserDetails): Promise<void|undefined> => {
+export const createUser = async (userDetails: UserDetails): Promise<void|string> => {
   try {
     return await set(ref(database, `users/${userDetails.username}`), userDetails);
   } catch (error: any) {
     console.log(error.message);
+    return error.message;
   }
 }
 

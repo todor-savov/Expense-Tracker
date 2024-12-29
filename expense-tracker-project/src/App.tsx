@@ -15,8 +15,9 @@ import OverviewView from './views/OverviewView/OverviewView.tsx';
 import ForgotPasswordView from './views/ForgotPasswordView/ForgotPasswordView.tsx';
 import ResetPasswordView from './views/ResetPasswordView/ResetPasswordView.tsx';
 import SettingsView from './views/SettingsView/SettingsView.tsx';
-import FaqView from './views/FaqView/FaqView.tsx';
 import AboutView from './views/AboutView/AboutView.tsx';
+import FaqView from './views/FaqView/FaqView.tsx';
+import BudgetGoalsView from './views/BudgetGoalsView/BudgetGoalsView.tsx';
 import './App.css';
 
 interface UserSettings { 
@@ -41,6 +42,7 @@ function App() {
                   <Route path="/login" element={<LoginView />} />
                   <Route path="/forgot-password" element={<ForgotPasswordView />} />
                   <Route path="/reset-password" element={<ResetPasswordView />} />
+                  <Route path="/about" element={<AboutView />} />
                   <Route path="/faq" element={<FaqView />} />
                   <Route path="/home" element={<Authenticated> <HomePrivateView /> </Authenticated>} />
                   <Route path="/profile" element={<Authenticated> <ProfileView /> </Authenticated>} />
@@ -50,7 +52,7 @@ function App() {
                   <Route path="/categories" element={<Authenticated> <CategoriesView /> </Authenticated>} />
                   <Route path="/overview" element={<Authenticated> <OverviewView /> </Authenticated>} />
                   <Route path="/settings" element={<Authenticated> <SettingsView /> </Authenticated>} />
-                  <Route path="/about" element={<AboutView />} />
+                  <Route path='/budget-goals' element={<Authenticated> <BudgetGoalsView /> </Authenticated>} />
                 </Routes>
             </div>
         </AuthContext.Provider>

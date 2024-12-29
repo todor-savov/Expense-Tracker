@@ -48,7 +48,7 @@ const Navigation: React.FC<NavigationProps> = ({ setIsNavigationOpen }) => {
                 </ListItemButton>
             </ListItem>
 
-            <ListItem key={'Budget & Goals'} disablePadding onClick={() => navigate('/')}>
+            <ListItem key={'Budget & Goals'} disablePadding onClick={() => navigate('/budget-goals')}>
                 <ListItemButton>
                     <ListItemIcon><FontAwesomeIcon icon={faScaleUnbalancedFlip} size="2xl" style={{color: "#0a89eb",}} /></ListItemIcon>
                     <ListItemText primary={'Budget & Goals'} />

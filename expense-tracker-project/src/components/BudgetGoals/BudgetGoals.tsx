@@ -6,6 +6,11 @@ import AuthContext from "../../context/AuthContext";
 import LimitDialog from "../LimitDialog/LimitDialog";
 import './BudgetGoals.css';
 
+interface BudgetGoalsProps {
+    isLimitChanged: boolean;
+    setIsLimitChanged: (isLimitChanged: boolean) => void;
+}
+
 interface Category {
     id: string;
     type: string;
@@ -29,7 +34,7 @@ interface FetchedTransaction {
     currency: string;
 }
 
-const BudgetGoals = () => {
+const BudgetGoals = ({ isLimitChanged, setIsLimitChanged }: BudgetGoalsProps) => {
     const { isLoggedIn } = useContext(AuthContext);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string|null>(null);
@@ -95,6 +100,7 @@ const BudgetGoals = () => {
                 }));
                 setUpdateCategoryLimit(false);
                 setCategoryForLimitUpdate(null);
+                setIsLimitChanged(!isLimitChanged);
             } catch (error: any) {
                 setError(error.message);
                 console.log(error.message);

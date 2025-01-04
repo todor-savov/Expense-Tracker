@@ -5,13 +5,18 @@ import AuthContext from "../../context/AuthContext";
 import { updateUserSettings } from "../../service/database-service";
 import './Settings.css';
 
+interface SettingsProps {
+    isLimitChanged: boolean;
+    setIsLimitChanged: (isLimitChanged: boolean) => void;
+}
+
 interface UserSettings {
     activityNotifications: string;
     budgetNotifications: string;
     currency: string;
 }
 
-const Settings = () => {
+const Settings = ({ isLimitChanged, setIsLimitChanged }: SettingsProps) => {
     const { isLoggedIn, settings, setSettings } = useContext(AuthContext);
     const [userSettings, setUserSettings] = useState<UserSettings|null>(null);
     const [activityNotifications, setActivityNotifications] = useState<boolean>(settings?.activityNotifications === 'enabled');
@@ -31,7 +36,8 @@ const Settings = () => {
                 setLoading(true);
                 const response = await updateUserSettings(isLoggedIn.user, userSettings as UserSettings);
                 if (response) throw new Error('Settings update has failed.');
-                setSuccessMessage('Settings have been updated successfully.');  
+                setSuccessMessage('Settings have been updated successfully.'); 
+                setIsLimitChanged(!isLimitChanged); 
                 setSettings(userSettings);
             } catch (error: any) {
                 setError(error.message);

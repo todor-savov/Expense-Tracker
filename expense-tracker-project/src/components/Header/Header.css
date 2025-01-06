@@ -59,3 +59,19 @@
 .feedback-form button:hover {
     background-color: #155fa0;
 }
+
+.notifications-box {
+    display: flex;
+    flex-direction: column;
+    margin: 0.3rem;
+    padding: 0.4rem;
+}
+
+.notification-item, .notification-item-critical {
+    padding: 0.5rem;
+    background-color: #f5f5f5;
+}
+
+.notification-item-critical {
+    color: rgb(174, 39, 39);
+}

@@ -35,7 +35,7 @@ interface FetchedTransaction {
 }
 
 const BudgetGoals = ({ isLimitChanged, setIsLimitChanged }: BudgetGoalsProps) => {
-    const { isLoggedIn } = useContext(AuthContext);
+    const { isLoggedIn, settings } = useContext(AuthContext);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string|null>(null);
     const [categories, setCategories] = useState<Category[]|[]>([]);
@@ -149,7 +149,11 @@ const BudgetGoals = ({ isLimitChanged, setIsLimitChanged }: BudgetGoalsProps) =>
                                                 width: '6rem',
                                             },
                                             path: {
-                                                stroke: category.costsPercentage as number > 80 ? 'red' : 'green',
+                                                stroke: 
+                                                    settings?.budgetNotificationLimit ?
+                                                    (category.costsPercentage as number > settings.budgetNotificationLimit ? 'red' : 'green')
+                                                    :
+                                                    (category.costsPercentage as number >= 100 ? 'red' : 'green')                                                                                                                                                    
                                             },
                                             trail: {
                                                 stroke: '#d6d6d6',
@@ -157,8 +161,14 @@ const BudgetGoals = ({ isLimitChanged, setIsLimitChanged }: BudgetGoalsProps) =>
                                         }}
                                     >
                                         <Typography id='absolute-values'>{category.totalCosts?.toFixed(2)} / {category.limit}</Typography>
-                                        <Typography id={category.costsPercentage as number > 80 ? 
-                                            'percentage-over-threshold' : 'percentage-below-threshold'}
+                                        <Typography id={settings?.budgetNotificationLimit ?
+                                            (category.costsPercentage as number > settings.budgetNotificationLimit ?
+                                            'percentage-over-threshold' : 'percentage-below-threshold')
+                                            : 
+                                            (category.costsPercentage as number >= 100 ?
+                                                'percentage-over-threshold' : 'percentage-below-threshold'
+                                            )                                                                                        
+                                        }
                                         >
                                             {category.costsPercentage?.toFixed(2)}%
                                         </Typography>

@@ -12,11 +12,25 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    gap: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    padding: 1rem;
+    gap: 0.5rem;
 }
 
-.update-settings-button {
+#activity-notification-limit, #budget-notification-limit {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: white;
+}
+
+.notification-limit-input {
+    width: 4rem;
+}
+
+#update-settings-button {
     color: #fff;
     background-color: #007BFF;
     padding: 0.5rem 1rem;
@@ -24,12 +38,12 @@
     cursor: pointer;
 }
 
-.update-settings-button:hover {
+#update-settings-button:hover {
     background-color: #0056b3;
 }
 
 @media (max-width: 768px) {
-    .update-settings-button {
+    #update-settings-button {
         width: 50%;
     }
 }
@@ -44,6 +58,9 @@
 }
 
 #currency-select {
-    width: 100%;
+    margin-top: 1.5rem;
+}
+
+#currency-select-input {
     margin: 0.2rem;
 }

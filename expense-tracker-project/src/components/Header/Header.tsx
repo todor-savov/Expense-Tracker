@@ -15,7 +15,7 @@ import { AccountCircle, Email, LoginOutlined, Logout, Settings } from '@mui/icon
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleCheck } from '@fortawesome/free-solid-svg-icons';
 import { signOutUser } from '../../service/authentication-service';
-import { addFeedback, getFeedbacks, getTransactions, getUserDetails } from '../../service/database-service';
+import { addFeedback, getCategories, getFeedbacks, getTransactions, getUserDetails } from '../../service/database-service';
 import Navigation from '../Navigation/Navigation';
 import AuthContext from '../../context/AuthContext';
 import "./Header.css";
@@ -23,6 +23,7 @@ import "./Header.css";
 interface HeaderProps {
     from: string;
     isUserChanged?: boolean;
+    isLimitChanged?: boolean;
  }
 
 interface UserDetails {
@@ -36,21 +37,44 @@ interface UserDetails {
     isBlocked: boolean;
 }
 
+interface Category {
+    id: string;
+    type: string;
+    imgSrc: string;
+    imgAlt: string;
+    limit?: number;
+    totalCosts?: number;
+    costsPercentage?: number;
+    user: string;
+}
+
+interface FetchedTransaction {
+  id: string;
+  amount: number;
+  category: string;
+  date: string;
+  name: string;
+  payment: string;
+  receipt: string;
+  user: string;
+  currency: string;
+}
+
 interface Feedback {
     user: string;
     rating: number;
     feedback: string;
 }
 
-const Header = ({ from, isUserChanged }: HeaderProps) => {
+const Header = ({ from, isUserChanged, isLimitChanged }: HeaderProps) => {
   const { isLoggedIn, setLoginState, settings } = useContext(AuthContext);
   const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
   const [isNavigationOpen, setIsNavigationOpen] = useState<boolean>(false);
   const [isBadgeOpen, setIsBadgeOpen] = useState<boolean>(false);
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [currentUser, setCurrentUser] = useState<UserDetails|null>(null);
-  const [activityNotification, setActivityNotification] = useState<string>('');
-  const [activityNotificationCount, setActivityNotificationCount] = useState<number>(0);
+  const [activityNotifications, setActivityNotifications] = useState<string[]>([]);
+  const [budgetNotifications, setBudgetNotifications] = useState<string[]>([]);
   const [showFeedbackForm, setShowFeedbackForm] = useState<boolean>(false);
   const [feedback, setFeedback] = useState<Feedback|null>(null);
   const [isFeedbackSubmitted, setIsFeedbackSubmitted] = useState<boolean>(false);
@@ -71,23 +95,57 @@ const Header = ({ from, isUserChanged }: HeaderProps) => {
   }, [isUserChanged]);
 
   useEffect(() => {
-    const fetchTransactions = async () => {
-      try {          
+    const handleNotifications = async () => {
+      try {
+        const activityMessages: string[] = [];
+        const budgetMessages: string[] = [];
         const transactions = await getTransactions(isLoggedIn.user);
-        transactions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-        const differenceInTime = new Date().getTime() - new Date(transactions[0].date).getTime();
-        const differenceInDays = differenceInTime / (1000 * 3600 * 24);
-        if (Math.floor(differenceInDays) > 3) {
-          setActivityNotification("You have not registered any transaction in the last 3 days.");
-          setActivityNotificationCount(1);
-        }           
+        if (settings?.activityNotifications === 'enabled') {
+          if (transactions.length === 0) {
+            setActivityNotifications(activityMessages);
+            setBudgetNotifications(budgetMessages);
+            return;
+          }
+          transactions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+          const differenceInTime = new Date().getTime() - new Date(transactions[0].date).getTime();
+          const differenceInDays = differenceInTime / (1000 * 3600 * 24);
+          if (settings.activityNotificationLimit) {
+            if (Math.floor(differenceInDays) > settings.activityNotificationLimit) {
+              activityMessages.push(`You have not added any transactions in the last ${settings.activityNotificationLimit} days.`);
+            }
+          }          
+        }
+        setActivityNotifications(activityMessages);
+        
+        if (settings?.budgetNotifications === 'enabled') {
+          const categories = await getCategories(isLoggedIn.user);
+          if (categories.length === 0) {
+            setBudgetNotifications(budgetMessages);
+            return;
+          };
+          categories.map((category: Category) => {
+            if (category.limit) {
+              const totalCategoryCosts = transactions.reduce((acc: number, transaction: FetchedTransaction) => {
+                return transaction.category === category.type ? (acc + transaction.amount) : acc;
+              }, 0);
+    
+              const costsPercentage = (totalCategoryCosts / category.limit) * 100;              
+    
+              if (settings.budgetNotificationLimit)  {
+                if (costsPercentage > settings.budgetNotificationLimit) {
+                  budgetMessages.push(`You have spent more than ${settings.budgetNotificationLimit}% of your "${category.type}" budget!`);
+                }
+              }             
+            }
+          });          
+        }
+        setBudgetNotifications(budgetMessages);    
       } catch (error: any) {
         console.log(error.message);
       }
-    }
-    if (isLoggedIn.user && settings?.activityNotifications === 'enabled') fetchTransactions();
-    if (isLoggedIn.user && settings?.activityNotifications === 'disabled') setActivityNotificationCount(0);
-  }, [settings?.activityNotifications]);
+    }  
+    if (isLoggedIn.user) handleNotifications();
+  }, [isLimitChanged]);
 
   useEffect(() => {
     const fetchFeedbacks = async () => {
@@ -187,7 +245,7 @@ const Header = ({ from, isUserChanged }: HeaderProps) => {
               <div>
                 <span>
                   <IconButton aria-describedby='simple-popover' aria-controls="simple-popover" onClick={handleBadgeClick}>
-                    <Badge color="secondary" badgeContent={activityNotificationCount} invisible={false}>
+                    <Badge color="secondary" badgeContent={activityNotifications.length + budgetNotifications.length} invisible={false}>
                       <Email sx={{color: 'white'}} />
                     </Badge>
                   </IconButton>
@@ -201,14 +259,19 @@ const Header = ({ from, isUserChanged }: HeaderProps) => {
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'right',}}
                     transformOrigin={{ vertical: 'top', horizontal: 'right',}}
                 >
-                    <Typography sx={{ p: 2 }}> 
-                      { 
-                        settings?.activityNotifications === 'enabled' ?                          
-                          (activityNotification ? activityNotification
-                          : "There are no activity notifications.")
-                        : "Activity notifications are disabled."       
-                      }                                                                  
-                    </Typography>
+                    <Box className='notifications-box'>
+                        {settings?.activityNotifications === 'enabled' ?                        
+                          (activityNotifications.length ? 
+                            <Typography className='notification-item-critical'> {activityNotifications.toString()} </Typography>                      
+                          : <Typography className='notification-item'> There are no activity notifications. </Typography>)                          
+                        : <Typography className='notification-item'> Activity notifications are disabled. </Typography>}
+                      
+                        {settings?.budgetNotifications === 'enabled' ?
+                          (budgetNotifications.length ? budgetNotifications.map((notification, index) =>
+                            <Typography key={index} className='notification-item-critical'> {notification} </Typography>)
+                          : <Typography className='notification-item'> There are no budget notifications. </Typography>)
+                        : <Typography className='notification-item'> Budget notifications are disabled. </Typography>}
+                    </Box>
                 </Popover>
                 <Menu id="menu-appbar" anchorEl={anchorEl} anchorOrigin={{vertical: 'bottom', horizontal: 'right',}} keepMounted
                   transformOrigin={{vertical: 'top', horizontal: 'right',}} open={isMenuOpen} onClose={handleMenuClose}>                  

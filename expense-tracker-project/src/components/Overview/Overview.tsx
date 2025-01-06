@@ -231,7 +231,7 @@ const Overview = () => {
                             </ListItem>                            
                         )}
                     </List>
-                </> : 'Select a period to view transactions'
+                </> : <Typography id='default-message'> Select a period to view transactions </Typography>
             }
         </Box>
         :   <div className="message-box">

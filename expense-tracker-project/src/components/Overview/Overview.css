@@ -19,6 +19,11 @@
     max-width: 40vw;
 }
 
+#default-message {
+    grid-column: 1 / 3;
+    grid-row: 3 / 3;
+}
+
 .pie-container {
     grid-column: 1 / 1;
     grid-row: 3 / 3;

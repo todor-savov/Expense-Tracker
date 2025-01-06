@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from "@mui/material";
 import './LimitDialog.css';
 
 interface Category {
@@ -41,13 +41,13 @@ const LimitDialog = ({ dialogOpen, setDialogOpen, categoryForLimitUpdate, setCat
             <DialogTitle id="limit-dialog-title">
               {"Category limit"}
             </DialogTitle>
-            <DialogContent>
-              <DialogContentText id="limit-dialog-description">
+            <DialogContent id="limit-dialog-description">
+              <DialogContentText>
                 <TextField type="number" label="Limit" id="category-limit-input" onChange={(e) => setLimit(parseInt(e.currentTarget.value))}/>
               </DialogContentText>
             </DialogContent>
-            <DialogActions> 
-                <Button id="add-category-limit-button" onClick={handleDialogConfirmation}> Add </Button>
+            <DialogActions>
+                <button id="add-category-limit-button" onClick={handleDialogConfirmation}> Add </button>
             </DialogActions>
         </Dialog>
     );

@@ -1,0 +1,31 @@
+#limit-dialog {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 0.5rem;
+}
+
+#limit-dialog-title {
+    text-align: center;
+}
+
+#limit-dialog-description {   
+    padding: 1rem;
+}
+
+#add-category-limit-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: blue;
+    color: white;
+}
+
+#category-limit-input {
+    padding: 1rem;
+    border-radius: 0.5rem;
+}

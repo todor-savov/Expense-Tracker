@@ -11,10 +11,12 @@ import './Profile.css';
 
 interface UserSettings { 
     activityNotifications: string;
+    activityNotificationLimit: number;
     budgetNotifications: string;
+    budgetNotificationLimit: number;
     currency: string;
-}
-  
+}  
+
 interface UserDetails {
     firstName: string;
     lastName: string;

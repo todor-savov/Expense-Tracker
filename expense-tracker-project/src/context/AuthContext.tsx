@@ -1,8 +1,10 @@
 import { createContext } from "react";
 
-interface UserSettings { 
+interface UserSettings {
     activityNotifications: string;
+    activityNotificationLimit: number;
     budgetNotifications: string;
+    budgetNotificationLimit: number;
     currency: string;
 }
 

@@ -3,7 +3,9 @@ import { ref, get, set, push, update, query, equalTo, orderByChild, DataSnapshot
 
 interface UserSettings { 
   activityNotifications: string;
+  activityNotificationLimit: number;
   budgetNotifications: string;
+  budgetNotificationLimit: number;
   currency: string;
 }
 

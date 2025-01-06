@@ -20,9 +20,11 @@ import FaqView from './views/FaqView/FaqView.tsx';
 import BudgetGoalsView from './views/BudgetGoalsView/BudgetGoalsView.tsx';
 import './App.css';
 
-interface UserSettings { 
+interface UserSettings {
   activityNotifications: string;
+  activityNotificationLimit: number;
   budgetNotifications: string;
+  budgetNotificationLimit: number;
   currency: string;
 }
 

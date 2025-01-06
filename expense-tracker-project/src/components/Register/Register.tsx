@@ -55,7 +55,9 @@ const Register = () => {
                         isBlocked: false,
                         settings: {
                             activityNotifications: 'enabled',
+                            activityNotificationLimit: 100,
                             budgetNotifications: 'enabled',
+                            budgetNotificationLimit: 100,
                             currency: 'BGN',
                         }                                                
                     });

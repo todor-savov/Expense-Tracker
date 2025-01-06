@@ -6,7 +6,9 @@ import { getUserSettings } from '../service/database-service.js';
 
 interface UserSettings { 
     activityNotifications: string;
+    activityNotificationLimit: number;
     budgetNotifications: string;
+    budgetNotificationLimit: number;
     currency: string;
 }
 

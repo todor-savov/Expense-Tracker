@@ -79,6 +79,8 @@ const BudgetGoals = ({ isLimitChanged, setIsLimitChanged }: BudgetGoalsProps) =>
     useEffect(() => {
         const updateLimit = async () => {
             try {
+                console.log(loading);
+                console.log(error);
                 setError(null);
                 setLoading(true);
                 const response = await updateCategory(categoryForLimitUpdate as Category, categoryForLimitUpdate?.id);

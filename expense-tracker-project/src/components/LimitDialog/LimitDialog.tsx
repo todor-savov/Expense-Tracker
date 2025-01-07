@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from "@mui/material";
+import { Box, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from "@mui/material";
 import './LimitDialog.css';
 
 interface Category {
@@ -34,21 +34,20 @@ const LimitDialog = ({ dialogOpen, setDialogOpen, categoryForLimitUpdate, setCat
         setUpdateCategoryLimit(true);
         handleDialogClose();
     }
-
+ 
     return (        
-        <Dialog open={dialogOpen} onClose={handleDialogClose} aria-describedby="limit-dialog-description" id="limit-dialog"
-            aria-labelledby="limit-dialog-title">
-            <DialogTitle id="limit-dialog-title">
-              {"Category limit"}
-            </DialogTitle>
-            <DialogContent id="limit-dialog-description">
-              <DialogContentText>
-                <TextField type="number" label="Limit" id="category-limit-input" onChange={(e) => setLimit(parseInt(e.currentTarget.value))}/>
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-                <button id="add-category-limit-button" onClick={handleDialogConfirmation}> Add </button>
-            </DialogActions>
+        <Dialog open={dialogOpen} onClose={handleDialogClose}>
+            <Box id="limit-dialog">
+                <DialogTitle id="limit-dialog-title"> {"Set category limit"} </DialogTitle>
+                <DialogContent id="limit-dialog-description">
+                    <DialogContentText>
+                        <TextField type="number" label="Limit" id="category-limit-input" onChange={(e) => setLimit(parseInt(e.currentTarget.value))}/>
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <button id="add-category-limit-button" onClick={handleDialogConfirmation}> Add </button>
+                </DialogActions>
+            </Box>
         </Dialog>
     );
 }

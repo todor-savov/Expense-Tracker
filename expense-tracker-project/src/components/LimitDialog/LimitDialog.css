@@ -3,29 +3,35 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 1rem;
-    padding: 1rem;
-    border: 1px solid #e0e0e0;
-    border-radius: 0.5rem;
+    padding: 0.5rem;
+    margin: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 #limit-dialog-title {
-    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
 }
 
-#limit-dialog-description {   
+#limit-dialog-description {
     padding: 1rem;
-}
-
-#add-category-limit-button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: blue;
-    color: white;
 }
 
 #category-limit-input {
     padding: 1rem;
-    border-radius: 0.5rem;
+}
+
+#add-category-limit-button {
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#add-category-limit-button:hover {
+    background-color: #0e6913;
 }

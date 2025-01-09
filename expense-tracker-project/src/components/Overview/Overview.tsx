@@ -228,7 +228,7 @@ const Overview = () => {
                                     primary={`${settings?.currency === 'EUR' ? '€' : (settings?.currency === 'USD' ? '$' : 'BGN')} ${data.value.toFixed(2)}`}                                                                                                            
                                     secondary={`${((data.value / totalSum)*100).toFixed(1)}%`}
                                 />
-                            </ListItem>                            
+                            </ListItem>                             
                         )}
                     </List>
                 </> : <Typography id='default-message'> Select a period to view transactions </Typography>

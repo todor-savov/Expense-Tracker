@@ -129,6 +129,7 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionT
       }
       setFilteredTransactions(filteredResults);
       setSum(filteredResults.reduce((acc, transaction) => acc + transaction.amount, 0));
+      setPage(0);
   }, [searchFilters]);
 
   useEffect(() => {
@@ -149,6 +150,7 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionT
       }
     }
     setSearchFilters(newMap);
+    setPage(0);
   };
 
   const loadSearchFilters = () => {

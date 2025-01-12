@@ -141,24 +141,29 @@ const Progress = () => {
     return (
         <>
             {error && <p>{error}</p>}
-            <Box sx={{backgroundColor: 'white'}}>
-                <Box className="overview-header">
-                    <FormControl sx={{ m: 1, minWidth: 200 }}>
-                        <InputLabel id="demo-simple-select-helper-label">Time Span</InputLabel>
-                            <Select labelId="demo-simple-select-helper-label" id="demo-simple-select-helper" value={timeSpan} 
-                                label="time-span" onChange={handleChange}>
-                                <MenuItem value={"yearly"}>Yearly</MenuItem>
-                                <MenuItem value={"monthly-current"}>Monthly (Current Year)</MenuItem>
-                                <MenuItem value={"monthly-all"}>Monthly (All Years)</MenuItem>
-                            </Select>
-                    </FormControl>
-                </Box>
+            
+            <Box className="progress-header">
+                <FormControl sx={{ m: 1, minWidth: 200 }}>
+                    <InputLabel>Time Span</InputLabel>
+                    <Select label="time-span" value={timeSpan} onChange={handleChange}>
+                        <MenuItem value={"yearly"}>Yearly</MenuItem>
+                        <MenuItem value={"monthly-current"}>Monthly (Current Year)</MenuItem>
+                        <MenuItem value={"monthly-all"}>Monthly (All Years)</MenuItem>
+                    </Select>
+                </FormControl>
+            </Box>
 
-                {(transactions.length > 0 && timeSpan !== '') ?
-                <Box sx={{ padding: 1 }}>
-                    <Typography variant="h6" sx={{ marginBottom: '10px', display: 'flex', fontSize: '16px', fontStyle: 'italic' }}> 
-                        The values on the "Amount" axis are in {settings?.currency} currency.
-                    </Typography>
+            {!timeSpan ? 
+                <Box className="default-message-box">
+                    <Typography> Select a period to preview graph </Typography>
+                </Box>
+                :
+                <Box className="progress-content">
+                    {(data && Object.keys(data).length > 1) && 
+                        <Typography variant="h6" id='graph-info-text'>
+                            The values on the "Amount" axis are in {settings?.currency} currency.
+                        </Typography>
+                    }
 
                     <LineChart
                         xAxis={[
@@ -175,19 +180,11 @@ const Progress = () => {
                                 labelStyle: {
                                     fontSize: 14,
                                     fontWeight: 'bold',
-                                    transform: 'translateY(3px)',
+                                    transform: 'translateY(5px)',
                                 },
                             },
-                        ]}
-
-                        sx={{
-                            [`.${axisClasses.left} .${axisClasses.label}`]: {
-                                fontSize: 14,
-                                fontWeight: 'bold',
-                                transform: 'translateX(-11px)',
-                            },
-                        }}
-                            
+                        ]}                        
+                                
                         yAxis={[
                             {
                                 id: 'Amount',
@@ -197,46 +194,48 @@ const Progress = () => {
                                 tickLabelStyle: {
                                     fontSize: 11,
                                     textAnchor: 'end',
-                                },
+                                }                                
                             }
-                        ]}
+                        ]}                        
 
-                        series={data ? Object.keys(data).map(category => ({
+                        series={(data && Object.keys(data).length > 1) ? Object.keys(data).map(category => ({
                             id: category,
                             label: category,
                             data: data[category],
                             stack: category !== 'Total' ? 'total' : undefined,
                             area: category !== 'Total' ? true : false,
                             showMark: true,
-                        })) : []}
+                        })) : []}                        
 
                         grid={{ horizontal: true }}
-                        height={400}
-                        margin={{ left: 50 }}
-
+                        width={900}
+                        height={450}
+                                                    
                         slotProps={{
                             legend: {
-                                direction: 'column',
-                                position: { vertical: 'top', horizontal: 'right' },
+                                direction: 'row',
+                                position: { vertical: 'top', horizontal: 'middle' },
                                 padding: 0,
-                                itemMarkWidth: 20,
+                                itemMarkWidth: 15,
                                 itemMarkHeight: 10,
                                 markGap: 5,
-                                itemGap: 10,
+                                itemGap: 20,
                                 labelStyle: {
                                     fontSize: 12,
-                                    fontWeight: 'bold',
                                 }, 
-                            },
+                            }                            
+                        }}
+
+                        sx={{
+                            [`.${axisClasses.left} .${axisClasses.label}`]: {
+                                fontSize: 14,
+                                fontWeight: 'bold',
+                                transform: 'translateX(-12px)',
+                            }
                         }}
                     />   
-                </Box>
-                :   (timeSpan !== '' && 
-                    <div className="message-box">
-                        <h2>No Transactions Found</h2>                
-                    </div>)
-                }
-            </Box>
+                </Box>                
+            }
         </>
     );
 }

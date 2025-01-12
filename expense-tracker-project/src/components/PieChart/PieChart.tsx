@@ -28,13 +28,13 @@ const PieActiveArc: React.FC<PieActiveArcProps> = ({ data }) => {
           startAngle: -90,
           endAngle: 180,
         },
-      ]}
-      height={400}
-      width={550}
-      margin={{ top: 20, bottom: 5, left: 5, right: 5 }}
-      slotProps={{legend: {
-          direction: 'row',
-          position: { vertical: 'top', horizontal: 'middle' },
+      ]}    
+      margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
+      slotProps={{
+        legend: {
+          direction: 'column',
+          padding: 0,
+          position: { vertical: 'bottom', horizontal: 'left' },
         },
       }}
     />

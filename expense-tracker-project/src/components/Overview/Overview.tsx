@@ -16,7 +16,7 @@ import './Overview.css';
 interface FetchedTransaction {
     id: string;
     date: string;
-    name: string;
+    name: string; 
     amount: number;
     category: string;
     payment: string;
@@ -142,102 +142,107 @@ const Overview = () => {
     }
   
     return (
-      <>
+    <>
       {error && <p>{error}</p>}
       
       {switchLabel === 'Period Overview' ? 
         (transactions.length > 0 ?
-        <Box className="overview-container">     
-            <FormGroup className='switch-button'>
-                <FormControlLabel control={<Switch />} label={switchLabel} 
-                    onChange={() => setSwitchLabel(switchLabel === 'Period Overview' ? 'Progress Over Time' : 'Period Overview')} />
-            </FormGroup>
+            <Box className="overview-container">     
+                <FormGroup className='switch-button'>
+                    <FormControlLabel control={<Switch />} label={switchLabel} 
+                        onChange={() => setSwitchLabel(switchLabel === 'Period Overview' ? 'Progress Over Time' : 'Period Overview')} />
+                </FormGroup>
 
-            <Box className="overview-header">
-                <Tabs value={outerValue} onChange={handleOuterChange}>
-                    <Tab key={0} label="Year" onClick={() => setView("yearly")} sx={{ backgroundColor: outerValue === 0 ? 'lightblue' : 'inherit' }} />
-                    <Tab key={1} label="Month" onClick={() => setView("monthly")} sx={{ backgroundColor: outerValue === 1 ? 'lightblue' : 'inherit' }} /> 
-                </Tabs>
-
-                {view && 
-                    <Tabs value={innerValue} variant="scrollable" scrollButtons allowScrollButtonsMobile aria-label="scrollable force tabs example" onChange={handleInnerChange}
-                        sx={{ [`& .${tabsClasses.scrollButtons}`]: {'&.Mui-disabled': { opacity: 0.3 },},}} className='scrollable-tabs'>
-                        {view === 'monthly' ? 
-                            Array.from(
-                                new Set(transactions.map((transaction) => 
-                                    new Date(transaction.date).toLocaleString('en-US', { month: 'long', year: 'numeric' })
-                                    ))
-                                )
-                                .sort((a, b) => new Date(a).getTime() - new Date(b).getTime())
-                                .map((month, index) => 
-                                    <Tab key={index} label={month} onClick={() => handleTabClick(month)} 
-                                        sx={{ backgroundColor: innerValue === index ? 'lightblue' : 'inherit' }} />)
-                            : 
-                            Array.from(
-                                new Set(transactions.map((transaction) => 
-                                    new Date(transaction.date).toLocaleString('en-US', { year: 'numeric' })
-                                    ))
-                                )
-                                .sort((a, b) => parseInt(a) - parseInt(b))
-                                .map((year, index) => 
-                                    <Tab key={index} label={year} onClick={() => handleTabClick(year)} 
-                                        sx={{ backgroundColor: innerValue === index ? 'lightblue' : 'inherit' }} />)
-                        }
+                <Box className="overview-header">
+                    <Tabs value={outerValue} onChange={handleOuterChange}>
+                        <Tab key={0} label="Year" onClick={() => setView("yearly")} sx={{ backgroundColor: outerValue === 0 ? 'lightblue' : 'inherit' }} />
+                        <Tab key={1} label="Month" onClick={() => setView("monthly")} sx={{ backgroundColor: outerValue === 1 ? 'lightblue' : 'inherit' }} /> 
                     </Tabs>
-                }
-            </Box>            
 
-            {pieData.length > 0 ? 
-                <>          
-                    <Box className="pie-container">
-                        <PieActiveArc data={ pieData.map((category) => {return {...category, value: +((category.value / totalSum)*100).toFixed(2)}}) } />
-                    </Box>
-                               
-                    <List className='list-container'>
-                        <Typography variant="h6" sx={{ display: 'flex', marginBottom: '10px', fontSize: '16px', fontStyle: 'italic' }}>
-                                The provided values are in {settings?.currency} currency.
-                        </Typography>
+                    {view && 
+                        <Tabs value={innerValue} variant="scrollable" scrollButtons allowScrollButtonsMobile aria-label="scrollable force tabs example" onChange={handleInnerChange}
+                            sx={{ [`& .${tabsClasses.scrollButtons}`]: {'&.Mui-disabled': { opacity: 0.3 },},}} className='scrollable-tabs'>
+                            {view === 'monthly' ? 
+                                Array.from(
+                                    new Set(transactions.map((transaction) => 
+                                        new Date(transaction.date).toLocaleString('en-US', { month: 'long', year: 'numeric' })
+                                        ))
+                                    )
+                                    .sort((a, b) => new Date(a).getTime() - new Date(b).getTime())
+                                    .map((month, index) => 
+                                        <Tab key={index} label={month} onClick={() => handleTabClick(month)} 
+                                            sx={{ backgroundColor: innerValue === index ? 'lightblue' : 'inherit' }} />)
+                                : 
+                                Array.from(
+                                    new Set(transactions.map((transaction) => 
+                                        new Date(transaction.date).toLocaleString('en-US', { year: 'numeric' })
+                                        ))
+                                    )
+                                    .sort((a, b) => parseInt(a) - parseInt(b))
+                                    .map((year, index) => 
+                                        <Tab key={index} label={year} onClick={() => handleTabClick(year)} 
+                                            sx={{ backgroundColor: innerValue === index ? 'lightblue' : 'inherit' }} />)
+                            }
+                        </Tabs>
+                    }
+                </Box>            
 
-                        <ListItem className="custom-list-item">
-                            <ListItemAvatar>
-                                <Avatar> <FunctionsIcon /> </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText 
-                                primary={<strong>Total</strong>}
-                                secondary={`${filteredTransactions.length} transaction(s)`}
-                            />
-                            <ListItemText 
-                                primary={`${settings?.currency === 'EUR' ? '€' : (settings?.currency === 'USD' ? '$' : 'BGN')} ${totalSum.toFixed(2)}`}        
-                                secondary={`100%`} 
-                            />
-                        </ListItem>
-                        
-                        {pieData.map((data, index) =>                             
-                            <ListItem key={index} className="custom-list-item">
+                {pieData.length > 0 ? 
+                    <Box className="overview-content">        
+                        <Box className="pie-container">
+                            <PieActiveArc data={ pieData.map((category) => {return {...category, value: +((category.value / totalSum)*100).toFixed(2)}}) } />
+                        </Box>
+                                
+                        <List className='list-container'>
+                            <Typography variant="h6" id='graph-info-text'>
+                                    The provided values are in {settings?.currency} currency.
+                            </Typography>
+
+                            <ListItem className="custom-list-item">
                                 <ListItemAvatar>
-                                    {getCategoryIcon(data.label, categories)}
+                                    <Avatar> <FunctionsIcon /> </Avatar>
                                 </ListItemAvatar>
                                 <ListItemText 
-                                    primary={<strong>{data.label}</strong>}
-                                    secondary={`${filteredTransactions.reduce((acc, transaction) => {
-                                                if (transaction.category === data.label) acc++;
-                                                    return acc;
-                                                }, 0)} transaction(s)`}
+                                    primary={<strong>Total</strong>}
+                                    secondary={`${filteredTransactions.length} transaction(s)`}
                                 />
                                 <ListItemText 
-                                    primary={`${settings?.currency === 'EUR' ? '€' : (settings?.currency === 'USD' ? '$' : 'BGN')} ${data.value.toFixed(2)}`}                                                                                                            
-                                    secondary={`${((data.value / totalSum)*100).toFixed(1)}%`}
+                                    primary={`${settings?.currency === 'EUR' ? '€' : (settings?.currency === 'USD' ? '$' : 'BGN')} ${totalSum.toFixed(2)}`}        
+                                    secondary={`100%`} 
                                 />
-                            </ListItem>                             
-                        )}
-                    </List>
-                </> : <Typography id='default-message'> Select a period to view transactions </Typography>
-            }
-        </Box>
-        :   <div className="message-box">
+                            </ListItem>
+                            
+                            {pieData.map((data, index) =>                             
+                                <ListItem key={index} className="custom-list-item">
+                                    <ListItemAvatar> {getCategoryIcon(data.label, categories)} </ListItemAvatar>
+                                    <ListItemText
+                                        primary={<strong>{data.label}</strong>}
+                                        secondary={`${filteredTransactions.reduce((acc, transaction) => {
+                                                    if (transaction.category === data.label) acc++;
+                                                        return acc;
+                                                    }, 0)} transaction(s)`}
+                                    />
+                                    <ListItemText 
+                                        primary={`${settings?.currency === 'EUR' ? '€' : (settings?.currency === 'USD' ? '$' : 'BGN')} ${data.value.toFixed(2)}`}                                                                                                            
+                                        secondary={`${((data.value / totalSum)*100).toFixed(1)}%`}
+                                    />
+                                </ListItem>                             
+                            )}
+                        </List>
+                    </Box> 
+                    : 
+                    <Box className="default-message-box">
+                        <Typography> Select a period to preview graph </Typography>
+                    </Box>
+                }
+            </Box>
+            :   
+            <div className="message-box">
                 <h2>No Transactions Found</h2>
-            </div>)
-        : <div className='progress-container'>        
+            </div>
+        )
+        : 
+        <div className='progress-container'>        
             <FormGroup className='switch-button'>
                 <FormControlLabel control={<Switch checked={switchLabel === 'Progress Over Time' ? true : false} />} 
                     onChange={() => setSwitchLabel(switchLabel === 'Period Overview' ? 'Progress Over Time' : 'Period Overview')} 

@@ -171,19 +171,10 @@ const AddTransaction = ({ mode }: { mode: string }) => {
         if (mode === 'new') setNewTransaction(expenseDetails);
     }
 
-    if (loading) {
-        return (
-            <div className='spinnerContainer'>
-                <div className='spinner'></div>
-            </div>
-        )
-    }
-
     return (categories.length > 0 ?
-            <Box component="form" sx={{'& .MuiTextField-root': { m: 1, width: '25ch' },}} noValidate
-                autoComplete="off" onSubmit={handleSubmit} className="expense-form"
-            >
-                <div className='input-fields'>
+        <Box className="expense-container">
+            <Box component="form" noValidate autoComplete="off" onSubmit={handleSubmit} className="expense-form">
+                <Box className='input-fields'>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DemoContainer components={['DatePicker']}>
                                 <DatePicker 
@@ -245,20 +236,20 @@ const AddTransaction = ({ mode }: { mode: string }) => {
                             ))}
                         </TextField>
                     }
-                </div>
+
+                    <span className='action-buttons'>
+                        <Button id='add-expense' type="submit" endIcon={<Save />}>Save</Button>
+                        <Button id='cancel-expense' endIcon={<Cancel />} onClick={() => navigate('/transactions')}>Cancel</Button>
+                    </span> 
+                </Box>
                 
-                <UploadReceipt setSalesReceipt={setSalesReceipt} setError={setError} transaction={fetchedTransaction} />
-
-                {error && <Typography variant="body1" id="error-input-fields">{error}</Typography>}
-
-                <span className='action-buttons'>
-                    <Button id='add-expense' type="submit" endIcon={<Save />}>Save</Button>
-                    <Button id='cancel-expense' onClick={() => navigate('/transactions')} endIcon={<Cancel />}>Cancel</Button>
-                </span>                
-             </Box>
-        :   <div className="message-box">
-                <p>Please ensure you have created at least one category to be able to add a new transaction.</p>
-            </div>
+                <UploadReceipt setSalesReceipt={setSalesReceipt} setError={setError} transaction={fetchedTransaction} />                                            
+            </Box>
+        </Box>
+        :   
+        <Box className="message-box">
+            <Typography>Please ensure you have created at least one category to be able to add a new transaction.</Typography>
+        </Box>
     );
 }
 

@@ -1,13 +1,13 @@
 .upload-receipt {
-    display: grid;
+    display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 10px;
-    padding: 20px;
+    gap: 1rem;
+    padding: 1rem;
+    margin: 1rem;
     border: 2px dashed #ccc;
-    border-radius: 10px;
     background-color: #f9f9f9;
-    margin: 20px 14px;
     transition: border-color 0.3s;
 }
 
@@ -15,17 +15,11 @@
     border-color: #888;
 }
 
-.upload-receipt input[type="file"] {
-    display: none;
-}
-
 .upload-receipt label {
-    display: inline-block;
-    padding: 10px 20px;
+    padding: 1rem 2rem;
     background-color: #007bff;
     color: white;
     border: none;
-    border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
 }
@@ -35,25 +29,6 @@
 }
 
 .upload-receipt img {
-    max-width: 100%;
-    max-height: 100%;
-    border-radius: 8px;
-    margin-top: 20px;
-}
-
-.spinner {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    border: 4px solid rgba(0, 0, 0, 0.1);
-    border-left-color: #333;
-    border-radius: 50%;
-    width: 100px;
-    height: 100px;
-    animation: spin 1s linear infinite;
-}
-
-.spinnerContainer{
-    height: 100vh;
+    width: 25rem;
+    margin-top: 1rem;
 }

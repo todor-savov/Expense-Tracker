@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faReceipt } from '@fortawesome/free-solid-svg-icons';
 import { uploadFile } from "../../service/storage-service.ts";
-import { Button } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import { VisuallyHiddenInput } from '../../common/utils.ts';
 import './UploadReceipt.css';
 
@@ -22,7 +22,7 @@ interface UploadReceiptProps {
     setSalesReceipt: (url: string) => void;
     transaction: FetchedTransaction|null;
     setError: (error: string|null) => void;
- }
+}
 
 const UploadReceipt: React.FC<UploadReceiptProps> = ({ setSalesReceipt, transaction, setError }) => {
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -58,32 +58,27 @@ const UploadReceipt: React.FC<UploadReceiptProps> = ({ setSalesReceipt, transact
         if (file) setFileToUpload(file);
     }
 
-    if (loading) {
-        return (
-            <div className='spinnerContainer'>
-                <div className='spinner'></div>
-            </div>
-        )
-    }
-
     return (
-        <>
-            <div className='upload-receipt'>
-                <Button component="label" role={undefined} variant="contained" tabIndex={-1} 
-                    startIcon={<span><FontAwesomeIcon icon={faReceipt} size="2xl" style={{color: "#74C0FC",}}/> Sales Receipt</span>}>       
-                    <VisuallyHiddenInput type="file" id="file" name="file" accept="image/*" ref={fileInputRef} onChange={(event) => handleUpload(event)} />
-                </Button>
-                {receiptURL ? 
-                    <div>        
-                        <img src={receiptURL as string} alt="receipt" />
-                    </div>
-                    : transaction && 
-                    <div>        
-                        <img src={transaction?.receipt as string} alt="receipt" />
-                    </div>
+        <Box className='upload-receipt'>
+            <Button component="label" role={undefined} tabIndex={-1}
+                startIcon={
+                    <span>
+                        <FontAwesomeIcon icon={faReceipt} size="2xl" style={{color: "#74C0FC",}}/> Sales Receipt                                
+                    </span>
                 }
-            </div>
-        </>
+            >
+                <VisuallyHiddenInput type="file" id="file" name="file" accept="image/*" ref={fileInputRef} onChange={(event) => handleUpload(event)} />
+            </Button>
+            {receiptURL ? 
+                <Box>        
+                    <img src={receiptURL as string} alt="receipt" />
+                </Box>
+                : transaction && 
+                <Box>        
+                    <img src={transaction?.receipt as string} alt="receipt" />
+                </Box>
+            }
+        </Box>
     );
 }
 

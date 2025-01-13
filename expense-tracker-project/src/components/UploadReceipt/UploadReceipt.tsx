@@ -30,6 +30,8 @@ const UploadReceipt: React.FC<UploadReceiptProps> = ({ setSalesReceipt, transact
     const [receiptURL, setReceiptURL] = useState<string|null>(null);
     const [loading, setLoading] = useState<boolean>(false);
 
+    console.log(loading);
+
     useEffect(() => {
         const uploadHandler = async () => {
             try {

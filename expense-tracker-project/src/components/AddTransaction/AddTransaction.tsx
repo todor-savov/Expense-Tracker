@@ -67,6 +67,9 @@ const AddTransaction = ({ mode }: { mode: string }) => {
     const [categories, setCategories] = useState<Category[]|[]>([]);
     const [payments, setPayments] = useState<Payment[]|[]>([]);
 
+    console.log(loading);
+    console.log(error);
+
     useEffect(() => {
         const fetchCategoriesAndPayments = async () => {
           const categories = await getCategories(isLoggedIn.user);

@@ -77,12 +77,13 @@ interface NewTransaction {
   currency: string;
 }
 
-export const addTransaction = async (transactionDetails: NewTransaction): Promise<void|undefined> => {
+export const addTransaction = async (transactionDetails: NewTransaction): Promise<void|string> => {
   try {
     const response = await push(ref(database, 'transactions'), transactionDetails);
-    update(ref(database, `transactions/${response.key}`), { id: response.key });
+    return await update(ref(database, `transactions/${response.key}`), { id: response.key });
   } catch (error: any) {
     console.log(error.message);
+    return error.message;
   }
 }
 
@@ -120,11 +121,12 @@ export const getTransaction = async (transactionId: string): Promise<FetchedTran
   }
 }
 
-export const updateTransaction = async (transactionDetails: FetchedTransaction, transactionId: string): Promise<void|undefined> => {
+export const updateTransaction = async (transactionDetails: FetchedTransaction, transactionId: string): Promise<void|string> => {
   try {
     return await set(ref(database, `transactions/${transactionId}`), transactionDetails);
   } catch (error: any) {
     console.log(error.message);
+    return error.message;
   }
 }
 

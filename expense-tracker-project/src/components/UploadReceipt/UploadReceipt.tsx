@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faReceipt } from '@fortawesome/free-solid-svg-icons';
 import { uploadFile } from "../../service/storage-service.ts";
-import { Box, Button } from '@mui/material';
+import { Box, Button, CircularProgress, Stack } from '@mui/material';
 import { VisuallyHiddenInput } from '../../common/utils.ts';
 import './UploadReceipt.css';
 
@@ -22,30 +22,39 @@ interface UploadReceiptProps {
     setSalesReceipt: (url: string) => void;
     transaction: FetchedTransaction|null;
     setError: (error: string|null) => void;
+    setOpenSnackbar: (open: boolean) => void;
+    setSuccessMessage: (message: string|null) => void;
 }
 
-const UploadReceipt: React.FC<UploadReceiptProps> = ({ setSalesReceipt, transaction, setError }) => {
+const UploadReceipt: React.FC<UploadReceiptProps> = ({ setSalesReceipt, transaction, setError, setOpenSnackbar, setSuccessMessage }) => {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [fileToUpload, setFileToUpload] = useState<File|null>(null);
     const [receiptURL, setReceiptURL] = useState<string|null>(null);
     const [loading, setLoading] = useState<boolean>(false);
 
-    console.log(loading);
-
     useEffect(() => {
         const uploadHandler = async () => {
-            try {
+            try {                
                 setLoading(true);
                 const receiptURL = await uploadFile(fileToUpload as File);
+                if (!receiptURL) throw new Error('Failed to upload receipt');
                 setReceiptURL(receiptURL);
                 setSalesReceipt(receiptURL);
-                setLoading(false);
+                setSuccessMessage('Receipt uploaded successfully');
             } catch (error: any) {
                 setError(error.message);
                 console.log(error.message);
+            } finally {
+                setLoading(false);
+                setOpenSnackbar(true);
             }
         }
         if (fileToUpload) uploadHandler();
+
+        return () => {
+            setError(null);
+            setSuccessMessage(null);
+        }
     }, [fileToUpload]);
 
     const handleUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,7 +62,8 @@ const UploadReceipt: React.FC<UploadReceiptProps> = ({ setSalesReceipt, transact
         const file: File|null = (fileInputRef.current?.files) ? fileInputRef.current.files[0] : null;
 
         if (file?.type !== 'image/jpeg' && file?.type !== 'image/png') {            
-            setError('Invalid file type. Please upload a valid image file.');
+            setError('Please upload a valid image file.');
+            setOpenSnackbar(true);
             return;
         }
 
@@ -62,15 +72,21 @@ const UploadReceipt: React.FC<UploadReceiptProps> = ({ setSalesReceipt, transact
 
     return (
         <Box className='upload-receipt'>
-            <Button component="label" role={undefined} tabIndex={-1}
-                startIcon={
-                    <span>
-                        <FontAwesomeIcon icon={faReceipt} size="2xl" style={{color: "#74C0FC",}}/> Sales Receipt                                
-                    </span>
-                }
-            >
-                <VisuallyHiddenInput type="file" id="file" name="file" accept="image/*" ref={fileInputRef} onChange={(event) => handleUpload(event)} />
-            </Button>
+            {loading ?
+                <Stack sx={{ color: 'grey.500' }} spacing={2} direction="row" id='spinning-circle'>
+                    <CircularProgress color="success" size='3rem' />
+                </Stack>
+                :
+                <Button component="label" role={undefined} tabIndex={-1}
+                    startIcon={
+                        <span>
+                            <FontAwesomeIcon icon={faReceipt} size="2xl" style={{color: "#74C0FC",}}/> Sales Receipt
+                        </span>
+                    }
+                >
+                    <VisuallyHiddenInput type="file" id="file" name="file" accept="image/*" ref={fileInputRef} onChange={(event) => handleUpload(event)} />
+                </Button>
+            }            
             {receiptURL ? 
                 <Box>        
                     <img src={receiptURL as string} alt="receipt" />

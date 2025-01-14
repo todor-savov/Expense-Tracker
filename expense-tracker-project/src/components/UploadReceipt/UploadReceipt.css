@@ -9,6 +9,7 @@
     border: 2px dashed #ccc;
     background-color: #f9f9f9;
     transition: border-color 0.3s;
+    width: 30rem;
 }
 
 .upload-receipt:hover {

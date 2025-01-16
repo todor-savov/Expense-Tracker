@@ -30,6 +30,7 @@ const AllTransactions = () => {
                 setLoading(true);
                 const transactions = await getTransactions(isLoggedIn.user);
                 const exchangeRates = await getExchangeRates(settings?.currency as string);
+                if (!exchangeRates) throw new Error('Exchange rates not found');
 
                 const updatedTransactions = transactions.map((transaction: FetchedTransaction) => {
                     if (transaction.currency !== settings?.currency) {

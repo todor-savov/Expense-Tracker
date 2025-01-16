@@ -1,8 +1,6 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Typography } from "@mui/material";
 import { axisClasses, LineChart } from "@mui/x-charts";
-import { getTransactions } from "../../service/database-service";
-import { getExchangeRates } from "../../service/exchange-rate-service";
 import AuthContext from "../../context/AuthContext";
 
 interface FetchedTransaction {
@@ -21,43 +19,18 @@ interface Data {
     [category: string]: number[];
 }
 
-const Progress = () => {
-    const { isLoggedIn, settings } = useContext(AuthContext);
-    const [transactions, setTransactions] = useState<FetchedTransaction[]|[]>([]);
+interface ProgressProps {
+    transactions: FetchedTransaction[];
+    error: string|null;
+    timeSpan: string;
+    setTimeSpan: (value: string) => void;
+}
+
+const Progress = ({ transactions, error, timeSpan, setTimeSpan }: ProgressProps) => {
+    const { settings } = useContext(AuthContext);
     const [uniqueMonths, setUniqueMonths] = useState<string[]>([]);
     const [uniqueYears, setUniqueYears] = useState<string[]>([]);
     const [data, setData] = useState<Data|null>(null);
-    const [timeSpan, setTimeSpan] = useState<string>('');
-    const [error, setError] = useState<string|null>(null);
-    const [loading, setLoading] = useState<boolean>(true);
-
-    useEffect(() => {
-        const fetchTransactions = async () => {
-            try {
-                setLoading(true);
-                const transactions = await getTransactions(isLoggedIn.user);
-                const exchangeRates = await getExchangeRates(settings?.currency as string);
-
-                const updatedTransactions = transactions.map((transaction: FetchedTransaction) => {
-                    if (transaction.currency !== settings?.currency) {
-                        const exchangeRate = 1 / exchangeRates[transaction.currency];
-                        transaction.amount = transaction.amount * exchangeRate;  
-                        transaction.currency = settings?.currency as string;                       
-                    }
-                    return transaction;
-                });
-
-                setTransactions(updatedTransactions);
-                setError(null);
-                setLoading(false);
-            } catch (error: any) {
-                setError(error.message);
-                console.log(error.message);
-                setLoading(false);
-            }
-        }
-        if (!transactions.length) fetchTransactions();
-    }, []);
 
     const handleChange = (event: SelectChangeEvent) => {
         event.preventDefault();
@@ -128,20 +101,10 @@ const Progress = () => {
         }
 
         setTimeSpan(event.target.value);
-    }
-  
-    if (loading) {
-        return (
-            <div className='spinnerContainer'>
-                <div className='spinner'></div>
-            </div>
-        )
-    }
+    }   
 
     return (
-        <>
-            {error && <p>{error}</p>}
-            
+        <>            
             <Box className="progress-header">
                 <FormControl sx={{ m: 1, minWidth: 200 }}>
                     <InputLabel>Time Span</InputLabel>
@@ -153,9 +116,13 @@ const Progress = () => {
                 </FormControl>
             </Box>
 
-            {!timeSpan ? 
+            {(!timeSpan || error) ? 
                 <Box className="default-message-box">
-                    <Typography> Select a period to preview graph </Typography>
+                    {error ? 
+                        <Typography> No data to display </Typography>
+                        :
+                        <Typography> Select a period to preview graph </Typography>
+                    }                    
                 </Box>
                 :
                 <Box className="progress-content">

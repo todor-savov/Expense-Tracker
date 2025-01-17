@@ -197,7 +197,7 @@ export const createCategory = async (category: NewCategory): Promise<string|void
 
 export const updateCategory = async (categoryDetails: Category, categoryId: string|undefined): Promise<void|string> => {
   try {
-    if (!categoryId) return;
+    if (!categoryId) throw new Error('Category not found');
     return await set(ref(database, `categories/${categoryId}`), categoryDetails);
   } catch (error: any) {
     console.log(error.message);

@@ -19,9 +19,12 @@ interface LimitDialogProps {
     categoryForLimitUpdate: Category|null;
     setCategoryForLimitUpdate: (category: Category) => void;
     setUpdateCategoryLimit: (add: boolean) => void;
+    setError: (error: string) => void;
+    setOpenSnackbar: (open: boolean) => void;
 }
 
-const LimitDialog = ({ dialogOpen, setDialogOpen, categoryForLimitUpdate, setCategoryForLimitUpdate, setUpdateCategoryLimit }: LimitDialogProps) => {
+const LimitDialog = ({ dialogOpen, setDialogOpen, categoryForLimitUpdate, setCategoryForLimitUpdate, 
+                        setUpdateCategoryLimit, setError, setOpenSnackbar }: LimitDialogProps) => {
     const [limit, setLimit] = useState<number>(0);
     
     const handleDialogClose = () => {
@@ -29,7 +32,11 @@ const LimitDialog = ({ dialogOpen, setDialogOpen, categoryForLimitUpdate, setCat
     }
     
     const handleDialogConfirmation = () => {
-        if (limit < 0 || limit === 0 || isNaN(limit)) return;
+        if (limit < 0 || limit === 0 || isNaN(limit)) {
+            setError("Limit must be a positive number");
+            setOpenSnackbar(true);
+            return;
+        };
         setCategoryForLimitUpdate({ ...categoryForLimitUpdate as Category, limit });
         setUpdateCategoryLimit(true);
         handleDialogClose();

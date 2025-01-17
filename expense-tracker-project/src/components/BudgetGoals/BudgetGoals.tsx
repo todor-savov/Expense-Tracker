@@ -1,15 +1,10 @@
 import { useContext, useEffect, useState } from "react";
 import { CircularProgressbarWithChildren } from 'react-circular-progressbar';
-import { Box, Button, Typography } from "@mui/material";
+import { Alert, Box, Button, CircularProgress, Snackbar, Stack, Typography } from "@mui/material";
 import { getCategories, getTransactions, updateCategory } from "../../service/database-service";
 import AuthContext from "../../context/AuthContext";
 import LimitDialog from "../LimitDialog/LimitDialog";
 import './BudgetGoals.css';
-
-interface BudgetGoalsProps {
-    isLimitChanged: boolean;
-    setIsLimitChanged: (isLimitChanged: boolean) => void;
-}
 
 interface Category {
     id: string;
@@ -34,83 +29,96 @@ interface FetchedTransaction {
     currency: string;
 }
 
+interface BudgetGoalsProps {
+    isLimitChanged: boolean;
+    setIsLimitChanged: (isLimitChanged: boolean) => void;
+}
+
 const BudgetGoals = ({ isLimitChanged, setIsLimitChanged }: BudgetGoalsProps) => {
     const { isLoggedIn, settings } = useContext(AuthContext);
-    const [loading, setLoading] = useState<boolean>(false);
-    const [error, setError] = useState<string|null>(null);
     const [categories, setCategories] = useState<Category[]|[]>([]);
     const [transactions, setTransactions] = useState<FetchedTransaction[]|[]>([]);
     const [dialogOpen, setDialogOpen] = useState<boolean>(false);
     const [categoryForLimitUpdate, setCategoryForLimitUpdate] = useState<Category|null>(null);
     const [updateCategoryLimit, setUpdateCategoryLimit] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string|null>(null);
+    const [successMessage, setSuccessMessage] = useState<string|null>(null);
+    const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
 
     useEffect(() => {
         const fetchTransactionsAndCategories = async () => {
-            try {
-                setError(null);
+            try {            
                 setLoading(true);
                 const transactions = await getTransactions(isLoggedIn.user);
-                if (transactions.length > 0) setTransactions(transactions);  
+                if (transactions.length === 0) throw new Error('Missing data. No transactions found');                
                 const categories = await getCategories(isLoggedIn.user);
-                if (categories.length > 0) {
-                    categories.map((category: Category) => {
-                        if (category.limit) {
-                            const totalCategoryCosts = transactions.reduce((acc: number, transaction: FetchedTransaction) => {
-                                if (transaction.category === category.type) return acc + transaction.amount;
-                                return acc;
-                            }, 0);
-                            category.totalCosts = totalCategoryCosts;
-                            category.costsPercentage = (totalCategoryCosts / category.limit) * 100;
-                        }
-                    });                    
-                    setCategories(categories);
-                }                                
+                if (categories.length === 0) throw new Error('Missing data. No categories found');
+                categories.map((category: Category) => {
+                    if (category.limit) {
+                        const totalCategoryCosts = transactions.reduce((acc: number, transaction: FetchedTransaction) => {
+                        if (transaction.category === category.type) return acc + transaction.amount;
+                            return acc;
+                        }, 0);
+                        category.totalCosts = totalCategoryCosts;
+                        category.costsPercentage = (totalCategoryCosts / category.limit) * 100;
+                    }
+                });
+                setTransactions(transactions);  
+                setCategories(categories);
+                setSuccessMessage('Data fetched successfully');
             } catch (error: any) {
                 setError(error.message);
                 console.log(error.message);
             } finally {
                 setLoading(false);
+                setOpenSnackbar(true);
             }
         }
 
         fetchTransactionsAndCategories();
+
+        return () => {
+            setError(null);
+            setSuccessMessage(null);
+            setCategories([]);
+            setTransactions([]);
+        }
     }, []);
 
     useEffect(() => {
         const updateLimit = async () => {
             try {
-                console.log(loading);
-                console.log(error);
                 setError(null);
+                setSuccessMessage(null);
                 setLoading(true);
                 const response = await updateCategory(categoryForLimitUpdate as Category, categoryForLimitUpdate?.id);
-                if (response) throw new Error('Error adding limit to category');
-
+                if (response) throw new Error(categoryForLimitUpdate?.limit ? 'Failed to add limit' : 'Failed to remove limit');
                 if (categoryForLimitUpdate?.limit) {
                     const totalCategoryCosts = transactions.reduce((acc: number, transaction: FetchedTransaction) => {
                         if (transaction.category === categoryForLimitUpdate?.type) return acc + transaction.amount;
                         return acc;
                     }, 0);
-
                     categoryForLimitUpdate.totalCosts = totalCategoryCosts;
                     categoryForLimitUpdate.costsPercentage = (totalCategoryCosts / categoryForLimitUpdate.limit) * 100;
-                }
-                
+                }                
                 setCategories((categories as Category[]).map((category: Category) => {
                     if (category.id === categoryForLimitUpdate?.id) return categoryForLimitUpdate as Category;
                     else return category;
-                }));
-                setUpdateCategoryLimit(false);
-                setCategoryForLimitUpdate(null);
+                }));                                                
+                setSuccessMessage(categoryForLimitUpdate?.limit ? 'Limit added successfully' : 'Limit removed successfully');
                 setIsLimitChanged(!isLimitChanged);
             } catch (error: any) {
                 setError(error.message);
                 console.log(error.message);
             } finally {
                 setLoading(false);
+                setUpdateCategoryLimit(false);
+                setCategoryForLimitUpdate(null);
+                setOpenSnackbar(true);
             }
         }
-        if (updateCategoryLimit) updateLimit();
+        if (updateCategoryLimit) updateLimit();     
     }, [updateCategoryLimit]);
 
     const handleAddLimitClick = (category: Category) => {
@@ -130,8 +138,14 @@ const BudgetGoals = ({ isLimitChanged, setIsLimitChanged }: BudgetGoalsProps) =>
         setUpdateCategoryLimit(true);        
     }
 
+    const handleSnackbarClose = () => {
+        setOpenSnackbar(false);
+    }
+
     return (
         <Box className='main-budget-container'>
+            {(categories.length === 0 || transactions.length === 0) ? <Typography> No data to display </Typography>
+            :
             <Box className='budget-items-container'>
                 {categories.map((category: Category) => (
                     <Box key={category.id} className='budget-item-outer-container'>
@@ -178,23 +192,39 @@ const BudgetGoals = ({ isLimitChanged, setIsLimitChanged }: BudgetGoalsProps) =>
                                 </Box>
                             }
 
-                            {category.limit ?
-                                <Button id='remove-limit-button' onClick={() => handleRemoveLimitClick(category)}> Remove Limit </Button>
+                            {(categoryForLimitUpdate?.id === category.id && loading) ? 
+                                <Stack sx={{ color: 'grey.500' }} spacing={2} direction="row" id='spinning-circle'>
+                                    <CircularProgress color="success" size='3rem' />
+                                </Stack>
                                 :
-                                <Button id='add-limit-button' onClick={() => handleAddLimitClick(category)}> Add Limit </Button>
+                                (category.limit ?
+                                    <Button id='remove-limit-button' onClick={() => handleRemoveLimitClick(category)}> Remove Limit </Button>
+                                    :
+                                    <Button id='add-limit-button' onClick={() => handleAddLimitClick(category)}> Add Limit </Button>
+                                )
                             }
                         </Box>
                     </Box>
                 ))}
             </Box>
+            }
 
             {dialogOpen && 
                 <LimitDialog dialogOpen={true} setDialogOpen={setDialogOpen} 
                             categoryForLimitUpdate={categoryForLimitUpdate} 
                             setCategoryForLimitUpdate={setCategoryForLimitUpdate}
                             setUpdateCategoryLimit={setUpdateCategoryLimit}
+                            setError={setError} setOpenSnackbar={setOpenSnackbar}
                 />
             }
+            
+            <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleSnackbarClose}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} sx={{ marginBottom: 8 }}
+            >
+                <Alert onClose={handleSnackbarClose} severity={error ? 'error' : 'success'} variant="filled">
+                    {error ? error : successMessage}
+                </Alert>
+            </Snackbar>                
         </Box>        
     );
 }

@@ -1,6 +1,9 @@
 .main-budget-container {
+    flex: 1;
     display: flex;
+    justify-content: center;
     align-items: center;
+    background-color: #f5f5f5;
 }
 
 .budget-items-container {
@@ -17,8 +20,8 @@
     justify-content: center;
     margin: 1rem;
     padding: 1rem;
-    background-color: #f5f5f5;
-    border: 1px solid #e0e0e0;
+    background-color: #edeaea;
+    border: 1px solid #bdb6b6;
     border-radius: 0.5rem;
 }
 
@@ -74,8 +77,11 @@
 }
 
 #add-limit-button, #remove-limit-button {
+    width: 8rem;
+    margin: 0 auto;
     font-size: 0.8rem;
     font-weight: bold;
+    border: 1px solid;
     border-radius: 0.5rem;
     padding: 0.25rem 0.5rem;
     outline: none;

@@ -99,14 +99,14 @@ interface FetchedTransaction {
   currency: string;
 }
 
-export const getTransactions = async (user: string): Promise<FetchedTransaction[]|[]> => {
+export const getTransactions = async (user: string): Promise<FetchedTransaction[]|[]|string> => {
   try {
     const snapshot = await get(query(ref(database, "transactions"), orderByChild("user"), equalTo(user)));
     if (snapshot.exists()) return Object.values(snapshot.val()) as FetchedTransaction[];
     else return [];
   } catch (error: any) {
     console.log(error.message);
-    return [];
+    return error.message;
   }
 }
 
@@ -153,14 +153,14 @@ interface NewCategory {
   user: string;
 }
 
-export const getCategories = async (user: string): Promise<Category[]|[]> => {
+export const getCategories = async (user: string): Promise<Category[]|[]|string> => {
   try {
     const snapshot = await get(query(ref(database, "categories"), orderByChild("user"), equalTo(user)));
     if (snapshot.exists()) return Object.values(snapshot.val()) as Category[];
     else return [];
   } catch (error: any) {
     console.log(error.message);
-    return [];
+    return error.message;
   }
 }
 
@@ -170,14 +170,14 @@ interface Payment {
   type: string;
 }
 
-export const getPayments = async (): Promise<Payment[]|[]> => {
+export const getPayments = async (): Promise<Payment[]|[]|string> => {
   try {
     const snapshot = await get(ref(database, "payments"));
     if (snapshot.exists()) return Object.values(snapshot.val()) as Payment[];
     else return [];
   } catch (error: any) {
     console.log(error.message);
-    return [];
+    return error.message;
   }
 }
 

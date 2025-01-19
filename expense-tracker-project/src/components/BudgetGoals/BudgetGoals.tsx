@@ -43,6 +43,8 @@ const BudgetGoals = ({ isLimitChanged, setIsLimitChanged }: BudgetGoalsProps) =>
     const [updateCategoryLimit, setUpdateCategoryLimit] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string|null>(null);
+    const [onSaveError, setOnSaveError] = useState<string|null>(null);
+    const [validationError, setValidationError] = useState<string|null>(null);
     const [successMessage, setSuccessMessage] = useState<string|null>(null);
     const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
 
@@ -51,9 +53,9 @@ const BudgetGoals = ({ isLimitChanged, setIsLimitChanged }: BudgetGoalsProps) =>
             try {            
                 setLoading(true);
                 const transactions = await getTransactions(isLoggedIn.user);
-                if (transactions.length === 0) throw new Error('Missing data. No transactions found');                
+                if (typeof transactions === 'string') throw new Error('Error fetching transactions.');
                 const categories = await getCategories(isLoggedIn.user);
-                if (categories.length === 0) throw new Error('Missing data. No categories found');
+                if (typeof categories === 'string') throw new Error('Error fetching categories.');
                 categories.map((category: Category) => {
                     if (category.limit) {
                         const totalCategoryCosts = transactions.reduce((acc: number, transaction: FetchedTransaction) => {
@@ -89,7 +91,7 @@ const BudgetGoals = ({ isLimitChanged, setIsLimitChanged }: BudgetGoalsProps) =>
     useEffect(() => {
         const updateLimit = async () => {
             try {
-                setError(null);
+                setOnSaveError(null);
                 setSuccessMessage(null);
                 setLoading(true);
                 const response = await updateCategory(categoryForLimitUpdate as Category, categoryForLimitUpdate?.id);
@@ -109,7 +111,7 @@ const BudgetGoals = ({ isLimitChanged, setIsLimitChanged }: BudgetGoalsProps) =>
                 setSuccessMessage(categoryForLimitUpdate?.limit ? 'Limit added successfully' : 'Limit removed successfully');
                 setIsLimitChanged(!isLimitChanged);
             } catch (error: any) {
-                setError(error.message);
+                setOnSaveError(error.message);
                 console.log(error.message);
             } finally {
                 setLoading(false);
@@ -144,69 +146,78 @@ const BudgetGoals = ({ isLimitChanged, setIsLimitChanged }: BudgetGoalsProps) =>
 
     return (
         <Box className='main-budget-container'>
-            {(categories.length === 0 || transactions.length === 0) ? <Typography> No data to display </Typography>
-            :
-            <Box className='budget-items-container'>
-                {categories.map((category: Category) => (
-                    <Box key={category.id} className='budget-item-outer-container'>
-                        <Box className='budget-item-inner-container'>
-                            <Box id={category.limit ? 'budget-item-with-limit-header' : 'budget-item-without-limit-header'}>
-                                <img src={category.imgSrc} alt={category.imgAlt} id={category.limit ? 'image-with-limit' : 'image-without-limit'} />
-                                <Typography>{category.type}</Typography>
-                            </Box>
-                           
-                            {category.limit && 
-                                <Box id='budget-item-with-limit-status'>
-                                    <CircularProgressbarWithChildren
-                                        value={category.costsPercentage as number}
-                                        styles={{              
-                                            root: {
-                                                display: 'flex',
-                                                width: '6rem',
-                                            },
-                                            path: {
-                                                stroke: 
-                                                    settings?.budgetNotificationLimit ?
-                                                    (category.costsPercentage as number > settings.budgetNotificationLimit ? 'red' : 'green')
-                                                    :
-                                                    (category.costsPercentage as number >= 100 ? 'red' : 'green')                                                                                                                                                    
-                                            },
-                                            trail: {
-                                                stroke: '#d6d6d6',
-                                            }                                                                                
-                                        }}
-                                    >
-                                        <Typography id='absolute-values'>{category.totalCosts?.toFixed(2)} / {category.limit}</Typography>
-                                        <Typography id={settings?.budgetNotificationLimit ?
-                                            (category.costsPercentage as number > settings.budgetNotificationLimit ?
-                                            'percentage-over-threshold' : 'percentage-below-threshold')
-                                            : 
-                                            (category.costsPercentage as number >= 100 ?
-                                                'percentage-over-threshold' : 'percentage-below-threshold'
-                                            )                                                                                        
-                                        }
-                                        >
-                                            {category.costsPercentage?.toFixed(2)}%
-                                        </Typography>
-                                    </CircularProgressbarWithChildren>
-                                </Box>
-                            }
-
-                            {(categoryForLimitUpdate?.id === category.id && loading) ? 
-                                <Stack sx={{ color: 'grey.500' }} spacing={2} direction="row" id='spinning-circle'>
-                                    <CircularProgress color="success" size='3rem' />
-                                </Stack>
-                                :
-                                (category.limit ?
-                                    <Button id='remove-limit-button' onClick={() => handleRemoveLimitClick(category)}> Remove Limit </Button>
-                                    :
-                                    <Button id='add-limit-button' onClick={() => handleAddLimitClick(category)}> Add Limit </Button>
-                                )
-                            }
-                        </Box>
+            {error ? 
+                <Box className="message-box">
+                    <Typography>There was a problem loading your data. Please try again later.</Typography>
+                </Box>
+                :
+                ((categories.length === 0 || transactions.length === 0) ? 
+                    <Box className="message-box">
+                        <Typography>No transactions or categories found.</Typography>
                     </Box>
-                ))}
-            </Box>
+                    :
+                    <Box className='budget-items-container'>
+                        {categories.map((category: Category) => (
+                            <Box key={category.id} className='budget-item-outer-container'>
+                                <Box className='budget-item-inner-container'>
+                                    <Box id={category.limit ? 'budget-item-with-limit-header' : 'budget-item-without-limit-header'}>
+                                        <img src={category.imgSrc} alt={category.imgAlt} id={category.limit ? 'image-with-limit' : 'image-without-limit'} />
+                                        <Typography>{category.type}</Typography>
+                                    </Box>
+                                
+                                    {category.limit && 
+                                        <Box id='budget-item-with-limit-status'>
+                                            <CircularProgressbarWithChildren
+                                                value={category.costsPercentage as number}
+                                                styles={{              
+                                                    root: {
+                                                        display: 'flex',
+                                                        width: '6rem',
+                                                    },
+                                                    path: {
+                                                        stroke: 
+                                                            settings?.budgetNotificationLimit ?
+                                                            (category.costsPercentage as number > settings.budgetNotificationLimit ? 'red' : 'green')
+                                                            :
+                                                            (category.costsPercentage as number >= 100 ? 'red' : 'green')                                                                                                                                                    
+                                                    },
+                                                    trail: {
+                                                        stroke: '#d6d6d6',
+                                                    }                                                                                
+                                                }}
+                                            >
+                                                <Typography id='absolute-values'>{category.totalCosts?.toFixed(2)} / {category.limit}</Typography>
+                                                <Typography id={settings?.budgetNotificationLimit ?
+                                                    (category.costsPercentage as number > settings.budgetNotificationLimit ?
+                                                    'percentage-over-threshold' : 'percentage-below-threshold')
+                                                    : 
+                                                    (category.costsPercentage as number >= 100 ?
+                                                        'percentage-over-threshold' : 'percentage-below-threshold'
+                                                    )                                                                                        
+                                                }
+                                                >
+                                                    {category.costsPercentage?.toFixed(2)}%
+                                                </Typography>
+                                            </CircularProgressbarWithChildren>
+                                        </Box>
+                                    }
+
+                                    {(category.id === categoryForLimitUpdate?.id && loading) ? 
+                                        <Stack sx={{ color: 'grey.500' }} spacing={2} direction="row" id='spinning-circle'>
+                                            <CircularProgress color="success" size='3rem' />
+                                        </Stack>
+                                        :
+                                        (category.limit ?
+                                            <Button id='remove-limit-button' onClick={() => handleRemoveLimitClick(category)}> Remove Limit </Button>
+                                            :
+                                            <Button id='add-limit-button' onClick={() => handleAddLimitClick(category)}> Add Limit </Button>
+                                        )
+                                    }
+                                </Box>
+                            </Box>
+                        ))}
+                    </Box>
+                )
             }
 
             {dialogOpen && 
@@ -214,17 +225,17 @@ const BudgetGoals = ({ isLimitChanged, setIsLimitChanged }: BudgetGoalsProps) =>
                             categoryForLimitUpdate={categoryForLimitUpdate} 
                             setCategoryForLimitUpdate={setCategoryForLimitUpdate}
                             setUpdateCategoryLimit={setUpdateCategoryLimit}
-                            setError={setError} setOpenSnackbar={setOpenSnackbar}
+                            setValidationError={setValidationError} setOpenSnackbar={setOpenSnackbar}
                 />
             }
             
             <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleSnackbarClose}
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} sx={{ marginBottom: 8 }}
             >
-                <Alert onClose={handleSnackbarClose} severity={error ? 'error' : 'success'} variant="filled">
-                    {error ? error : successMessage}
+                <Alert onClose={handleSnackbarClose} severity={(error || validationError || onSaveError) ? 'error' : 'success'} variant="filled">
+                    {error ? error : (validationError ? validationError : (onSaveError ? onSaveError : successMessage))}
                 </Alert>
-            </Snackbar>                
+            </Snackbar>
         </Box>        
     );
 }

@@ -58,9 +58,10 @@ const AddTransaction = ({ mode }: { mode: string }) => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string|null>(null);
-    const [successMessage, setSuccessMessage] = useState<string|null>(null);
+    const [onSaveError, setOnSaveError] = useState<string|null>(null);
     const [nameError, setNameError] = useState<string|null>(null);
     const [amountError, setAmountError] = useState<string|null>(null);
+    const [successMessage, setSuccessMessage] = useState<string|null>(null);    
     const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
     const [salesReceipt, setSalesReceipt] = useState<string|null>(null);
     const [newTransaction, setNewTransaction] = useState<NewTransaction|null>(null);
@@ -74,12 +75,12 @@ const AddTransaction = ({ mode }: { mode: string }) => {
             try {                        
                 setLoading(true);
                 const categories = await getCategories(isLoggedIn.user);
-                if (categories.length === 0) throw new Error('No categories found');
-                setCategories(categories);
+                if (typeof categories === 'string') throw new Error('Error fetching categories.');
                 const payments = await getPayments();
-                if (payments.length === 0) throw new Error('No payment methods found');
+                if (typeof payments === 'string') throw new Error('Error fetching payment methods.');
+                setCategories(categories);
                 setPayments(payments);
-                setSuccessMessage('Categories and payment methods loaded');
+                setSuccessMessage('Successful data fetch');
             } catch (error: any) {
                 setError(error.message);
                 console.log(error.message);                 
@@ -111,7 +112,7 @@ const AddTransaction = ({ mode }: { mode: string }) => {
                 navigate('/transactions');
             } catch (error: any) {
                 setLoading(false);
-                setError(error.message);
+                setOnSaveError(error.message);
                 console.log(error.message);
                 setOpenSnackbar(true);
             }
@@ -119,7 +120,7 @@ const AddTransaction = ({ mode }: { mode: string }) => {
         
         if (newTransaction) addHandler();
 
-        return () => setError(null);
+        return () => setOnSaveError(null);
     }, [newTransaction]);
 
     useEffect(() => {
@@ -130,12 +131,12 @@ const AddTransaction = ({ mode }: { mode: string }) => {
                 setLoading(true);
                 const transactionDetails = await getTransaction(id as string);
                 if (!transactionDetails) throw new Error('Transaction not found');
-                setFetchedTransaction(transactionDetails);
                 const categories = await getCategories(isLoggedIn.user);
-                if (categories.length === 0) throw new Error('No categories found');
-                setCategories(categories);
+                if (typeof categories === 'string') throw new Error('Error fetching categories');
                 const payments = await getPayments();
-                if (payments.length === 0) throw new Error('No payment methods found');
+                if (typeof payments === 'string') throw new Error('Error fetching payment methods');
+                setFetchedTransaction(transactionDetails);
+                setCategories(categories);
                 setPayments(payments);
                 setSuccessMessage('Transaction fetched successfully');
             } catch (error: any) {
@@ -170,19 +171,19 @@ const AddTransaction = ({ mode }: { mode: string }) => {
                 navigate('/transactions');
             } catch (error: any) {
                 setLoading(false);
-                setError(error.message);
+                setOnSaveError(error.message);
                 console.log(error.message);
                 setOpenSnackbar(true);                
             }
         }
         if (transactionToEdit) updateHandler();
 
-        return () => setError(null);
+        return () => setOnSaveError(null);
     }, [transactionToEdit]);
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        setError(null);
+        setOnSaveError(null);
         setNameError(null);
         setAmountError(null);
 
@@ -218,7 +219,7 @@ const AddTransaction = ({ mode }: { mode: string }) => {
         }       
 
         if (!date || !currency || !category || !payment) {
-            setError('Please fill in all the fields');
+            setOnSaveError('Please fill in all the fields');
             setOpenSnackbar(true);
             return;
         }
@@ -235,98 +236,104 @@ const AddTransaction = ({ mode }: { mode: string }) => {
 
     return (
         <Box className="expense-container">
-            {((mode === 'edit' && !fetchedTransaction) || categories.length === 0 || payments.length === 0) ?
+            {error ? 
                 <Box className="message-box">
-                    <Typography> Missing data - {error} </Typography>
+                    <Typography>There was a problem loading your data. Please try again later.</Typography>
                 </Box>
                 :
-                <Box component="form" noValidate autoComplete="off" onSubmit={handleSubmit} className="expense-form">
-                    <Box className='input-fields'>
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DemoContainer components={['DatePicker']}>
-                                <DatePicker 
-                                    value={fetchedTransaction ? dayjs(fetchedTransaction?.date) : null}
-                                    label={<FontAwesomeIcon icon={faCalendarDays} size="xl" style={{color: "#74C0FC",}} />}
-                                    slotProps={{textField: {
-                                        id: "expense-date",
-                                        helperText: "Please select a date", 
-                                        required: true
-                                    }}}
-                                />
-                            </DemoContainer>
-                        </LocalizationProvider>
-                        
-                        <TextField error={!!nameError} type="text" id="expense-name" label={<FontAwesomeIcon icon={faTags} size="xl" style={{color: "#74C0FC",}} />}
-                            {...fetchedTransaction ? { defaultValue: fetchedTransaction?.name } : { placeholder: 'Name' }} 
-                            helperText={nameError || "Please select name"} required
-                        />
-                    
-                        <TextField error={!!amountError} type="number" id="expense-amount" label={<FontAwesomeIcon icon={faCalculator} size="xl" style={{color: "#74C0FC",}} />}
-                            {...fetchedTransaction ? { defaultValue: fetchedTransaction?.amount } : { placeholder: 'Amount' }} 
-                            helperText={amountError || "Please select amount"} required
-                        />
-                            
-                        <TextField select id="expense-currency" name="expense-currency" label={<FontAwesomeIcon icon={faDollarSign} size="xl" style={{color: "#74C0FC",}} />}
-                            defaultValue={fetchedTransaction ? fetchedTransaction?.currency : ""}
-                            helperText={"Please select currency"} required 
-                        >
-                            <MenuItem key="Currency" value="" disabled>Currency</MenuItem>
-                            <MenuItem key="BGN" value="BGN">BGN</MenuItem>
-                            <MenuItem key="USD" value="USD">USD</MenuItem>
-                            <MenuItem key="EUR" value="EUR">EUR</MenuItem>
-                        </TextField>
-                        
-                        {categories.length > 0 && 
-                            <TextField select id="expense-category" name="expense-category" label={<FontAwesomeIcon icon={faList} size="xl" style={{color: "#74C0FC",}} />}
-                                defaultValue={fetchedTransaction ? fetchedTransaction?.category : ""}
-                                helperText={"Please select category"} required 
-                            >
-                                <MenuItem key="Category" value="" disabled>Category</MenuItem>
-                                {categories.map((category: Category) => (
-                                    <MenuItem key={category.type} value={category.type}>
-                                        {getCategoryIcon(category.type, categories)}
-                                    </MenuItem>
-                                ))}
-                            </TextField>
-                        }
-                        
-                        {payments.length > 0 &&
-                            <TextField select id="expense-payment" name="expense-payment" label={<FontAwesomeIcon icon={faCreditCard} size="xl" style={{color: "#74C0FC",}} />}
-                                defaultValue={fetchedTransaction ? fetchedTransaction?.payment : ""}
-                                helperText={"Please select payment method"} required 
-                            >
-                                <MenuItem key="Payment" value="" disabled>Payment Method</MenuItem>
-                                {payments.map((payment: Payment) => (
-                                    <MenuItem key={payment.type} value={payment.type}>
-                                        {getPaymentIcon(payment.type, payments)}
-                                    </MenuItem>
-                                ))}
-                            </TextField>
-                        }
-
-                        {loading ? 
-                            <Stack sx={{ color: 'grey.500' }} spacing={2} direction="row" id='spinning-circle'>
-                                <CircularProgress color="success" size='3rem' />
-                            </Stack>  
-                            :
-                            <span className='action-buttons'>
-                                <Button id='add-expense' type="submit" endIcon={<Save />}>Save</Button>
-                                <Button id='cancel-expense' endIcon={<Cancel />} onClick={() => navigate('/transactions')}>Cancel</Button>
-                            </span>                                                                              
-                        }
+                ((mode === 'edit' && !fetchedTransaction || categories.length === 0 || payments.length === 0) ?
+                    <Box className="message-box">
+                       <Typography>No transaction found. / No categories or payment methods found.</Typography>
                     </Box>
-                    
-                    <UploadReceipt setSalesReceipt={setSalesReceipt} setError={setError} transaction={fetchedTransaction}
-                        setOpenSnackbar={setOpenSnackbar} setSuccessMessage={setSuccessMessage} />
-                </Box>                        
+                    :                      
+                    <Box component="form" noValidate autoComplete="off" onSubmit={handleSubmit} className="expense-form">
+                        <Box className='input-fields'>
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <DemoContainer components={['DatePicker']}>
+                                    <DatePicker 
+                                        value={fetchedTransaction ? dayjs(fetchedTransaction?.date) : null}
+                                        label={<FontAwesomeIcon icon={faCalendarDays} size="xl" style={{color: "#74C0FC",}} />}
+                                        slotProps={{textField: {
+                                            id: "expense-date",
+                                            helperText: "Please select a date", 
+                                            required: true
+                                        }}}
+                                    />
+                                </DemoContainer>
+                            </LocalizationProvider>
+                                
+                            <TextField error={!!nameError} type="text" id="expense-name" label={<FontAwesomeIcon icon={faTags} size="xl" style={{color: "#74C0FC",}} />}
+                                {...fetchedTransaction ? { defaultValue: fetchedTransaction?.name } : { placeholder: 'Name' }} 
+                                helperText={nameError || "Please select name"} required
+                            />
+                            
+                            <TextField error={!!amountError} type="number" id="expense-amount" label={<FontAwesomeIcon icon={faCalculator} size="xl" style={{color: "#74C0FC",}} />}
+                                {...fetchedTransaction ? { defaultValue: fetchedTransaction?.amount } : { placeholder: 'Amount' }} 
+                                helperText={amountError || "Please select amount"} required
+                            />
+                                    
+                            <TextField select id="expense-currency" name="expense-currency" label={<FontAwesomeIcon icon={faDollarSign} size="xl" style={{color: "#74C0FC",}} />}
+                                defaultValue={fetchedTransaction ? fetchedTransaction?.currency : ""}
+                                helperText={"Please select currency"} required 
+                            >
+                                <MenuItem key="Currency" value="" disabled>Currency</MenuItem>
+                                <MenuItem key="BGN" value="BGN">BGN</MenuItem>
+                                <MenuItem key="USD" value="USD">USD</MenuItem>
+                                <MenuItem key="EUR" value="EUR">EUR</MenuItem>
+                            </TextField>
+                                
+                            {categories.length > 0 && 
+                                <TextField select id="expense-category" name="expense-category" label={<FontAwesomeIcon icon={faList} size="xl" style={{color: "#74C0FC",}} />}
+                                    defaultValue={fetchedTransaction ? fetchedTransaction?.category : ""}
+                                    helperText={"Please select category"} required 
+                                >
+                                    <MenuItem key="Category" value="" disabled>Category</MenuItem>
+                                    {categories.map((category: Category) => (
+                                        <MenuItem key={category.type} value={category.type}>
+                                            {getCategoryIcon(category.type, categories)}
+                                        </MenuItem>
+                                    ))}
+                                </TextField>
+                            }
+                                
+                            {payments.length > 0 &&
+                                <TextField select id="expense-payment" name="expense-payment" label={<FontAwesomeIcon icon={faCreditCard} size="xl" style={{color: "#74C0FC",}} />}
+                                    defaultValue={fetchedTransaction ? fetchedTransaction?.payment : ""}
+                                    helperText={"Please select payment method"} required 
+                                >
+                                    <MenuItem key="Payment" value="" disabled>Payment Method</MenuItem>
+                                    {payments.map((payment: Payment) => (
+                                        <MenuItem key={payment.type} value={payment.type}>
+                                            {getPaymentIcon(payment.type, payments)}
+                                        </MenuItem>
+                                    ))}
+                                </TextField>
+                            }
+
+                            {loading ? 
+                                <Stack sx={{ color: 'grey.500' }} spacing={2} direction="row" id='spinning-circle'>
+                                    <CircularProgress color="success" size='3rem' />
+                                </Stack>  
+                                :
+                                <span className='action-buttons'>
+                                    <Button id='add-expense' type="submit" endIcon={<Save />}>Save</Button>
+                                    <Button id='cancel-expense' endIcon={<Cancel />} onClick={() => navigate('/transactions')}>Cancel</Button>
+                                </span>                                                                              
+                            }
+                        </Box>
+                            
+                        <UploadReceipt setSalesReceipt={setSalesReceipt} setOnSaveError={setOnSaveError} transaction={fetchedTransaction}
+                            setOpenSnackbar={setOpenSnackbar} setSuccessMessage={setSuccessMessage} />
+                    </Box>
+                )
             }
                                 
             {!loading && 
                 <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleSnackbarClose}
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} sx={{ marginBottom: 8 }}
                 >
-                    <Alert onClose={handleSnackbarClose} severity={error ? 'error' : 'success'} variant="filled">
-                        {error ? error : successMessage}
+                    <Alert onClose={handleSnackbarClose} severity={(error || onSaveError) ? 'error' : 'success'} variant="filled">
+                        {error ? error : (onSaveError ? onSaveError : successMessage)}
                     </Alert>
                 </Snackbar>
             }

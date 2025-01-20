@@ -18,7 +18,6 @@ import SearchIcon from '@mui/icons-material/Search';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare, faReceipt, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import { getCategoryIcon, getPaymentIcon } from '../../common/utils';
-import { getCategories, getPayments } from '../../service/database-service.ts';
 import AuthContext from '../../context/AuthContext';
 import ConfirmDialog from '../ConfirmDialog/ConfirmDialog.tsx';
 
@@ -30,26 +29,16 @@ interface Column {
 }
 
 interface FetchedTransaction {
-    id: string;
-    amount: number;
-    category: string;
-    date: string;
-    name: string;
-    payment: string;
-    receipt: string;
-    user: string;
-    currency: string;
+  id: string;
+  amount: number;
+  category: string;
+  date: string;
+  name: string;
+  payment: string;
+  receipt: string;
+  user: string;
+  currency: string;
 }
-
-interface StickyTableProps {
-    transactions: FetchedTransaction[];
-    setTransactionToDelete: (id: string) => void;
-}
-
-interface sortParams {
-    column: string;
-    ascending: boolean;
-} 
 
 interface Category {
   id: string;
@@ -65,13 +54,25 @@ interface Payment {
   type: string;
 }
 
+interface sortParams {
+  column: string;
+  ascending: boolean;
+} 
+
 interface Dialog {
   open: boolean,
   id: string|null
 }
 
-const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionToDelete }) => {
-  const { isLoggedIn, settings } = useContext(AuthContext);
+interface StickyTableProps {
+    transactions: FetchedTransaction[];
+    categories: Category[];
+    payments: Payment[];
+    setTransactionToDelete: (id: string) => void;
+}
+
+const StickyTable: React.FC<StickyTableProps> = ({ transactions, categories, payments, setTransactionToDelete }) => {
+  const { settings } = useContext(AuthContext);
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
   const [showReceipt, setShowReceipt] = useState<string>('');
@@ -80,9 +81,7 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionT
   const [sortParams, setSortParams] = useState<sortParams>({'column': 'date', 'ascending': false});
   const [hoveredColumnTitle, setHoveredColumnTitle] = useState<string>('');
   const [hoveredRow, setHoveredRow] = useState<string>('');
-  const [sum, setSum] = useState<number>(0);
-  const [categories, setCategories] = useState<Category[]|[]>([]);
-  const [payments, setPayments] = useState<Payment[]|[]>([]);
+  const [sum, setSum] = useState<number>(0); 
   const [dialog, setDialog] = useState<Dialog>({ open: false, id: null });
   const navigate = useNavigate();
 
@@ -132,16 +131,6 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionT
       setPage(0);
   }, [searchFilters]);
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      const categories = await getCategories(isLoggedIn.user);
-      const payments = await getPayments();
-      setCategories(categories);
-      setPayments(payments);
-    }
-    fetchCategories();
-  }, []);
-
   const clearFilter = (key: string) => {
     const newMap = new Map();
     if (key !== "all") {
@@ -155,31 +144,32 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionT
 
   const loadSearchFilters = () => {
     const activeFilters = [...searchFilters].map(([key]) => 
-             <TextField fullWidth key={key} label={key} className="search" 
+            <TextField fullWidth key={key} label={key} className="search" 
               onChange={(event) => setSearchFilters(new Map(searchFilters.set(key, event.target.value.toString().toLowerCase())))} 
               size="small" 
-              InputProps={{endAdornment: (
-                          <InputAdornment position="end">
+              InputProps={{
+                          endAdornment: (
+                            <InputAdornment position="end">
                               <IconButton onClick={() => clearFilter(key)}>
-                                  <ClearIcon style={{color: 'red'}}/>
+                                <ClearIcon style={{color: 'red'}}/>
                               </IconButton> 
-                          </InputAdornment>
-                        )}}
+                            </InputAdornment>
+                          )
+                        }}
               style={{ margin: '1%'}}
-           />         
-    );
+            />);
     
     if (activeFilters.length > 0) {
-        return <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', borderRadius: '5px' }}>
+        return  <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', borderRadius: '5px' }}>
                   <Box style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', margin: '0.3%', padding: '1%', borderRadius: '5px' }}>
                       {activeFilters} 
                   </Box>
                   {activeFilters.length > 1 && 
                     <IconButton style={{justifyContent: "left"}} onClick={() => clearFilter("all")}>
-                        <ClearIcon style={{color: 'red'}}/> <span style={{ fontSize: '0.9rem' }}>Clear All Filters</span>
+                        <ClearIcon style={{color: 'red'}} /> <span style={{ fontSize: '0.9rem' }}>Clear All Filters</span>
                     </IconButton>
                   }
-              </Box>
+                </Box>
     }
   };
 
@@ -188,131 +178,124 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, setTransactionT
         <div className={showReceipt ? "receipt-content" : 'receipt-content-hide'} onClick={() => setShowReceipt('')}>
             <img src={showReceipt} alt="receipt" />
         </div>
+
         { dialog.open && <ConfirmDialog deleteHandler={setTransactionToDelete} dialog={dialog} setDialog={setDialog} /> }
-            <Paper sx={{ flex: 1 }}>
-                <TableContainer>
-                    {loadSearchFilters()}
-                    <Table aria-label="sticky table">
-                        <TableHead>
-                            <TableRow>
-                              {columns.map(column => 
-                                  <TableCell key={column.id} align={column.align} style={{ minWidth: column.minWidth }}
-                                    onMouseEnter={() => setHoveredColumnTitle(column.id)} onMouseLeave={() => setHoveredColumnTitle('')}>
-                                      <strong>{column.label}</strong>
 
-                                      <IconButton size='small' onClick={() => setSearchFilters(new Map(searchFilters.set(column.id, "")))}>
-                                        <SearchIcon fontSize='small' />
-                                      </IconButton>
+        <Paper sx={{ flex: 1 }}>
+          <TableContainer>
+            {loadSearchFilters()}
+            
+            <Table aria-label="sticky table">
+              <TableHead>
+                <TableRow>
+                  {columns.map(column => 
+                    <TableCell key={column.id} align={column.align} style={{ minWidth: column.minWidth }}
+                      onMouseEnter={() => setHoveredColumnTitle(column.id)} onMouseLeave={() => setHoveredColumnTitle('')}>
 
-                                      {column.id === sortParams.column  
-                                        ? <IconButton size='small' onClick={() => setSortParams({...sortParams, 'ascending': !sortParams.ascending})}>
-                                              {sortParams.ascending ? <ArrowUpward fontSize='small' /> : <ArrowDownward fontSize='small' />}
-                                          </IconButton> 
-                                        : (column.id === hoveredColumnTitle && 
-                                          <IconButton size='small' onClick={() => setSortParams({...sortParams, 'column': column.id})}>
-                                              <ArrowUpward fontSize='small' />
-                                          </IconButton>)
-                                      }
-                                  </TableCell>
-                              )}
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {filteredTransactions
-                            .sort((transaction1, transaction2) => {
-                                const key1 = transaction1[sortParams.column as keyof FetchedTransaction];
-                                const key2 = transaction2[sortParams.column as keyof FetchedTransaction];
-                                if (sortParams.column === 'date') {
-                                  const date1 = new Date(key1 as string);
-                                  const date2 = new Date(key2 as string);
-                                  if (sortParams.ascending) return date1 >= date2 ? 1 : -1;
-                                  else return date1 <= date2 ? 1 : -1;
-                                } else {
-                                  if (sortParams.ascending) return key1 >= key2 ? 1 : -1;
-                                  else return key1 <= key2 ? 1 : -1;
-                                }
-                            })
-                            .map((transaction) =>
-                                <TableRow hover role="checkbox" tabIndex={-1} key={transaction.id}
-                                  onMouseEnter={() => handleMouseEnter(transaction.id)}
-                                  onMouseLeave={handleMouseLeave}
-                                >
-                                    {columns.map((column) => {
-                                        const value = transaction[column.id];
-                                        if (column.id === 'receipt') {
-                                            return <TableCell key={column.id} align={column.align}>
-                                                        {value === 'none' ? 'No receipt'
-                                                            : <FontAwesomeIcon icon={faReceipt} size="2xl" className="receipt-icon"
-                                                                onClick={() => setShowReceipt(`${value}`)} />                         
-                                                        }
-                                                        {hoveredRow === transaction.id && 
-                                                              <span>
-                                                                <button className="edit-button" onClick={() => navigate(`/edit-transaction/${transaction.id}`)}><FontAwesomeIcon icon={faPenToSquare} size="sm" /></button>
-                                                                <button className="delete-button" onClick={() => setDialog({ open: true, id: transaction.id })}><FontAwesomeIcon icon={faTrashCan} size="sm" /></button>
-                                                              </span>
-                                                        }
-                                                   </TableCell>
-                                        } else if (column.id === 'category') {
-                                            return <TableCell key={column.id} align={column.align}>
-                                                      {getCategoryIcon(`${value}`, categories)}
-                                                   </TableCell>
-                                        } else if (column.id === 'date') {
-                                            return <TableCell key={column.id} align={column.align}>
-                                                      {new Date(value).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-                                                   </TableCell>
-                                        } else if (column.id === 'amount') {                                      
-                                            return <TableCell key={column.id} align={column.align}>
-                                                          <span>
-                                                            {`${transaction.currency === 'USD' ? '$' : 
-                                                                  (transaction.currency === 'EUR' ? '€' : 'BGN')} ${(value as number).toFixed(2)}
-                                                            `}
-                                                          </span>
-                                                   </TableCell>
-                                        } else if (column.id === 'payment') {
-                                            return <TableCell key={column.id} align={column.align}>
-                                                      {getPaymentIcon(`${value}`, payments)}
-                                                   </TableCell>  
-                                        } else {
-                                            return <TableCell key={column.id} align={column.align}>
-                                                        {value}
-                                                   </TableCell>
-                                        }
-                                    })} 
-                                </TableRow>)
-                            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                          }
-                        </TableBody>
-                    </Table>
+                        <strong>{column.label}</strong>
 
-                    <Typography variant="h6" sx={{ display: 'flex', justifyContent: 'center', padding: '0.5rem',
-                        fontSize: '16px', fontStyle: 'italic' }}> 
-                        The values in the "Amount" column are in {settings?.currency} currency.
-                    </Typography>
+                        <IconButton size='small' onClick={() => setSearchFilters(new Map(searchFilters.set(column.id, "")))}>
+                            <SearchIcon fontSize='small' />
+                        </IconButton>
 
-                    <Box sx={{ padding: '1%' }}> 
-                          <strong>TOTAL: </strong>
-                          {`${settings?.currency === 'USD' ? '$' : (settings?.currency === 'EUR' ? '€' : 'BGN')} ${sum.toFixed(2)}`}                      
-                    </Box>
+                        {column.id === sortParams.column ?
+                          <IconButton size='small' onClick={() => setSortParams({...sortParams, 'ascending': !sortParams.ascending})}>
+                              {sortParams.ascending ? <ArrowUpward fontSize='small' /> : <ArrowDownward fontSize='small' />}
+                          </IconButton>
+                          : (column.id === hoveredColumnTitle && 
+                              <IconButton size='small' onClick={() => setSortParams({...sortParams, 'column': column.id})}>
+                                  <ArrowUpward fontSize='small' />
+                              </IconButton>
+                            )
+                        }
+                    </TableCell>
+                  )}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {filteredTransactions
+                    .sort((transaction1, transaction2) => {
+                      const key1 = transaction1[sortParams.column as keyof FetchedTransaction];
+                      const key2 = transaction2[sortParams.column as keyof FetchedTransaction];
+                      if (sortParams.column === 'date') {
+                        const date1 = new Date(key1 as string);
+                        const date2 = new Date(key2 as string);
+                        if (sortParams.ascending) return date1 >= date2 ? 1 : -1;
+                        else return date1 <= date2 ? 1 : -1;
+                      } else {
+                        if (sortParams.ascending) return key1 >= key2 ? 1 : -1;
+                        else return key1 <= key2 ? 1 : -1;
+                      }
+                    })
+                    .map((transaction) =>
+                        <TableRow hover role="checkbox" tabIndex={-1} key={transaction.id}
+                          onMouseEnter={() => handleMouseEnter(transaction.id)} onMouseLeave={handleMouseLeave}
+                        >
+                          {columns.map((column) => {
+                            const value = transaction[column.id];
+                              if (column.id === 'receipt') {
+                                  return  <TableCell key={column.id} align={column.align}>
+                                            {value === 'none' ? 
+                                              'No receipt'
+                                              : 
+                                              <FontAwesomeIcon icon={faReceipt} size="2xl" className="receipt-icon" onClick={() => setShowReceipt(`${value}`)} />                         
+                                            }
+                                            
+                                            {hoveredRow === transaction.id && 
+                                              <span>
+                                                <button className="edit-button" onClick={() => navigate(`/edit-transaction/${transaction.id}`)}><FontAwesomeIcon icon={faPenToSquare} size="sm" /></button>
+                                                <button className="delete-button" onClick={() => setDialog({ open: true, id: transaction.id })}><FontAwesomeIcon icon={faTrashCan} size="sm" /></button>
+                                              </span>
+                                            }
+                                          </TableCell>
+                              } else if (column.id === 'category') {
+                                  return  <TableCell key={column.id} align={column.align}> {getCategoryIcon(`${value}`, categories)} </TableCell>
+                              } else if (column.id === 'date') {
+                                  return  <TableCell key={column.id} align={column.align}>
+                                            {new Date(value).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                                          </TableCell>
+                              } else if (column.id === 'amount') {                                      
+                                  return  <TableCell key={column.id} align={column.align}>
+                                            <span>
+                                              {`${transaction.currency === 'USD' ? '$' : 
+                                                  (transaction.currency === 'EUR' ? '€' : 'BGN')} ${(value as number).toFixed(2)}
+                                              `}
+                                            </span>
+                                          </TableCell>
+                              } else if (column.id === 'payment') {
+                                  return <TableCell key={column.id} align={column.align}> {getPaymentIcon(`${value}`, payments)} </TableCell>  
+                              } else {
+                                  return <TableCell key={column.id} align={column.align}> {value} </TableCell>
+                              }
+                          })} 
+                        </TableRow>)
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                }
+              </TableBody>
+            </Table>
 
-                    <Button onClick={() => navigate('/add-transaction')} variant="contained" sx={{marginTop: '5px'}}>
-                      <Add />
-                    </Button>            
-                </TableContainer>
-                <TablePagination
-                    rowsPerPageOptions={[10, 25, 100]}
-                    component="div"                   
-                    count={filteredTransactions.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                    classes={{
-                              root: 'pagination',
-                              selectLabel: 'pagination-select-label',
-                              displayedRows: 'pagination-displayed-rows',
-                            }}
-                />
-            </Paper>
+            <Typography variant="h6" sx={{ display: 'flex', justifyContent: 'center', padding: '0.5rem', fontSize: '16px', fontStyle: 'italic' }}> 
+                The values in the "Amount" column are in {settings?.currency} currency.
+            </Typography>
+
+            <Box sx={{ padding: '1%' }}> 
+                <strong>TOTAL: </strong>
+                {`${settings?.currency === 'USD' ? '$' : (settings?.currency === 'EUR' ? '€' : 'BGN')} ${sum.toFixed(2)}`}                      
+            </Box>
+
+            <Button onClick={() => navigate('/add-transaction')} variant="contained" sx={{marginTop: '5px'}}> <Add /> </Button>            
+          </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[10, 25, 100]}
+            component="div"                   
+            count={filteredTransactions.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            classes={{ root: 'pagination', selectLabel: 'pagination-select-label', displayedRows: 'pagination-displayed-rows' }}
+          />
+        </Paper>
     </>
   );
 }

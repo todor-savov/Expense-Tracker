@@ -130,11 +130,12 @@ export const updateTransaction = async (transactionDetails: FetchedTransaction, 
   }
 }
 
-export const deleteTransaction = async (transactionId: string): Promise<void|undefined> => {
+export const deleteTransaction = async (transactionId: string): Promise<void|string> => {
   try {
     return await set(ref(database, `transactions/${transactionId}`), null);
   } catch (error: any) {
     console.log(error.message);
+    return error.message;
   }
 }
 

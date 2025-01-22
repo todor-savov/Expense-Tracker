@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faReceipt } from '@fortawesome/free-solid-svg-icons';
-import { uploadFile } from "../../service/storage-service.ts";
 import { Box, Button, CircularProgress, Stack } from '@mui/material';
+import { uploadFile } from "../../service/storage-service.ts";
 import { VisuallyHiddenInput } from '../../common/utils.ts';
 import './UploadReceipt.css';
 
@@ -21,12 +21,12 @@ interface FetchedTransaction {
 interface UploadReceiptProps {
     setSalesReceipt: (url: string) => void;
     transaction: FetchedTransaction|null;
-    setError: (error: string|null) => void;
+    setOnSaveError: (error: string|null) => void;
     setOpenSnackbar: (open: boolean) => void;
     setSuccessMessage: (message: string|null) => void;
 }
 
-const UploadReceipt: React.FC<UploadReceiptProps> = ({ setSalesReceipt, transaction, setError, setOpenSnackbar, setSuccessMessage }) => {
+const UploadReceipt: React.FC<UploadReceiptProps> = ({ setSalesReceipt, transaction, setOnSaveError, setOpenSnackbar, setSuccessMessage }) => {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [fileToUpload, setFileToUpload] = useState<File|null>(null);
     const [receiptURL, setReceiptURL] = useState<string|null>(null);
@@ -42,7 +42,7 @@ const UploadReceipt: React.FC<UploadReceiptProps> = ({ setSalesReceipt, transact
                 setSalesReceipt(receiptURL);
                 setSuccessMessage('Receipt uploaded successfully');
             } catch (error: any) {
-                setError(error.message);
+                setOnSaveError(error.message);
                 console.log(error.message);
             } finally {
                 setLoading(false);
@@ -52,7 +52,7 @@ const UploadReceipt: React.FC<UploadReceiptProps> = ({ setSalesReceipt, transact
         if (fileToUpload) uploadHandler();
 
         return () => {
-            setError(null);
+            setOnSaveError(null);
             setSuccessMessage(null);
         }
     }, [fileToUpload]);
@@ -62,7 +62,7 @@ const UploadReceipt: React.FC<UploadReceiptProps> = ({ setSalesReceipt, transact
         const file: File|null = (fileInputRef.current?.files) ? fileInputRef.current.files[0] : null;
 
         if (file?.type !== 'image/jpeg' && file?.type !== 'image/png') {            
-            setError('Please upload a valid image file.');
+            setOnSaveError('Please upload a valid image file.');
             setOpenSnackbar(true);
             return;
         }

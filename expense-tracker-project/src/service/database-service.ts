@@ -80,7 +80,11 @@ interface NewTransaction {
 export const addTransaction = async (transactionDetails: NewTransaction): Promise<void|string> => {
   try {
     const response = await push(ref(database, 'transactions'), transactionDetails);
-    return await update(ref(database, `transactions/${response.key}`), { id: response.key });
+    if (response && response.key) {
+      return await update(ref(database, `transactions/${response.key}`), { id: response.key });
+    } else {
+      throw new Error('Transaction not created');
+    }    
   } catch (error: any) {
     console.log(error.message);
     return error.message;

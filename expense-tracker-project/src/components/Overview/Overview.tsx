@@ -5,12 +5,12 @@ import Tabs, { tabsClasses } from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import FunctionsIcon from '@mui/icons-material/Functions';
-import { getCategoryIcon } from '../../common/utils';
 import AuthContext from '../../context/AuthContext';
-import PieActiveArc from '../PieChart/PieChart';
-import Progress from './Progress';
+import { getCategoryIcon } from '../../common/utils';
 import { getCategories, getTransactions } from '../../service/database-service';
 import { getExchangeRates } from '../../service/exchange-rate-service';
+import PieActiveArc from '../PieChart/PieChart';
+import Progress from './Progress';
 import './Overview.css';
 
 interface FetchedTransaction {
@@ -60,9 +60,9 @@ const Overview = () => {
             try {
                 setLoading(true);
                 const transactions = await getTransactions(isLoggedIn.user);
-                if (transactions.length === 0) throw new Error('Missing data. No transactions found');
+                if (typeof transactions === 'string') throw new Error('Error fetching transactions.');
                 const exchangeRates = await getExchangeRates(settings?.currency as string);
-                if (!exchangeRates) throw new Error('Missing data. Exchange rates not found');
+                if (!exchangeRates) throw new Error('Error fetching exchange rates.');
                 const updatedTransactions = transactions.map((transaction: FetchedTransaction) => {
                     if (transaction.currency !== settings?.currency) {
                         const exchangeRate = 1 / exchangeRates[transaction.currency];
@@ -72,7 +72,7 @@ const Overview = () => {
                     return transaction;
                 });
                 const categories = await getCategories(isLoggedIn.user);
-                if (categories.length === 0) throw new Error('Missing data. No categories found');
+                if (typeof categories === 'string') throw new Error('Error fetching categories.');
                 setTransactions(updatedTransactions);
                 setCategories(categories);
                 setSuccessMessage('Data fetched successfully');
@@ -148,120 +148,128 @@ const Overview = () => {
     }
   
     return (
-    <>
-        {switchLabel === 'Period Overview' ? 
-            <Box className="overview-container">     
-                <FormGroup className='switch-button'>
-                    <FormControlLabel control={<Switch />} label={switchLabel} onChange={handleSwitchClick} />
-                </FormGroup>
-                    
-                <Box className="overview-header">
-                    {loading ? 
-                        <Stack sx={{ color: 'grey.500' }} spacing={2} direction="row" id='spinning-circle'>
-                            <CircularProgress color="success" size='3rem' />
-                        </Stack>
-                        :
-                        <>
-                            <Tabs value={outerValue} onChange={handleOuterChange}>
-                                <Tab key={0} label="Year" onClick={() => setView("yearly")} sx={{ backgroundColor: outerValue === 0 ? 'lightblue' : 'inherit' }} />
-                                <Tab key={1} label="Month" onClick={() => setView("monthly")} sx={{ backgroundColor: outerValue === 1 ? 'lightblue' : 'inherit' }} /> 
-                            </Tabs>
-
-                            {view && 
-                                <Tabs value={innerValue} variant="scrollable" scrollButtons allowScrollButtonsMobile aria-label="scrollable force tabs example" onChange={handleInnerChange}
-                                    sx={{ [`& .${tabsClasses.scrollButtons}`]: {'&.Mui-disabled': { opacity: 0.3 },},}} className='scrollable-tabs'>
-                                    {view === 'monthly' ? 
-                                        Array.from(
-                                            new Set(transactions.map((transaction) => 
-                                                new Date(transaction.date).toLocaleString('en-US', { month: 'long', year: 'numeric' })
-                                                ))
-                                            )
-                                            .sort((a, b) => new Date(a).getTime() - new Date(b).getTime())
-                                            .map((month, index) => 
-                                                <Tab key={index} label={month} onClick={() => handleTabClick(month)} 
-                                                    sx={{ backgroundColor: innerValue === index ? 'lightblue' : 'inherit' }} />)
-                                        : 
-                                        Array.from(
-                                            new Set(transactions.map((transaction) => 
-                                                new Date(transaction.date).toLocaleString('en-US', { year: 'numeric' })
-                                                ))
-                                            )
-                                            .sort((a, b) => parseInt(a) - parseInt(b))
-                                            .map((year, index) => 
-                                                <Tab key={index} label={year} onClick={() => handleTabClick(year)} 
-                                                    sx={{ backgroundColor: innerValue === index ? 'lightblue' : 'inherit' }} />)
-                                    }
-                                </Tabs>
-                            }
-                        </>
-                    }
-                </Box>
-
-                {pieData.length > 0 ? 
-                    <Box className="overview-content">        
-                        <Box className="pie-container">
-                            <PieActiveArc data={ pieData.map((category) => {return {...category, value: +((category.value / totalSum)*100).toFixed(2)}}) } />
-                        </Box>
-                                
-                        <List className='list-container'>
-                            <Typography variant="h6" id='graph-info-text'>
-                                The provided values are in {settings?.currency} currency.
-                            </Typography>
-
-                            <ListItem className="custom-list-item">
-                                <ListItemAvatar>
-                                    <Avatar> <FunctionsIcon /> </Avatar>
-                                </ListItemAvatar>
-                                <ListItemText 
-                                    primary={<strong>Total</strong>}
-                                    secondary={`${filteredTransactions.length} transaction(s)`}
-                                />
-                                <ListItemText 
-                                    primary={`${settings?.currency === 'EUR' ? '€' : (settings?.currency === 'USD' ? '$' : 'BGN')} ${totalSum.toFixed(2)}`}        
-                                    secondary={`100%`} 
-                                />
-                            </ListItem>
-                            
-                            {pieData.map((data, index) =>                             
-                                <ListItem key={index} className="custom-list-item">
-                                    <ListItemAvatar> {getCategoryIcon(data.label, categories)} </ListItemAvatar>
-                                    <ListItemText
-                                        primary={<strong>{data.label}</strong>}
-                                        secondary={`${filteredTransactions.reduce((acc, transaction) => {
-                                                    if (transaction.category === data.label) acc++;
-                                                        return acc;
-                                                    }, 0)} transaction(s)`}
-                                    />
-                                    <ListItemText 
-                                        primary={`${settings?.currency === 'EUR' ? '€' : (settings?.currency === 'USD' ? '$' : 'BGN')} ${data.value.toFixed(2)}`}                                                                                                            
-                                        secondary={`${((data.value / totalSum)*100).toFixed(1)}%`}
-                                    />
-                                </ListItem>                             
-                            )}
-                        </List>
-                    </Box> 
-                    : 
-                    <Box className="default-message-box">
-                        {error ? 
-                            <Typography> No data to display </Typography>
-                            :
-                            <Typography> Select a period to preview graph </Typography>
-                        }
-                    </Box>
-                }
-            </Box>           
+    <> 
+        {error ? 
+            <Box className="default-message-box">
+                <Typography>There was a problem loading your data. Please try again later.</Typography>
+            </Box>
             : 
-            <div className='progress-container'>        
-                <FormGroup className='switch-button'>
-                    <FormControlLabel control={<Switch checked={switchLabel === 'Progress Over Time' ? true : false} />} 
-                        label={switchLabel} onChange={handleSwitchClick}                         
-                    />
-                </FormGroup>
+            ((transactions.length === 0 || categories.length === 0) ? 
+                <Box className="default-message-box">
+                    <Typography>No transactions or categories found.</Typography>
+                </Box>
+                :
+                (switchLabel === 'Period Overview' ? 
+                    <Box className="overview-container">     
+                        <FormGroup className='switch-button'>
+                            <FormControlLabel control={<Switch />} label={switchLabel} onChange={handleSwitchClick} />
+                        </FormGroup>
+                            
+                        <Box className="overview-header">
+                            {loading ? 
+                                <Stack sx={{ color: 'grey.500' }} spacing={2} direction="row" id='spinning-circle'>
+                                    <CircularProgress color="success" size='3rem' />
+                                </Stack>
+                                :
+                                <>
+                                    <Tabs value={outerValue} onChange={handleOuterChange}>
+                                        <Tab key={0} label="Year" onClick={() => setView("yearly")} sx={{ backgroundColor: outerValue === 0 ? 'lightblue' : 'inherit' }} />
+                                        <Tab key={1} label="Month" onClick={() => setView("monthly")} sx={{ backgroundColor: outerValue === 1 ? 'lightblue' : 'inherit' }} /> 
+                                    </Tabs>
 
-                <Progress transactions={transactions} error={error} timeSpan={timeSpan} setTimeSpan={setTimeSpan} />
-            </div>
+                                    {view && 
+                                        <Tabs value={innerValue} variant="scrollable" scrollButtons allowScrollButtonsMobile aria-label="scrollable force tabs example" onChange={handleInnerChange}
+                                            sx={{ [`& .${tabsClasses.scrollButtons}`]: {'&.Mui-disabled': { opacity: 0.3 },},}} className='scrollable-tabs'>
+                                            {view === 'monthly' ? 
+                                                Array.from(
+                                                    new Set(transactions.map((transaction) => 
+                                                        new Date(transaction.date).toLocaleString('en-US', { month: 'long', year: 'numeric' })
+                                                        ))
+                                                    )
+                                                    .sort((a, b) => new Date(a).getTime() - new Date(b).getTime())
+                                                    .map((month, index) => 
+                                                        <Tab key={index} label={month} onClick={() => handleTabClick(month)} 
+                                                            sx={{ backgroundColor: innerValue === index ? 'lightblue' : 'inherit' }} />)
+                                                : 
+                                                Array.from(
+                                                    new Set(transactions.map((transaction) => 
+                                                        new Date(transaction.date).toLocaleString('en-US', { year: 'numeric' })
+                                                        ))
+                                                    )
+                                                    .sort((a, b) => parseInt(a) - parseInt(b))
+                                                    .map((year, index) => 
+                                                        <Tab key={index} label={year} onClick={() => handleTabClick(year)} 
+                                                            sx={{ backgroundColor: innerValue === index ? 'lightblue' : 'inherit' }} />)
+                                            }
+                                        </Tabs>
+                                    }
+                                </>
+                            }
+                        </Box>
+
+                        {pieData.length > 0 ? 
+                            <Box className="overview-content">        
+                                <Box className="pie-container">
+                                    <PieActiveArc data={ pieData.map((category) => {return {...category, value: +((category.value / totalSum)*100).toFixed(2)}}) } />
+                                </Box>
+                                        
+                                <List className='list-container'>
+                                    <Typography variant="h6" id='graph-info-text'>
+                                        The provided values are in {settings?.currency} currency.
+                                    </Typography>
+
+                                    <ListItem className="custom-list-item">
+                                        <ListItemAvatar>
+                                            <Avatar> <FunctionsIcon /> </Avatar>
+                                        </ListItemAvatar>
+                                        <ListItemText 
+                                            primary={<strong>Total</strong>}
+                                            secondary={`${filteredTransactions.length} transaction(s)`}
+                                        />
+                                        <ListItemText 
+                                            primary={`${settings?.currency === 'EUR' ? '€' : (settings?.currency === 'USD' ? '$' : 'BGN')} ${totalSum.toFixed(2)}`}        
+                                            secondary={`100%`} 
+                                        />
+                                    </ListItem>
+                                    
+                                    {pieData.map((data, index) =>                             
+                                        <ListItem key={index} className="custom-list-item">
+                                            <ListItemAvatar> {getCategoryIcon(data.label, categories)} </ListItemAvatar>
+                                            <ListItemText
+                                                primary={<strong>{data.label}</strong>}
+                                                secondary={`${filteredTransactions.reduce((acc, transaction) => {
+                                                            if (transaction.category === data.label) acc++;
+                                                                return acc;
+                                                            }, 0)} transaction(s)`}
+                                            />
+                                            <ListItemText 
+                                                primary={`${settings?.currency === 'EUR' ? '€' : (settings?.currency === 'USD' ? '$' : 'BGN')} ${data.value.toFixed(2)}`}                                                                                                            
+                                                secondary={`${((data.value / totalSum)*100).toFixed(1)}%`}
+                                            />
+                                        </ListItem>                             
+                                    )}
+                                </List>
+                            </Box> 
+                            : 
+                            <Box className="default-message-box">
+                                <Typography> Select a period to preview graph </Typography>
+                            </Box>
+                        }
+                    </Box>           
+                    : 
+                    <div className='progress-container'>        
+                        <FormGroup className='switch-button'>
+                            <FormControlLabel control={<Switch checked={switchLabel === 'Progress Over Time' ? true : false} />} 
+                                label={switchLabel} onChange={handleSwitchClick}                         
+                            />
+                        </FormGroup>
+
+                        <Progress transactions={transactions} timeSpan={timeSpan} setTimeSpan={setTimeSpan} />
+                    </div>
+                )
+            )
         }
-       
+               
         <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleSnackbarClose}
             anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} sx={{ marginBottom: 8 }}
         >

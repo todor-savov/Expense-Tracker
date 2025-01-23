@@ -21,12 +21,11 @@ interface Data {
 
 interface ProgressProps {
     transactions: FetchedTransaction[];
-    error: string|null;
     timeSpan: string;
     setTimeSpan: (value: string) => void;
 }
 
-const Progress = ({ transactions, error, timeSpan, setTimeSpan }: ProgressProps) => {
+const Progress = ({ transactions, timeSpan, setTimeSpan }: ProgressProps) => {
     const { settings } = useContext(AuthContext);
     const [uniqueMonths, setUniqueMonths] = useState<string[]>([]);
     const [uniqueYears, setUniqueYears] = useState<string[]>([]);
@@ -116,13 +115,9 @@ const Progress = ({ transactions, error, timeSpan, setTimeSpan }: ProgressProps)
                 </FormControl>
             </Box>
 
-            {(!timeSpan || error) ? 
+            {!timeSpan ? 
                 <Box className="default-message-box">
-                    {error ? 
-                        <Typography> No data to display </Typography>
-                        :
-                        <Typography> Select a period to preview graph </Typography>
-                    }                    
+                    <Typography> Select a period to preview graph </Typography>
                 </Box>
                 :
                 <Box className="progress-content">

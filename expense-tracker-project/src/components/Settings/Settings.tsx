@@ -24,24 +24,36 @@ const Settings = ({ isLimitChanged, setIsLimitChanged }: SettingsProps) => {
     const [activityNotifications, setActivityNotifications] = useState<boolean>(settings?.activityNotifications === 'enabled');
     const [budgetNotifications, setBudgetNotifications] = useState<boolean>(settings?.budgetNotifications === 'enabled');
     const [currency, setCurrency] = useState<string>(settings?.currency || 'BGN');
-    const [successMessage, setSuccessMessage] = useState<string|null>(null);
     const [error, setError] = useState<string|null>(null);
+    const [onSaveError, setOnSaveError] = useState<string|null>(null);
+    const [successMessage, setSuccessMessage] = useState<string|null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
+
+   useEffect(() => {    
+        if (!settings) setError('Error fetching user settings.');            
+        else setSuccessMessage('Settings fetched successfully.');
+        setOpenSnackbar(true);
+
+        return () => {
+            setError(null);
+            setSuccessMessage(null);
+        }
+    }, []);
 
     useEffect(() => {
         const updateSettings = async () => {
             try {
-                setError(null);
+                setOnSaveError(null);
                 setSuccessMessage(null);
                 setLoading(true);
                 const response = await updateUserSettings(isLoggedIn.user, userSettings as UserSettings);
-                if (response) throw new Error('Settings update has failed.');
+                if (typeof response === 'string') throw new Error('Settings update has failed.');
                 setSuccessMessage('Settings have been updated successfully.'); 
                 setIsLimitChanged(!isLimitChanged); 
                 setSettings(userSettings);
             } catch (error: any) {
-                setError(error.message);
+                setOnSaveError(error.message);
                 console.log(error.message);                                
             } finally {
                 setLoading(false);
@@ -58,7 +70,7 @@ const Settings = ({ isLimitChanged, setIsLimitChanged }: SettingsProps) => {
 
         if (activityNotificationLimit) {
             if (!Number.isInteger(activityNotificationLimit) || activityNotificationLimit < 1 || activityNotificationLimit > 365) {
-                setError('Inactivity days must be an integer between 1 and 365.');
+                setOnSaveError('Inactivity days must be an integer between 1 and 365.');
                 setOpenSnackbar(true);
                 return;
             }
@@ -66,7 +78,7 @@ const Settings = ({ isLimitChanged, setIsLimitChanged }: SettingsProps) => {
 
         if (budgetNotificationLimit) {
             if (!Number.isInteger(budgetNotificationLimit) || budgetNotificationLimit < 1 || budgetNotificationLimit > 100) {
-                setError('Budget notification limit must be an integer between 1 and 100.');
+                setOnSaveError('Budget notification limit must be an integer between 1 and 100.');
                 setOpenSnackbar(true);
                 return;
             }            
@@ -89,70 +101,79 @@ const Settings = ({ isLimitChanged, setIsLimitChanged }: SettingsProps) => {
     }
 
     return (
-            <Box component={"form"} onSubmit={handleSubmit} className="settings-container">
-                <Typography variant="h5" id='settings-header'>Choose your preferred settings:</Typography>
-                <FormGroup className="form-group">
-                    <FormControlLabel control={
-                        <Switch checked={activityNotifications} onChange={(e) => setActivityNotifications(e.target.checked)} className="switch" />
+        <Box className='settings-container'>
+            {error ? 
+                <Box className="message-box">
+                    <Typography>There was a problem loading your data. Please try again later.</Typography>
+                </Box>
+                :
+                <Box component={"form"} onSubmit={handleSubmit} className="settings-form">
+                    <Typography variant="h5" id='settings-header'>Choose your preferred settings:</Typography>
+                    
+                    <FormGroup className="form-group">
+                        <FormControlLabel control={
+                            <Switch checked={activityNotifications} onChange={(e) => setActivityNotifications(e.target.checked)} className="switch" />
+                            } 
+                            label="Enable activity notifications"
+                        />
+
+                        {activityNotifications && 
+                            <Box id="activity-notification-limit">
+                                <TextField type="number" label="Days" required 
+                                    name="activity-notification-limit" 
+                                    className="notification-limit-input"                                    
+                                    defaultValue={settings?.activityNotificationLimit ? settings.activityNotificationLimit : ''}
+                                />
+                                <span> of inactivity.</span>
+                            </Box>
                         } 
-                        label="Enable activity notifications"
-                    />
 
-                    {activityNotifications && 
-                        <Box id="activity-notification-limit">
-                            <TextField type="number" label="Days" required 
-                                name="activity-notification-limit" 
-                                className="notification-limit-input"                                    
-                                defaultValue={settings?.activityNotificationLimit ? settings.activityNotificationLimit : ''}
-                            />
-                            <span> of inactivity.</span>
-                        </Box>
-                    } 
+                        <FormControlLabel control={
+                            <Switch checked={budgetNotifications} onChange={(e) => setBudgetNotifications(e.target.checked)} className="switch" />
+                            }
+                            label="Enable budget notifications" 
+                        />
 
-                    <FormControlLabel control={
-                        <Switch checked={budgetNotifications} onChange={(e) => setBudgetNotifications(e.target.checked)} className="switch" />
+                        {budgetNotifications && 
+                            <Box id="budget-notification-limit">
+                                <TextField type="number" label="%" required
+                                    name='budget-notification-limit'
+                                    className="notification-limit-input"
+                                    defaultValue={settings?.budgetNotificationLimit ? settings.budgetNotificationLimit : ''}
+                                />
+                                <span> of the category budget.</span>
+                            </Box>
                         }
-                        label="Enable budget notifications" 
-                    />
 
-                    {budgetNotifications && 
-                        <Box id="budget-notification-limit">
-                            <TextField type="number" label="%" required
-                                name='budget-notification-limit'
-                                className="notification-limit-input"
-                                defaultValue={settings?.budgetNotificationLimit ? settings.budgetNotificationLimit : ''}
-                            />
-                            <span> of the category budget.</span>
-                        </Box>
-                    }
+                        <FormControl id="currency-select">
+                            <InputLabel id="demo-simple-select-label">Currency</InputLabel>
+                            <Select labelId="demo-simple-select-label" id="currency-select-input" label="Currency" 
+                                value={currency} onChange={handleCurrencyChange}>
+                                <MenuItem value={"BGN"}>BGN</MenuItem>
+                                <MenuItem value={"EUR"}>EUR</MenuItem>
+                                <MenuItem value={"USD"}>USD</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </FormGroup>
 
-                    <FormControl id="currency-select">
-                        <InputLabel id="demo-simple-select-label">Currency</InputLabel>
-                        <Select labelId="demo-simple-select-label" id="currency-select-input" label="Currency" 
-                            value={currency} onChange={handleCurrencyChange}>
-                            <MenuItem value={"BGN"}>BGN</MenuItem>
-                            <MenuItem value={"EUR"}>EUR</MenuItem>
-                            <MenuItem value={"USD"}>USD</MenuItem>
-                        </Select>
-                    </FormControl>
-                </FormGroup>
+                    {loading ? 
+                        <Stack sx={{ color: 'grey.500' }} spacing={2} direction="row" id='spinning-circle'>
+                            <CircularProgress color="success" size='3rem' />
+                        </Stack>
+                        : 
+                        <button id="update-settings-button" type="submit">Update</button>                        
+                    }                                                                    
+                </Box>
+            }
 
-                {loading ? 
-                    <Stack sx={{ color: 'grey.500' }} spacing={2} direction="row" id='spinning-circle'>
-                        <CircularProgress color="success" size='3rem' />
-                    </Stack>
-                    : 
-                    <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleSnackbarClose}
-                        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} sx={{ marginBottom: 8 }}
-                    >
-                        <Alert onClose={handleSnackbarClose} severity={error ? 'error' : 'success'} variant="filled">
-                            {error ? error : successMessage}
-                        </Alert>
-                    </Snackbar>
-                }
-                                                                
-                {!loading && <button id="update-settings-button" type="submit">Update</button>}                        
-            </Box>
+            <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleSnackbarClose}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} sx={{ marginBottom: 8 }}
+            >
+                <Alert onClose={handleSnackbarClose} severity={(error || onSaveError) ? 'error' : 'success'} variant="filled">
+                    {error ? error : (onSaveError ? onSaveError : successMessage)}
+                </Alert>
+            </Snackbar>
+        </Box>
     );
 }
 

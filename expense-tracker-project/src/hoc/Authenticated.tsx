@@ -1,8 +1,8 @@
 import { useContext, useEffect, useState, ReactNode } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { auth } from '../config/firebase-config.js';
-import AuthContext from '../context/AuthContext.js';
-import { getUserSettings } from '../service/database-service.js';
+import { auth } from '../config/firebase-config.ts';
+import AuthContext from '../context/AuthContext.tsx';
+import { getUserSettings } from '../service/database-service.ts';
 
 interface UserSettings { 
     activityNotifications: string;
@@ -23,6 +23,7 @@ const Authenticated = ({ children }: { children: ReactNode }) => {
                 try {                    
                     setLoginState({ status: true, user: currentUser.email || '' });
                     const userSettings = await getUserSettings(currentUser.email as string);
+                    if (typeof userSettings === "string") throw new Error('Error fetching user settings');
                     setSettings(userSettings as UserSettings);
                 } catch (error) {
                     console.log(error);

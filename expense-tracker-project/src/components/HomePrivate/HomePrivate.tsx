@@ -52,6 +52,8 @@ const HomePrivate = () => {
     const [successMessage, setSuccessMessage] = useState<string|null>(null);
     const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
 
+    console.log(loading);
+
     const columns: readonly Column[] = [
         { id: 'category', label: 'Category', minWidth: 50 },
         { id: 'date', label: 'Date', minWidth: 100 },

@@ -47,6 +47,8 @@ const AllTransactions = () => {
     const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
     const navigate = useNavigate();
 
+    console.log(loading);
+
     useEffect(() => {
         const fetchTransactions = async () => {
             try {

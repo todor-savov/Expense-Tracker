@@ -100,13 +100,14 @@ const Header = ({ from, isUserChanged, isLimitChanged }: HeaderProps) => {
         const activityMessages: string[] = [];
         const budgetMessages: string[] = [];
         const transactions = await getTransactions(isLoggedIn.user);
+        if (typeof transactions === 'string') throw new Error('Error fetching transactions!');
         if (settings?.activityNotifications === 'enabled') {
           if (transactions.length === 0) {
             setActivityNotifications(activityMessages);
             setBudgetNotifications(budgetMessages);
             return;
           }
-          transactions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+          (transactions as FetchedTransaction[]).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
           const differenceInTime = new Date().getTime() - new Date(transactions[0].date).getTime();
           const differenceInDays = differenceInTime / (1000 * 3600 * 24);
           if (settings.activityNotificationLimit) {
@@ -123,7 +124,7 @@ const Header = ({ from, isUserChanged, isLimitChanged }: HeaderProps) => {
             setBudgetNotifications(budgetMessages);
             return;
           };
-          categories.map((category: Category) => {
+          (categories as Category[]).map((category: Category) => {
             if (category.limit) {
               const totalCategoryCosts = transactions.reduce((acc: number, transaction: FetchedTransaction) => {
                 return transaction.category === category.type ? (acc + transaction.amount) : acc;

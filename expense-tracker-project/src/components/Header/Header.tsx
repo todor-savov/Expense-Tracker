@@ -86,7 +86,8 @@ const Header = ({ from, isUserChanged, isLimitChanged }: HeaderProps) => {
       const fetchUserDetails = async () => {
         try {
           const userDetails = await getUserDetails(isLoggedIn.user);
-          if (userDetails.length) setCurrentUser(userDetails[0]);
+          if (typeof userDetails === 'string') throw new Error('Error fetching user details!');
+          setCurrentUser(userDetails[0]);
         } catch (error: any) {
           console.log(error.message);
         }

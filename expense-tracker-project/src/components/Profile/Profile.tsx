@@ -1,10 +1,10 @@
 import { useContext, useEffect, useRef, useState } from "react";
+import { Alert, Box, Button, CircularProgress, Snackbar, Stack, TextField, Typography } from "@mui/material";
 import AuthContext from "../../context/AuthContext";
-import { Alert, Box, Button, CircularProgress, Snackbar, Stack, TextField } from "@mui/material";
-import { VisuallyHiddenInput } from "../../common/utils";
 import { changePassword } from "../../service/authentication-service";
 import { getUserDetails, updateUserDetails } from "../../service/database-service";
 import { uploadUserPhoto } from "../../service/storage-service";
+import { VisuallyHiddenInput } from "../../common/utils";
 import { NAME_MIN_CHARS, NAME_MAX_CHARS, LETTERS_ONLY_REGEX, PHONE_DIGITS,
     PASSWORD_MIN_CHARS, PASSWORD_MAX_CHARS, LETTER_REGEX, DIGIT_REGEX, SPECIAL_CHARS_REGEX } from '../../common/constants';
 import './Profile.css';
@@ -39,36 +39,35 @@ interface PasswordCredentials {
     newPassword: string;
 }
 
-const Profile = ( { isUserChanged, setIsUserChanged }: ProfileProps ) => {
+const Profile = ({ isUserChanged, setIsUserChanged }: ProfileProps) => {
     const { isLoggedIn } = useContext(AuthContext);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [userDetails, setUserDetails] = useState<UserDetails|null>(null);
-    const [error, setError] = useState<string|null>(null);
-    const [successMessage, setSuccessMessage] = useState<string|null>(null);
+    const [userToUpdate, setUserToUpdate] = useState<UserDetails|null>(null);
     const [loading, setLoading] = useState<boolean>(false);
-    const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
+    const [successMessage, setSuccessMessage] = useState<string|null>(null);
+    const [error, setError] = useState<string|null>(null);
+    const [onSaveError, setOnSaveError] = useState<string|null>(null);
     const [firstNameError, setFirstNameError] = useState<string|null>(null);
     const [lastNameError, setLastNameError] = useState<string|null>(null);
     const [phoneError, setPhoneError] = useState<string|null>(null);
     const [oldPasswordError, setOldPasswordError] = useState<string|null>(null);
     const [newPasswordError, setNewPasswordError] = useState<string|null>(null);
+    const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
     const [fileToUpload, setFileToUpload] = useState<File|null>(null);
     const [newPhotoURL, setNewPhotoURL] = useState<string|null>(null);
-    const [userToUpdate, setUserToUpdate] = useState<UserDetails|null>(null);
     const [passwordCredentials, setPasswordCredentials] = useState<PasswordCredentials|null>(null);
 
     useEffect(() => { 
         const fetchUserDetails = async () => {
-            try {
-                setError(null);
-                setSuccessMessage(null);
+            try {                
                 setLoading(true);
                 const userData = await getUserDetails(isLoggedIn.user);
-                if (userData.length === 0) throw new Error('User not found');
+                if (typeof userData === 'string') throw new Error('Error fetching user details');
                 setUserDetails(userData[0]);
-                setSuccessMessage('User details loaded successfully');
+                setSuccessMessage('User details fetched successfully');
             } catch (error: any) {
-                setError('Failed to load user details');
+                setError(error.message);
                 console.log(error.message);                 
             } finally {
                 setLoading(false);
@@ -76,22 +75,31 @@ const Profile = ( { isUserChanged, setIsUserChanged }: ProfileProps ) => {
             }
         }
         fetchUserDetails();
+
+        return () => {
+            setError(null);
+            setSuccessMessage(null);
+            setUserDetails(null);
+        }
     }, []);
 
     useEffect(() => {
         const handleUpload = async () => {
             try {
+                setNewPhotoURL(null);
+                setOnSaveError(null);
                 setSuccessMessage(null);
                 setLoading(true);
                 const photoURL = await uploadUserPhoto(fileToUpload as File);
-                if (!photoURL) throw new Error('Failed to upload photo');
+                if (!photoURL) throw new Error('Failed to upload user photo.');
                 setNewPhotoURL(photoURL);
-                setSuccessMessage('Photo uploaded successfully');
+                setSuccessMessage('User photo uploaded successfully');
             } catch (error: any) {
-                setError('Failed to upload photo');
+                setOnSaveError(error.message);
                 console.log(error.message);
             } finally {
                 setLoading(false);
+                setFileToUpload(null);
                 setOpenSnackbar(true);
             }
         }
@@ -101,18 +109,20 @@ const Profile = ( { isUserChanged, setIsUserChanged }: ProfileProps ) => {
     useEffect(() => {
         const updateUserData = async () => {
             try {
-                setError(null);
+                setOnSaveError(null);
                 setSuccessMessage(null);
                 setLoading(true);
                 const response = await updateUserDetails(userToUpdate as UserDetails, userToUpdate?.username as string);
-                if (response) throw new Error(response);
+                if (typeof response === 'string') throw new Error('Failed to update user details');                
+                setUserDetails({...userToUpdate as UserDetails});
                 setIsUserChanged(!isUserChanged);
                 setSuccessMessage('User details updated successfully');
             } catch (error: any) {
-                setError('Failed to update user details');
+                setOnSaveError(error.message);
                 console.log(error.message);
             } finally {
                 setLoading(false);
+                setUserToUpdate(null);
                 setOpenSnackbar(true);
             }
         }
@@ -121,23 +131,23 @@ const Profile = ( { isUserChanged, setIsUserChanged }: ProfileProps ) => {
 
     useEffect(() => {
         const handlePasswordUpdate = async () => {
-            try {                
-                setError(null);
+            try {
+                setOnSaveError(null);
                 setSuccessMessage(null);
                 setLoading(true);
                 const response = await changePassword(isLoggedIn.user, passwordCredentials?.oldPassword as string, passwordCredentials?.newPassword as string);
-                if (response) throw new Error(response);
-                setPasswordCredentials(null);
+                if (typeof response === 'string') throw new Error('Failed to update password');
                 setSuccessMessage('Password updated successfully');
             } catch (error: any) {
-                setError('Failed to update password');
+                setOnSaveError(error.message);
                 console.log(error.message);
             } finally {
                 setLoading(false);
+                setPasswordCredentials(null);
                 setOpenSnackbar(true);
             }
         }
-        if (passwordCredentials) handlePasswordUpdate();
+        if (passwordCredentials) handlePasswordUpdate();        
     }, [passwordCredentials]);
 
     const handleUserChange = (e: React.FormEvent<HTMLFormElement>) => {
@@ -218,12 +228,12 @@ const Profile = ( { isUserChanged, setIsUserChanged }: ProfileProps ) => {
 
     const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
-        setError(null);
+        setOnSaveError(null);
 
         const file: File|null = (fileInputRef.current?.files) ? fileInputRef.current.files[0] : null;
 
         if (file?.type !== 'image/jpeg' && file?.type !== 'image/png') {            
-            setError('Invalid file type. Please upload a valid image file.');
+            setOnSaveError('Invalid file type. Please upload a valid image file.');
             setOpenSnackbar(true);
             return;
         }
@@ -235,83 +245,93 @@ const Profile = ( { isUserChanged, setIsUserChanged }: ProfileProps ) => {
         setOpenSnackbar(false);
     }
 
-    return (userDetails ? 
-        <div className="profile-container">
-            <Box component="form" noValidate autoComplete="off" onSubmit={handleUserChange}>
-                <div id="profile-fields">
-                    <div id="photo-name-container">
-                        <div id="image-text-container">
-                            {newPhotoURL ?
-                                <img src={newPhotoURL} alt="profile" onClick={() => fileInputRef.current?.click()} />
+    return (
+        <Box className="profile-container">
+            {error ? 
+                <Box className="message-box">
+                    <Typography>There was a problem loading your data. Please try again later.</Typography>
+                </Box>
+                :
+                (userDetails &&
+                    <>
+                        <Box component="form" noValidate autoComplete="off" onSubmit={handleUserChange}>
+                            <div id="profile-fields">
+                                <div id="photo-name-container">
+                                    <div id="image-text-container">
+                                        {(loading && fileToUpload) ?
+                                            <Stack sx={{ color: 'grey.500' }} spacing={2} direction="row" id='spinning-circle'>
+                                                <CircularProgress color="success" size='3rem' />
+                                            </Stack>
+                                            :
+                                            <img src={newPhotoURL ? newPhotoURL : userDetails?.photo} alt="profile" onClick={() => fileInputRef.current?.click()} />
+                                        }
+                                        <span className="change-photo-text">Change photo</span>
+                                    </div>
+                                        
+                                    <VisuallyHiddenInput type="file" id="file" name="file" accept="image/*" ref={fileInputRef} onChange={(event) => handleFileUpload(event)} />
+
+                                    <TextField error={!!firstNameError} type="text" id="first-name" label='First Name'
+                                        defaultValue={userDetails?.firstName} helperText={firstNameError || "Editable"} required
+                                    />
+
+                                    <TextField error={!!lastNameError} type="text" id="last-name" label='Last Name'
+                                        defaultValue={userDetails?.lastName} helperText={lastNameError || "Editable"} required
+                                    />
+                                </div>
+
+                                <TextField type="email" id="email" label="Email Address" disabled
+                                    defaultValue={userDetails?.email} helperText={"Not editable"} required
+                                />
+                                    
+                                <TextField type="text" id="username" label="Username" disabled
+                                    defaultValue={userDetails?.username} helperText={"Not editable"} required
+                                />
+
+                                <TextField error={!!phoneError} type="number" id="phone" label="Phone Number"
+                                    defaultValue={userDetails?.phone} helperText={phoneError || "Editable"} required
+                                />
+                            </div>
+
+                            {(loading && userToUpdate) ?
+                                <Stack sx={{ color: 'grey.500' }} spacing={2} direction="row" id='spinning-circle'>
+                                    <CircularProgress color="success" size='3rem' />
+                                </Stack>
                                 :
-                                <img src={userDetails.photo} alt="profile" onClick={() => fileInputRef.current?.click()} />
+                                <Button id='update-user-button' type="submit">Save Profile</Button>
                             }
-                            <span className="change-photo-text">Change photo</span>
-                        </div>
-                            
-                        <VisuallyHiddenInput type="file" id="file" name="file" accept="image/*" ref={fileInputRef} onChange={(event) => handleFileUpload(event)} />
+                        </Box>
 
-                        <TextField error={!!firstNameError} type="text" id="first-name" label='First Name'
-                            defaultValue={userDetails.firstName} helperText={firstNameError || "Editable"} required
-                        />
+                        <Box component="form" noValidate autoComplete="off" onSubmit={handlePasswordChange}>
+                            <div className="password-fields">
+                                <TextField error={!!oldPasswordError} type="password" id="old-password" label="Old Password"
+                                    helperText={oldPasswordError || "Editable"}
+                                />
 
-                        <TextField error={!!lastNameError} type="text" id="last-name" label='Last Name'
-                            defaultValue={userDetails.lastName} helperText={lastNameError || "Editable"} required
-                        />
-                    </div>
-
-                    <TextField type="email" id="email" label="Email Address" disabled
-                        defaultValue={userDetails.email} helperText={"Not editable"} required
-                    />
+                                <TextField error={!!newPasswordError} type="password" id="new-password" label="New Password"
+                                    helperText={newPasswordError || `Editable | ${PASSWORD_MIN_CHARS}-${PASSWORD_MAX_CHARS} symbols, ONE digit, letter AND a special symbol`}
+                                />
+                            </div>
+                                    
+                            {(loading && passwordCredentials) ? 
+                                <Stack sx={{ color: 'grey.500' }} spacing={2} direction="row" id='spinning-circle'>
+                                    <CircularProgress color="success" size='3rem' />
+                                </Stack>
+                                :
+                                <Button id='update-password-button' type="submit">Update password</Button>
+                            }
+                        </Box> 
+                    </>    
+                )   
+            }                                            
                         
-                    <TextField type="text" id="username" label="Username" disabled
-                        defaultValue={userDetails.username} helperText={"Not editable"} required
-                    />
-
-                    <TextField error={!!phoneError} type="number" id="phone" label="Phone Number"
-                        defaultValue={userDetails.phone} helperText={phoneError || "Editable"} required
-                    />
-                </div>
-
-                {!loading && <Button id='update-user-button' type="submit">Save Profile</Button>}                
-            </Box>
-
-            <Box component="form" noValidate autoComplete="off" onSubmit={handlePasswordChange}>
-                <div className="password-fields">
-                    <TextField error={!!oldPasswordError} type="password" id="old-password" label="Old Password"
-                        helperText={oldPasswordError || "Editable"}
-                    />
-
-                    <TextField error={!!newPasswordError} type="password" id="new-password" label="New Password"
-                        helperText={newPasswordError || `Editable | ${PASSWORD_MIN_CHARS}-${PASSWORD_MAX_CHARS} symbols, ONE digit, letter AND a special symbol`}
-                    />
-                </div>
-                        
-                {!loading && <Button id='update-password-button' type="submit">Update password</Button>}
-            </Box>
-
-            {loading ?
-                    <Stack sx={{ color: 'grey.500' }} spacing={2} direction="row" id='spinning-circle'>
-                        <CircularProgress color="success" size='3rem' />
-                    </Stack>
-                    :   
-                    <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleSnackbarClose}
-                        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} sx={{ marginBottom: 8 }}
-                    >
-                        <Alert onClose={handleSnackbarClose} severity={error ? 'error' : 'success'} variant="filled">
-                            {error ? error : successMessage}
-                        </Alert>
-                    </Snackbar>
-            }
-        </div>
-        :   
-        <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleSnackbarClose}
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} sx={{ marginBottom: 8 }}
-        >
-            <Alert onClose={handleSnackbarClose} severity={error ? 'error' : 'success'} variant="filled">
-                {error ? error : successMessage}
-            </Alert>
-        </Snackbar>
+            <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleSnackbarClose}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} sx={{ marginBottom: 8 }}
+            >
+                <Alert onClose={handleSnackbarClose} severity={(error || onSaveError) ? 'error' : 'success'} variant="filled">
+                    {error ? error : (onSaveError ? onSaveError : successMessage)}
+                </Alert>
+            </Snackbar>
+        </Box>
     )
 }
 

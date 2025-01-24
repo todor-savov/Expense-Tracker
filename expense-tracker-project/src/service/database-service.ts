@@ -42,7 +42,7 @@ export const createUser = async (userDetails: UserDetails): Promise<void|string>
   }
 }
 
-export const getUserDetails = async (email: string): Promise<UserDetails[]|[]> => {
+export const getUserDetails = async (email: string): Promise<UserDetails[]|string> => {
   try {
     const snapshot = await get(query(ref(database, "users"), orderByChild("email"), equalTo(email)));
     if (snapshot.exists()) {
@@ -53,12 +53,13 @@ export const getUserDetails = async (email: string): Promise<UserDetails[]|[]> =
     }
   } catch (error: any) {
     console.log(error.message);
-    return [];
+    return error.message;
   }
 };
 
 export const updateUserDetails = async (userDetails: UserDetails, username: string): Promise<void|string> => {
   try {
+    if (!username) throw new Error('User not found');
     return await set(ref(database, `users/${username}`), userDetails);
   } catch (error: any) {
     console.log(error.message);

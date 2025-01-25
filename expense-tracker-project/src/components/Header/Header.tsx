@@ -121,6 +121,7 @@ const Header = ({ from, isUserChanged, isLimitChanged }: HeaderProps) => {
         
         if (settings?.budgetNotifications === 'enabled') {
           const categories = await getCategories(isLoggedIn.user);
+          if (typeof categories === 'string') throw new Error('Error fetching categories!');
           if (categories.length === 0) {
             setBudgetNotifications(budgetMessages);
             return;
@@ -153,13 +154,14 @@ const Header = ({ from, isUserChanged, isLimitChanged }: HeaderProps) => {
     const fetchFeedbacks = async () => {
       try {
         const feedbacks = await getFeedbacks(isLoggedIn.user);
+        if (typeof feedbacks === 'string') throw new Error('Error fetching feedbacks!');
         if (feedbacks.length === 0) setEligibleForFeedback(true);
-        else setEligibleForFeedback(false);        
+        if (feedbacks.length > 0) setEligibleForFeedback(false);
       } catch (error: any) {
         console.log(error.message);
       }
     }
-    if (isLoggedIn.user) fetchFeedbacks();    
+    if (isLoggedIn.user) fetchFeedbacks();   
   }, []);
 
   useEffect(() => {

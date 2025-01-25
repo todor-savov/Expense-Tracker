@@ -21,11 +21,11 @@ interface UserDetails {
   settings: UserSettings
 }
 
-export const checkIfUserExists = async (username: string, phone: string): Promise<Array<DataSnapshot>|string> => {
+export const checkIfUserExists = async (username: string, phone: string): Promise<DataSnapshot[]|string> => {
   try {
+    if (!username || !phone) throw new Error('User not found');
     const snapshot1 = await get(query(ref(database, "users"), orderByChild("username"), equalTo(username)));
     const snapshot2 = await get(query(ref(database, "users"), orderByChild("phone"), equalTo(phone)));
-
     return [snapshot1, snapshot2];
   } catch (error: any) {
     console.log(error.message);
@@ -44,6 +44,7 @@ export const createUser = async (userDetails: UserDetails): Promise<void|string>
 
 export const getUserDetails = async (email: string): Promise<UserDetails[]|string> => {
   try {
+    if (!email) throw new Error('User not found');
     const snapshot = await get(query(ref(database, "users"), orderByChild("email"), equalTo(email)));
     if (snapshot.exists()) {
       const userDetails = Object.values(snapshot.val());
@@ -106,6 +107,7 @@ interface FetchedTransaction {
 
 export const getTransactions = async (user: string): Promise<FetchedTransaction[]|[]|string> => {
   try {
+    if (!user) throw new Error('User not found');
     const snapshot = await get(query(ref(database, "transactions"), orderByChild("user"), equalTo(user)));
     if (snapshot.exists()) return Object.values(snapshot.val()) as FetchedTransaction[];
     else return [];
@@ -117,6 +119,7 @@ export const getTransactions = async (user: string): Promise<FetchedTransaction[
 
 export const getTransaction = async (transactionId: string): Promise<FetchedTransaction|null> => {
   try {
+    if (!transactionId) throw new Error('Transaction not found');
     const snapshot = await get(ref(database, `transactions/${transactionId}`));
     if (snapshot.exists()) return snapshot.val() as FetchedTransaction;
     else return null;
@@ -128,6 +131,7 @@ export const getTransaction = async (transactionId: string): Promise<FetchedTran
 
 export const updateTransaction = async (transactionDetails: FetchedTransaction, transactionId: string): Promise<void|string> => {
   try {
+    if (!transactionId) throw new Error('Transaction not found');
     return await set(ref(database, `transactions/${transactionId}`), transactionDetails);
   } catch (error: any) {
     console.log(error.message);
@@ -137,6 +141,7 @@ export const updateTransaction = async (transactionDetails: FetchedTransaction, 
 
 export const deleteTransaction = async (transactionId: string): Promise<void|string> => {
   try {
+    if (!transactionId) throw new Error('Transaction not found');
     return await set(ref(database, `transactions/${transactionId}`), null);
   } catch (error: any) {
     console.log(error.message);
@@ -161,6 +166,7 @@ interface NewCategory {
 
 export const getCategories = async (user: string): Promise<Category[]|[]|string> => {
   try {
+    if (!user) throw new Error('User not found');
     const snapshot = await get(query(ref(database, "categories"), orderByChild("user"), equalTo(user)));
     if (snapshot.exists()) return Object.values(snapshot.val()) as Category[];
     else return [];
@@ -213,6 +219,7 @@ export const updateCategory = async (categoryDetails: Category, categoryId: stri
 
 export const deleteCategory = async (categoryId: string): Promise<void|string> => {
   try {
+    if (!categoryId) throw new Error('Category not found');
     return await set(ref(database, `categories/${categoryId}`), null);
   } catch (error: any) {
     console.log(error.message);
@@ -229,26 +236,32 @@ interface Feedback {
 export const addFeedback = async (feedback: Feedback): Promise<void|string> => {
   try {
     const response = await push(ref(database, 'feedbacks'), feedback);
-    update(ref(database, `feedbacks/${response.key}`), { id: response.key });
+    if (response && response.key) {
+      return await update(ref(database, `feedbacks/${response.key}`), { id: response.key });
+    } else {
+      throw new Error('Feedback not created');
+    }
   } catch (error: any) {
     console.log(error.message);
     return error.message;
   }
 }
 
-export const getFeedbacks = async (email: string): Promise<Feedback[]|[]> => {
+export const getFeedbacks = async (email: string): Promise<Feedback[]|[]|string> => {
   try {
+    if (!email) throw new Error('User not found');
     const snapshot = await get(query(ref(database, "feedbacks"), orderByChild("user"), equalTo(email)));
     if (snapshot.exists()) return Object.values(snapshot.val()) as Feedback[];
     else return [];
   } catch (error: any) {
     console.log(error.message);
-    return [];
+    return error.message;
   }
 }
 
 export const getUserSettings = async (email: string): Promise<UserSettings|string> => {
   try {
+    if (!email) throw new Error('User not found');
     const snapshot = await get(query(ref(database, "users"), orderByChild("email"), equalTo(email)));
      if (snapshot.exists()) {
       const user = Object.values(snapshot.val())[0] as UserDetails;
@@ -263,6 +276,7 @@ export const getUserSettings = async (email: string): Promise<UserSettings|strin
 
 export const updateUserSettings = async (email: string, settings: UserSettings): Promise<void|string> => {
   try {
+    if (!email) throw new Error('User not found');
     const snapshot = await get(query(ref(database, "users"), orderByChild("email"), equalTo(email)));
     if (snapshot.exists()) {
       const user = Object.keys(snapshot.val())[0];

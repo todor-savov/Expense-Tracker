@@ -222,7 +222,8 @@ const Header = ({ from, isUserChanged, isLimitChanged }: HeaderProps) => {
 
   const handleLogout = () => {
     setShowFeedbackForm(false);
-    signOutUser();
+    const result = signOutUser();
+    if (typeof result === 'string') return;
     setLoginState({status: false, user: ''});
     navigate('/');
   }

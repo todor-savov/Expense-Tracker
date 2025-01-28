@@ -27,7 +27,7 @@ const Login = () => {
                     setError(null);
                     setLoading(true);
                     const userCredentials = await signInUser(form?.emailAddress as string, form?.password as string);
-                    if (!userCredentials) throw new Error(`Incorrect login credentials.`);
+                    if (typeof userCredentials === 'string') throw new Error(`Incorrect login credentials.`);
                     const settings = await getUserSettings(form?.emailAddress as string);
                     if (typeof settings === "string") throw new Error('Error fetching user settings');
                     setLoginState({ status: true, user: form?.emailAddress as string });

@@ -24,10 +24,10 @@ const ResetPasswordView = () => {
                 setTokenError(null);
                 setLoading(true);
                 const response = await verifyPasswordResetToken(oobCode as string);
-                if (!response) throw new Error('Invalid reset token');
+                if (!response) throw new Error('Invalid or expired reset token.');
                 setSuccessMessage('Valid reset token. You can now reset your password.');
             } catch (error: any) {
-                setTokenError(`Invalid or expired reset token.`);                
+                setTokenError(error.message);               
                 console.log(error.message);
             } finally {
                 setLoading(false);
@@ -44,10 +44,10 @@ const ResetPasswordView = () => {
                 setSuccessMessage(null);
                 setLoading(true);                
                 const status = await confirmPasswordResetWithToken(oobCode as string, newPassword);
-                if (status) throw new Error('Password reset failed');
+                if (typeof status === 'string') throw new Error('Password reset failed');
                 setSuccessMessage('Password reset has been successful. You can log in from upper right corner now.');
             } catch (error: any) {
-                setError('Password reset failed.');               
+                setError(error.message);           
                 console.log(error.message);
             } finally {
                 setLoading(false);

@@ -20,10 +20,10 @@ const ForgotPasswordView = () => {
                 setSuccessMessage(null);
                 setLoading(true);
                 const response = await sendResetLink(email as string);
-                if (response) throw new Error('Failure to send the reset link.');
+                if (typeof response === 'string') throw new Error('Failed to send the reset link.');
                 setSuccessMessage(`If an account with this email exists, a password reset link has been sent to it.`);
             } catch (error: any) {
-                setError('An error occurred while sending the password reset link.');
+                setError(error.message);
                 console.log(error.message);
             } finally {
                 setLoading(false);

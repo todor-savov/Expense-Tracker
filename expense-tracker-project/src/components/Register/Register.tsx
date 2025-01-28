@@ -34,14 +34,27 @@ const Register = () => {
                     setError(null);
                     setLoading(true);
                     const userCredentials = await registerUser(form?.emailAddress as string, form?.password as string);
-                    if (!userCredentials) throw new Error(`User with ${form?.emailAddress} email address could not be registered.`);
+                    if (typeof userCredentials === 'string') throw new Error(`Failed to register ${form?.emailAddress} user with authentication service.`);
                     const response = await checkIfUserExists(form?.username as string, form?.phoneNumber as string);
-                    if (typeof response === 'string') throw new Error('Error checking for existing user.');
+                    if (typeof response === 'string') {
+                        const result = handleUserDelete();
+                        if (typeof result === 'string') {
+                            throw new Error(`Failed to check if user exists in database.
+                                            ${result}`);
+                        } else {
+                            throw new Error(`Failed to check if user exists in database.`);
+                        }
+                    }
 
                     const [user, phone] = response;
                     if (user.exists() || phone.exists()) {
-                        handleUserDelete();
-                        throw new Error(`Existing username/phone number.`);
+                        const result = handleUserDelete();
+                        if (typeof result === 'string') {
+                            throw new Error(`User with that username/phone number already exists.
+                                            ${result}`);
+                        } else {
+                            throw new Error(`User with that username/phone number already exists.`);
+                        }
                     }
 
                     const status = await createUser({
@@ -67,8 +80,13 @@ const Register = () => {
                         setLoginState({ status: true, user: form?.emailAddress as string });
                         navigate('/home');
                     } else {
-                        handleUserDelete();
-                        throw new Error('Error creating user.');
+                        const result = handleUserDelete();
+                        if (typeof result === 'string') {
+                            throw new Error(`Failed at registering user in database.
+                                            ${result}`);
+                        } else {
+                            throw new Error(`Failed at registering user in database.`);
+                        }
                     }
                 } catch (error: any) {
                     setLoading(false);

@@ -69,21 +69,28 @@ const HomePrivate = () => {
                 setLoading(true);
                 const transactions = await getTransactions(isLoggedIn.user);
                 if (typeof transactions === 'string') throw new Error('Error fetching transactions.');
-                const exchangeRates = await getExchangeRates(settings?.currency as string);
-                if (!exchangeRates) throw new Error('Error fetching exchange rates.');
-                const updatedTransactions = transactions.map((transaction: FetchedTransaction) => {
-                    if (transaction.currency !== settings?.currency) {
-                        const exchangeRate = 1 / exchangeRates[transaction.currency];
-                        transaction.amount = transaction.amount * exchangeRate;  
-                        transaction.currency = settings?.currency as string;                       
-                    }
-                    return transaction;
+                const areExchangeRatesNeeded = transactions.some((transaction: FetchedTransaction) => {
+                    if (transaction.currency !== settings?.currency) return true;
+                    return false;
                 });
+                if (areExchangeRatesNeeded) {
+                    const exchangeRates = await getExchangeRates(settings?.currency as string);
+                    if (typeof exchangeRates === 'string') throw new Error('Error fetching exchange rates.');
+                    transactions.map((transaction: FetchedTransaction) => {
+                        if (transaction.currency !== settings?.currency) {
+                            const exchangeRate = 1 / exchangeRates[transaction.currency];
+                            transaction.amount = transaction.amount * exchangeRate;  
+                            transaction.currency = settings?.currency as string;                       
+                        }
+                        return transaction;
+                    });
+                }       
+                
                 const categories = await getCategories(isLoggedIn.user);
                 if (typeof categories === 'string') throw new Error('Error fetching categories.');
                 const payments = await getPayments();
                 if (typeof payments === 'string') throw new Error('Error fetching payments.');
-                setTransactions(updatedTransactions);
+                setTransactions(transactions);
                 setCategories(categories);
                 setPayments(payments);
                 setSuccessMessage('Data fetched successfully');

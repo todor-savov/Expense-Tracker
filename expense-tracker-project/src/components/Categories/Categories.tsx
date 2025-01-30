@@ -80,7 +80,7 @@ const Categories = () => {
                 setOnSaveError(null);
                 setFoundIcons([]);
                 const response = await searchIcons(searchTerm);
-                if (!response) throw new Error("Error fetching icons");
+                if (typeof response === 'string') throw new Error("Error fetching icons");
                 setFoundIcons(response.icons);
             } catch (error: any) {
                 setOnSaveError(error.message);

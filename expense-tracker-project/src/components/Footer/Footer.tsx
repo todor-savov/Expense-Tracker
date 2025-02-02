@@ -20,11 +20,11 @@ const Footer = () => {
                     </Box>
 
                     <Box className="footer-container-right">
-                        <Copyright /> 
-                        <Typography id='personal-name' variant="body2" color="inherit" align="center">
-                            2024 Todor Savov
-                        </Typography>
-                        
+                        <Box id='copyright-box'>
+                            <span id='year-span'> <Copyright fontSize="small" aria-label="menu" color="inherit" /> 2024 </span>
+                            <Typography id='author-name' variant="body2" color="inherit"> Todor Savov </Typography>
+                        </Box>
+                                                
                         <Tooltip title="GitHub" placement="top" arrow>
                             <IconButton
                                 component="a"

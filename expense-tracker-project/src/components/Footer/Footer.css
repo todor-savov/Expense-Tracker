@@ -1,6 +1,21 @@
+.footer-container-left {
+    display: flex;
+    flex-grow: 1;
+}
+
+.footer-container-left button {
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    padding: 0.3rem 0.4rem;
+}
+
+.footer-container-left button:hover {
+    scale: 1.2;
+}
+
 .footer-container-right {
     display: flex;
-    justify-content: flex-end;
     align-items: center;
 }
 
@@ -14,29 +29,55 @@
     scale: 1.2;
 }
 
-.footer-container-right svg {
-    font-size: 1rem;
+#copyright-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 0.2rem;
+    gap: 0.2rem;
 }
 
-#personal-name {
+#year-span {
+    display: flex;
+    align-items: center;
+    font-size: 0.8rem;
+    gap: 0.2rem;
+}
+
+#author-name {
     font-size: 0.6rem;
 }
 
-.footer-container-left {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    flex-grow: 1;
-    gap: 1rem;
+@media (min-width: 481px) and (max-width: 768px) {
+    .footer-container-left button {
+        font-size: 1.2rem;
+    }
+
+    #year-span, #author-name  {
+        font-size: 1rem;
+    }
 }
 
-.footer-container-left button {
-    font-size: 1rem;
-    font-family: 'Poppins', sans-serif;
-    padding: 0.5rem 1rem;
-    cursor: pointer;
+@media (min-width: 769px) and (max-width: 1024px) {
+    .footer-container-left button {
+        font-size: 1.2rem;
+    }
+
+    #year-span, #author-name {
+        font-size: 1rem;
+    }
 }
 
-.footer-container-left button:hover {
-    scale: 1.2;
+@media (min-width: 1025px) {
+    .footer-container-left {
+        gap: 2rem;
+    }
+
+    .footer-container-left button {
+        font-size: 1.2rem;
+    }
+
+    #year-span, #author-name {
+        font-size: 1rem;
+    }      
 }

@@ -8,14 +8,13 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-import { Badge, CircularProgress, Popover, Rating, Stack } from '@mui/material';
+import { Alert, Badge, CircularProgress, Popover, Rating, Snackbar, Stack } from '@mui/material';
 import { TextareaAutosize } from '@mui/base/TextareaAutosize';
 import MenuIcon from '@mui/icons-material/Menu';
 import { AccountCircle, Email, LoginOutlined, Logout, Settings } from '@mui/icons-material';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleCheck } from '@fortawesome/free-solid-svg-icons';
 import { signOutUser } from '../../service/authentication-service';
 import { addFeedback, getCategories, getFeedbacks, getTransactions, getUserDetails } from '../../service/database-service';
+import { FEEDBACK_MAX_CHARS } from '../../common/constants';
 import Navigation from '../Navigation/Navigation';
 import AuthContext from '../../context/AuthContext';
 import "./Header.css";
@@ -77,8 +76,9 @@ const Header = ({ from, isUserChanged, isLimitChanged }: HeaderProps) => {
   const [budgetNotifications, setBudgetNotifications] = useState<string[]>([]);
   const [showFeedbackForm, setShowFeedbackForm] = useState<boolean>(false);
   const [feedback, setFeedback] = useState<Feedback|null>(null);
-  const [isFeedbackSubmitted, setIsFeedbackSubmitted] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string|null>(null);
+  const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
   const [eligibleForFeedback, setEligibleForFeedback] = useState<boolean>(false);
   const navigate = useNavigate();
 
@@ -166,16 +166,20 @@ const Header = ({ from, isUserChanged, isLimitChanged }: HeaderProps) => {
 
   useEffect(() => {
     const addUserFeedback = async () => {
-      try {
+      try {                   
+        setError(null);             
         setLoading(true);
         const status = await addFeedback(feedback as Feedback);
-        if (status) throw new Error("Feedback not submitted!");
-        setLoading(false);
-        setIsFeedbackSubmitted(true);        
+        if (typeof status === 'string') throw new Error("Feedback not submitted!");
         setFeedback(null);
+        setLoading(false);                        
+        setOpenSnackbar(true);        
         setTimeout(() => handleLogout(), 2000);
       } catch (error: any) {
+        setFeedback(null);
         setLoading(false);
+        setError(error.message);
+        setOpenSnackbar(true);
         console.log(error.message);
       } 
     }
@@ -224,42 +228,65 @@ const Header = ({ from, isUserChanged, isLimitChanged }: HeaderProps) => {
     setShowFeedbackForm(false);
     const result = signOutUser();
     if (typeof result === 'string') return;
-    setLoginState({status: false, user: ''});
+    setLoginState({ status: false, user: '' });
     navigate('/');
+  }
+
+  const handleSnackbarClose = () => {
+    setOpenSnackbar(false);
   }
 
   const handleFeedbackSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setError(null);
+
     const rating = event.currentTarget['feedback-rating'].value;
-    const feedback = event.currentTarget['feedback-text'].value;    
+    const feedback = event.currentTarget['feedback-text'].value;
+
+    if (!rating) {      
+      setError('Please rate the app!');
+      setOpenSnackbar(true);
+      return;
+    }
+  
+    if (feedback.length > FEEDBACK_MAX_CHARS) {
+      setError(`Text cannot exceed ${FEEDBACK_MAX_CHARS} characters!`);
+      setOpenSnackbar(true);
+      return;
+    }
+
     setFeedback({ user: isLoggedIn.user, rating: parseInt(rating), feedback });
   }
 
   return (
-    isNavigationOpen ? <Navigation setIsNavigationOpen={setIsNavigationOpen} /> 
-    : <Box className='header-container'>
+    isNavigationOpen ? 
+      <Navigation setIsNavigationOpen={setIsNavigationOpen} /> 
+      : 
+      <Box className='header-container'>
         <AppBar position="sticky">
           <Toolbar>
-            {( isLoggedIn.status && from !== 'Reset Password') &&
-              <IconButton size="large" edge="start" color="inherit" aria-label="menu" onClick={() => setIsNavigationOpen(true)}>
+            {(isLoggedIn.status && from !== 'Reset Password') &&
+              <IconButton size="large" color="inherit" onClick={() => setIsNavigationOpen(true)}>
                 <MenuIcon />
               </IconButton>
             }
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}> {from} </Typography>
+
+            <Typography variant="h6" id='header-title'> {from} </Typography>
+
             {isLoggedIn.status ? 
               <div>
                 <span>
-                  <IconButton aria-describedby='simple-popover' aria-controls="simple-popover" onClick={handleBadgeClick}>
+                  <IconButton onClick={handleBadgeClick}>
                     <Badge color="secondary" badgeContent={activityNotifications.length + budgetNotifications.length} invisible={false}>
                       <Email sx={{color: 'white'}} />
                     </Badge>
                   </IconButton>
 
-                  <IconButton aria-label="account of current user" aria-controls="menu-appbar" aria-haspopup="true"
-                    onClick={handleMenuClick} color="inherit">
+                  <IconButton onClick={handleMenuClick}>
                       <img id="profile-photo" src={currentUser?.photo} alt="profile" />
                   </IconButton>
                 </span>
+
                 <Popover id='simple-popover' open={isBadgeOpen} anchorEl={anchorEl} onClose={handleBadgeClose}
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'right',}}
                     transformOrigin={{ vertical: 'top', horizontal: 'right',}}
@@ -267,67 +294,74 @@ const Header = ({ from, isUserChanged, isLimitChanged }: HeaderProps) => {
                     <Box className='notifications-box'>
                         {settings?.activityNotifications === 'enabled' ?                        
                           (activityNotifications.length ? 
-                            <Typography className='notification-item-critical'> {activityNotifications.toString()} </Typography>                      
-                          : <Typography className='notification-item'> There are no activity notifications. </Typography>)                          
-                        : <Typography className='notification-item'> Activity notifications are disabled. </Typography>}
+                            <Typography id='notification-item-critical'> {activityNotifications.toString()} </Typography>                      
+                          : <Typography id='notification-item'> There are no activity notifications. </Typography>)                          
+                        : <Typography id='notification-item'> Activity notifications are disabled. </Typography>}
                       
                         {settings?.budgetNotifications === 'enabled' ?
                           (budgetNotifications.length ? budgetNotifications.map((notification, index) =>
-                            <Typography key={index} className='notification-item-critical'> {notification} </Typography>)
-                          : <Typography className='notification-item'> There are no budget notifications. </Typography>)
-                        : <Typography className='notification-item'> Budget notifications are disabled. </Typography>}
+                            <Typography key={index} id='notification-item-critical'> {notification} </Typography>)
+                          : <Typography id='notification-item'> There are no budget notifications. </Typography>)
+                        : <Typography id='notification-item'> Budget notifications are disabled. </Typography>}
                     </Box>
                 </Popover>
-                <Menu id="menu-appbar" anchorEl={anchorEl} anchorOrigin={{vertical: 'bottom', horizontal: 'right',}} keepMounted
-                  transformOrigin={{vertical: 'top', horizontal: 'right',}} open={isMenuOpen} onClose={handleMenuClose}>                  
-                  <Box className='welcome-box'> <Typography component="span"> Welcome <strong>{currentUser?.firstName}</strong>! </Typography> </Box>          
-                  <MenuItem onClick={handleProfileClick}><AccountCircle sx={{marginRight: '7px'}} /> Profile </MenuItem>
-                  <MenuItem onClick={handleSettingsClick}><Settings sx={{marginRight: '7px'}} /> Settings </MenuItem>
-                  <MenuItem onClick={handleLogoutClick}><Logout sx={{marginRight: '7px'}} /> Logout </MenuItem>
+                
+                <Menu id="menu-appbar" open={isMenuOpen} anchorEl={anchorEl} onClose={handleMenuClose}
+                  anchorOrigin={{ vertical: 'bottom', horizontal: 'right',}}
+                  transformOrigin={{ vertical: 'top', horizontal: 'right',}}
+                >
+                  <Box className='welcome-box'>
+                    <Typography component="span"> Welcome <strong>{currentUser?.firstName}</strong>! </Typography>
+                  </Box>
+                  <MenuItem onClick={handleProfileClick}><AccountCircle className='menu-item-icon' /> Profile </MenuItem>
+                  <MenuItem onClick={handleSettingsClick}><Settings className='menu-item-icon' /> Settings </MenuItem>
+                  <MenuItem onClick={handleLogoutClick}><Logout className='menu-item-icon' /> Logout </MenuItem>
                 </Menu>
               </div>
               : ((from !== 'Login' && from !== 'Home') &&
-                  <IconButton size="large" aria-label="account of current user" aria-controls="menu-appbar" aria-haspopup="true"
-                    onClick={handleLoginClick} color="inherit">
+                  <IconButton size="large" color="inherit" onClick={handleLoginClick}>
                     <LoginOutlined />
-                  </IconButton>)
+                  </IconButton>
+                )
             }
           </Toolbar>
-        </AppBar>     
+        </AppBar>
 
         {showFeedbackForm && 
-          <div className="feedback-form-overlay">
-            <Box component="form" className="feedback-form" onSubmit={handleFeedbackSubmit}>
+          <Box className="feedback-form-overlay">
+            <Box component="form" onSubmit={handleFeedbackSubmit} className="feedback-form">            
               <Typography variant="h6"> Would you like to rate the app? </Typography>
-              <Rating name="feedback-rating" defaultValue={0} size="large" />          
-              <TextareaAutosize name="feedback-text" aria-label="minimum height" minRows={3} 
-                style={{ width: "100%", padding: "10px", borderRadius: "5px" }} 
-                placeholder="Share your feedback here... (optional)"                  
+
+              <Rating name="feedback-rating" size="large" defaultValue={0} />
+
+              <TextareaAutosize name="feedback-text" id='feedback-text-area' minRows={8} maxRows={14}
+                placeholder="Share your feedback here... (optional)"
               />
 
-              <div style={{ textAlign: "right" }}>
-                  {loading ? 
-                    <Stack sx={{ color: 'grey.500' }} spacing={2} direction="row">
-                      <CircularProgress color="success" />
-                    </Stack> 
-                  : (isFeedbackSubmitted ?                   
-                      <p>                    
-                        <FontAwesomeIcon icon={faCircleCheck} size="2xl" style={{color: "#1daa80", 
-                          marginRight: "0.7rem", marginTop: "0.5rem"}} 
-                        />
-                        Thank you! You will be logged out now...
-                      </p>                  
-                    : <div>
-                        <button type="submit">Submit</button>
-                        <button onClick={handleLogout} style={{ marginLeft: '10px' }}>Skip</button>
-                      </div>
-                    )
-                  }
-              </div>                        
+              <Typography id='feedback-max-chars'> {FEEDBACK_MAX_CHARS} characters max </Typography>
+
+              {loading ? 
+                  <Stack sx={{ color: 'grey.500' }} spacing={2} direction="row" id='spinning-circle'>
+                    <CircularProgress color="success" size='3rem' />
+                  </Stack> 
+                  : 
+                  <Box id='feedback-buttons'>
+                    <button type="submit">Submit</button>
+                    <button onClick={handleLogout}>Skip</button>
+                  </Box>
+              }                                                                                                              
             </Box>
-          </div>
+          </Box>
         }
-    </Box>
+
+        <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleSnackbarClose}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} 
+        >
+          <Alert onClose={handleSnackbarClose} severity={error ? 'error' : 'success'} variant="filled">
+            {error ? error : 'Thank you! Logging you out...'}
+          </Alert>
+        </Snackbar>
+      </Box>
   );
 }
 

@@ -18,7 +18,7 @@ const Navigation: React.FC<NavigationProps> = ({ setIsNavigationOpen }) => {
   const navigate = useNavigate();
 
   const DrawerList = (
-    <Box sx={{ width: 250 }} role="presentation" onClick={() => setIsNavigationOpen(false)} className="drawer-list">
+    <Box role="presentation" onClick={() => setIsNavigationOpen(false)} className="drawer-list">
         <List>
             <ListItem key={'Home'} disablePadding onClick={() => navigate('/home')}>
                 <ListItemButton>
@@ -59,7 +59,7 @@ const Navigation: React.FC<NavigationProps> = ({ setIsNavigationOpen }) => {
 
   return (
     <div>
-      <Drawer open={true} onClose={() => setIsNavigationOpen(false)}>
+      <Drawer anchor={'top'} open={true} onClose={() => setIsNavigationOpen(false)}>
         {DrawerList}
       </Drawer>
     </div>

@@ -5,22 +5,44 @@
     z-index: 50;
 }
 
+#header-title {
+    flex-grow: 1;
+}
+
+.notifications-box {
+    display: flex;
+    flex-direction: column;
+    margin: 0.3rem;
+    padding: 0.4rem;
+}
+
+#notification-item, #notification-item-critical {
+    font-size: 0.75rem;
+    padding: 0.5rem;
+    background-color: #f5f5f5;
+}
+
+#notification-item-critical {
+    color: rgb(174, 39, 39);
+}
+
 #profile-photo {
-    width: 30px;
-    height: 30px;
+    width: 2rem;
+    height: 2rem;
     border-radius: 50%;
 } 
 
+.menu-item-icon {
+    margin-right: 0.5rem;
+}
+
 .welcome-box {
    display: flex;
-   justify-content: center;
    margin: 0.4rem;
    padding: 0.5rem;
-   border-radius: 3px;
 }
 
 .welcome-box span {
-    color: #333;
     font-size: 0.9rem;
 }
 
@@ -39,39 +61,69 @@
 }
   
 .feedback-form {
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 1rem;
+    padding: 1.5rem;
+    gap: 1rem;
     background-color: #fff;
-    padding: 20px;
     border-radius: 10px;
-    width: 60%;
-    height: auto;
-    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3);
 }   
-  
+
+#feedback-text-area {
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 5px;
+}
+
+#feedback-max-chars {
+    font-size: 0.8rem;
+    font-style: italic;
+    color: red;
+}
+
+#feedback-buttons {
+    display: flex;
+    gap: 1rem;
+}
+
 .feedback-form button {
     background-color: #1976d2;
     color: white;
     border: none;
-    padding: 10px 20px;
+    padding: 0.5rem 1rem;
     cursor: pointer;
-    margin-top: 10px;
+    margin-top: 0.5rem;
 }
   
 .feedback-form button:hover {
     background-color: #155fa0;
 }
 
-.notifications-box {
-    display: flex;
-    flex-direction: column;
-    margin: 0.3rem;
-    padding: 0.4rem;
+@media (min-width: 481px) and (max-width: 768px) {
+    .feedback-form {
+        width: 75%;
+    }    
 }
 
-.notification-item, .notification-item-critical {
-    padding: 0.5rem;
-    background-color: #f5f5f5;
+@media (min-width: 769px) and (max-width: 1024px) {
+    #notification-item, #notification-item-critical {
+        font-size: 0.9rem;
+    }
+
+    .feedback-form {
+        width: 85%;
+    }
 }
 
-.notification-item-critical {
-    color: rgb(174, 39, 39);
+@media (min-width: 1025px) {  
+    #notification-item, #notification-item-critical {
+        font-size: 0.9rem;
+    }
+
+    .feedback-form {
+        width: 50%;
+    }   
 }

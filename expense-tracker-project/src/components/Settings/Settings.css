@@ -9,31 +9,45 @@
 .settings-form {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
     padding: 1rem;
+    gap: 1rem;
+}
+
+#settings-header {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
 }
 
 .form-group {
     display: flex;
     flex-direction: column;
-    align-items: center;
     border: 1px solid #ccc;
     border-radius: 5px;
     background-color: white;
     padding: 2rem;
-    gap: 0.5rem;
+    gap: 1rem;
 }
 
 #activity-notification-limit, #budget-notification-limit {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    background-color: white;
 }
 
-.notification-limit-input {
-    width: 4rem;
+.notification-limit-input {    
+    width: 4rem;    
+}
+
+#currency-select-box {
+    margin-top: 1rem;
+}
+
+#currency-select-dropdown {
+    margin: 0.2rem;
 }
 
 #update-settings-button {
@@ -48,25 +62,21 @@
     background-color: #0056b3;
 }
 
-@media (max-width: 768px) {
-    #update-settings-button {
-        width: 50%;
+@media (min-width: 481px) and (max-width: 768px) {
+    /* The page looks good on this screen size */    
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    #settings-header {
+        font-size: 2rem;
+    }
+
+    .form-group {
+        padding: 3rem;
+        gap: 2rem;
     }
 }
 
-#settings-header {
-    font-weight: bold;
-    margin-bottom: 1rem;
-}
-
-.switch {
-    margin: 0.5rem;
-}
-
-#currency-select {
-    margin-top: 1.5rem;
-}
-
-#currency-select-input {
-    margin: 0.2rem;
+@media (min-width: 1025px) { 
+    /* The page looks good on this screen size */
 }

@@ -31,7 +31,7 @@ const Settings = ({ isLimitChanged, setIsLimitChanged }: SettingsProps) => {
     const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
 
    useEffect(() => {    
-        if (!settings) setError('Error fetching user settings.');            
+        if (!settings) setError('Error fetching user settings.');
         else setSuccessMessage('Settings fetched successfully.');
         setOpenSnackbar(true);
 
@@ -49,7 +49,7 @@ const Settings = ({ isLimitChanged, setIsLimitChanged }: SettingsProps) => {
                 setLoading(true);
                 const response = await updateUserSettings(isLoggedIn.user, userSettings as UserSettings);
                 if (typeof response === 'string') throw new Error('Settings update has failed.');
-                setSuccessMessage('Settings have been updated successfully.'); 
+                setSuccessMessage('Settings updated successfully.'); 
                 setIsLimitChanged(!isLimitChanged); 
                 setSettings(userSettings);
             } catch (error: any) {
@@ -68,7 +68,7 @@ const Settings = ({ isLimitChanged, setIsLimitChanged }: SettingsProps) => {
         const activityNotificationLimit: number = +e.currentTarget['activity-notification-limit']?.value;
         const budgetNotificationLimit: number = +e.currentTarget['budget-notification-limit']?.value;
 
-        if (activityNotificationLimit) {
+        if (activityNotifications) {
             if (!Number.isInteger(activityNotificationLimit) || activityNotificationLimit < 1 || activityNotificationLimit > 365) {
                 setOnSaveError('Inactivity days must be an integer between 1 and 365.');
                 setOpenSnackbar(true);
@@ -76,9 +76,9 @@ const Settings = ({ isLimitChanged, setIsLimitChanged }: SettingsProps) => {
             }
         }
 
-        if (budgetNotificationLimit) {
+        if (budgetNotifications) {
             if (!Number.isInteger(budgetNotificationLimit) || budgetNotificationLimit < 1 || budgetNotificationLimit > 100) {
-                setOnSaveError('Budget notification limit must be an integer between 1 and 100.');
+                setOnSaveError('Budget limit must be an integer between 1 and 100.');
                 setOpenSnackbar(true);
                 return;
             }            
@@ -112,7 +112,7 @@ const Settings = ({ isLimitChanged, setIsLimitChanged }: SettingsProps) => {
                     
                     <FormGroup className="form-group">
                         <FormControlLabel control={
-                            <Switch checked={activityNotifications} onChange={(e) => setActivityNotifications(e.target.checked)} className="switch" />
+                            <Switch checked={activityNotifications} onChange={(e) => setActivityNotifications(e.target.checked)} />
                             } 
                             label="Enable activity notifications"
                         />
@@ -129,7 +129,7 @@ const Settings = ({ isLimitChanged, setIsLimitChanged }: SettingsProps) => {
                         } 
 
                         <FormControlLabel control={
-                            <Switch checked={budgetNotifications} onChange={(e) => setBudgetNotifications(e.target.checked)} className="switch" />
+                            <Switch checked={budgetNotifications} onChange={(e) => setBudgetNotifications(e.target.checked)} />
                             }
                             label="Enable budget notifications" 
                         />
@@ -145,10 +145,9 @@ const Settings = ({ isLimitChanged, setIsLimitChanged }: SettingsProps) => {
                             </Box>
                         }
 
-                        <FormControl id="currency-select">
-                            <InputLabel id="demo-simple-select-label">Currency</InputLabel>
-                            <Select labelId="demo-simple-select-label" id="currency-select-input" label="Currency" 
-                                value={currency} onChange={handleCurrencyChange}>
+                        <FormControl id="currency-select-box">
+                            <InputLabel>Currency</InputLabel>
+                            <Select id="currency-select-dropdown" label="Currency" value={currency} onChange={handleCurrencyChange}>
                                 <MenuItem value={"BGN"}>BGN</MenuItem>
                                 <MenuItem value={"EUR"}>EUR</MenuItem>
                                 <MenuItem value={"USD"}>USD</MenuItem>
@@ -167,7 +166,7 @@ const Settings = ({ isLimitChanged, setIsLimitChanged }: SettingsProps) => {
             }
 
             <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleSnackbarClose}
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} sx={{ marginBottom: 8 }}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
             >
                 <Alert onClose={handleSnackbarClose} severity={(error || onSaveError) ? 'error' : 'success'} variant="filled">
                     {error ? error : (onSaveError ? onSaveError : successMessage)}

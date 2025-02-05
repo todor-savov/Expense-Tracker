@@ -233,7 +233,7 @@ const Profile = ({ isUserChanged, setIsUserChanged }: ProfileProps) => {
         const file: File|null = (fileInputRef.current?.files) ? fileInputRef.current.files[0] : null;
 
         if (file?.type !== 'image/jpeg' && file?.type !== 'image/png') {            
-            setOnSaveError('Invalid file type. Please upload a valid image file.');
+            setOnSaveError('Please upload a valid image file.');
             setOpenSnackbar(true);
             return;
         }
@@ -265,17 +265,17 @@ const Profile = ({ isUserChanged, setIsUserChanged }: ProfileProps) => {
                                             :
                                             <img src={newPhotoURL ? newPhotoURL : userDetails?.photo} alt="profile" onClick={() => fileInputRef.current?.click()} />
                                         }
-                                        <span className="change-photo-text">Change photo</span>
+                                        <span id="change-photo-text">Change photo</span>
                                     </div>
                                         
                                     <VisuallyHiddenInput type="file" id="file" name="file" accept="image/*" ref={fileInputRef} onChange={(event) => handleFileUpload(event)} />
 
                                     <TextField error={!!firstNameError} type="text" id="first-name" label='First Name'
-                                        defaultValue={userDetails?.firstName} helperText={firstNameError || "Editable"} required
+                                        defaultValue={userDetails?.firstName} helperText={firstNameError} required
                                     />
 
                                     <TextField error={!!lastNameError} type="text" id="last-name" label='Last Name'
-                                        defaultValue={userDetails?.lastName} helperText={lastNameError || "Editable"} required
+                                        defaultValue={userDetails?.lastName} helperText={lastNameError} required
                                     />
                                 </div>
 
@@ -288,7 +288,7 @@ const Profile = ({ isUserChanged, setIsUserChanged }: ProfileProps) => {
                                 />
 
                                 <TextField error={!!phoneError} type="number" id="phone" label="Phone Number"
-                                    defaultValue={userDetails?.phone} helperText={phoneError || "Editable"} required
+                                    defaultValue={userDetails?.phone} helperText={phoneError} required
                                 />
                             </div>
 
@@ -302,13 +302,13 @@ const Profile = ({ isUserChanged, setIsUserChanged }: ProfileProps) => {
                         </Box>
 
                         <Box component="form" noValidate autoComplete="off" onSubmit={handlePasswordChange}>
-                            <div className="password-fields">
+                            <div id="password-fields">
                                 <TextField error={!!oldPasswordError} type="password" id="old-password" label="Old Password"
-                                    helperText={oldPasswordError || "Editable"}
+                                    helperText={oldPasswordError}
                                 />
 
                                 <TextField error={!!newPasswordError} type="password" id="new-password" label="New Password"
-                                    helperText={newPasswordError || `Editable | ${PASSWORD_MIN_CHARS}-${PASSWORD_MAX_CHARS} symbols, ONE digit, letter AND a special symbol`}
+                                    helperText={newPasswordError || `${PASSWORD_MIN_CHARS}-${PASSWORD_MAX_CHARS} symbols, ONE digit, letter AND a special symbol`}
                                 />
                             </div>
                                     
@@ -325,7 +325,7 @@ const Profile = ({ isUserChanged, setIsUserChanged }: ProfileProps) => {
             }                                            
                         
             <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleSnackbarClose}
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} sx={{ marginBottom: 8 }}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
             >
                 <Alert onClose={handleSnackbarClose} severity={(error || onSaveError) ? 'error' : 'success'} variant="filled">
                     {error ? error : (onSaveError ? onSaveError : successMessage)}

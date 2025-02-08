@@ -1,91 +1,110 @@
 .overview-container, .progress-container {
     flex: 1;
-    display: grid;
-    grid-template-rows: 10% 10% 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     background-color: white;
     padding: 1rem;
 }
 
-.overview-container {
-    grid-template-columns: 50% 50%;    
+.switch-button {    
+    margin: 0.75rem;
 }
 
-.progress-container {
-    grid-template-columns: 100%;
-}
-
-.switch-button {
-    grid-row: 1 / 1;
-    grid-column: 1 / 1;
-    margin: 1rem;
+.MuiFormControlLabel-root {
+    margin: 0;
 }
 
 .overview-header, .progress-header {
-    grid-row: 2 / 2;
-    grid-column: 1 / 3;
     display: flex;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    justify-content: center; 
+    margin-bottom: 1rem;
+}
+
+#year-outer-tab, #month-outer-tab, #month-inner-tab {    
+    font-size: 0.85rem;
 }
 
 .scrollable-tabs {
-    max-width: 40vw;
+    margin-top: 0.5rem;
+    max-width: 75vw;
+}
+
+.error-message-box {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f5f5f5;
+    padding: 1rem;
 }
 
 .default-message-box {
-    flex: 1;
-    grid-row: 3 / 3;
-    grid-column: 1 / 3;
+    height: 100%;
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
     background-color: #f5f5f5;
 }
 
 .overview-content, .progress-content {
-    grid-row: 3 / 3;
-    grid-column: 1 / 3;
     display: flex;
+    flex-direction: column;
     justify-content: center;
 }
 
-.overview-content {   
-    gap: 3rem;
+.overview-content { 
+    gap: 1.5rem;
     margin: 0.5rem;
 }
 
 .progress-content {    
-    flex-direction: column;
-    align-items: center;
     border: 1px solid #e0e0e0;
     border-radius: 10px;
-    margin: 1.5rem;
 }
 
 .pie-container, .list-container {
-    width: 40rem;
-    grid-row: 3 / 3;
-    display: flex;   
+    display: flex;
+    flex-direction: column;
     justify-content: center;
+    align-items: center;
     border: 1px solid #e0e0e0;
     border-radius: 10px;
 }
 
 .pie-container {
-    grid-column: 1 / 1;
-    padding: 0.5rem;
+    height: 25rem;
+    padding: 1rem;
 }
 
 .list-container {
-    grid-column: 2 / 2;
-    flex-direction: column;
     overflow: auto;
 }
 
 #graph-info-text {
-    font-size: 1rem;
+    font-size: 0.85rem;
     font-style: italic;
     margin: 0.5rem;
+}
+
+#total-label, #category-label {
+    font-weight: bold;
+}
+
+#total-count, #category-count {
+    font-size: 0.85rem;
+    color: green;
+}
+
+#total-amount, #category-amount {
+    font-size: 0.85rem;
+}
+
+#total-percentage, #category-percentage {
+    font-size: 0.85rem;
+    color: red;
 }
 
 .custom-list-item .MuiListItemAvatar-root {
@@ -99,4 +118,29 @@
   
 .custom-list-item .MuiListItemText-root:last-child {
     text-align: right;
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+    /* The page looks fine on this screen width */    
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    /* The page looks fine on this screen width */
+}
+
+@media (min-width: 1025px) { 
+    .overview-container, .progress-container {
+        gap: 1rem;
+        padding: 2rem;
+    }
+
+    .overview-content {
+        flex-direction: row;
+        justify-content: space-evenly;
+    }
+    
+    .pie-container, .list-container {
+        width: 100%;
+        height: 30rem;
+    }        
 }

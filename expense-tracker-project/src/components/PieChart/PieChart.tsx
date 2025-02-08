@@ -22,7 +22,6 @@ const PieActiveArc: React.FC<PieActiveArcProps> = ({ data }) => {
           highlightScope: { faded: 'global', highlighted: 'item' },
           faded: { innerRadius: 30, additionalRadius: -30, color: 'gray' },
           innerRadius: 20,
-          outerRadius: 150,
           paddingAngle: 5,
           cornerRadius: 5,
           startAngle: -90,
@@ -33,8 +32,8 @@ const PieActiveArc: React.FC<PieActiveArcProps> = ({ data }) => {
       slotProps={{
         legend: {
           direction: 'column',
-          padding: 0,
           position: { vertical: 'bottom', horizontal: 'left' },
+          padding: 0,
         },
       }}
     />

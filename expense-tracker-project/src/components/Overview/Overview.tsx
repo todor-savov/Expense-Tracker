@@ -156,7 +156,7 @@ const Overview = () => {
     return (
     <> 
         {error ? 
-            <Box className="default-message-box">
+            <Box className="error-message-box">
                 <Typography>There was a problem loading your data. Please try again later.</Typography>
             </Box>
             : 
@@ -168,7 +168,11 @@ const Overview = () => {
                 (switchLabel === 'Period Overview' ? 
                     <Box className="overview-container">     
                         <FormGroup className='switch-button'>
-                            <FormControlLabel control={<Switch />} label={switchLabel} onChange={handleSwitchClick} />
+                            <FormControlLabel 
+                                control={<Switch />} 
+                                label={switchLabel} 
+                                onChange={handleSwitchClick} 
+                            />
                         </FormGroup>
                             
                         <Box className="overview-header">
@@ -177,39 +181,39 @@ const Overview = () => {
                                     <CircularProgress color="success" size='3rem' />
                                 </Stack>
                                 :
-                                <>
-                                    <Tabs value={outerValue} onChange={handleOuterChange}>
-                                        <Tab key={0} label="Year" onClick={() => setView("yearly")} sx={{ backgroundColor: outerValue === 0 ? 'lightblue' : 'inherit' }} />
-                                        <Tab key={1} label="Month" onClick={() => setView("monthly")} sx={{ backgroundColor: outerValue === 1 ? 'lightblue' : 'inherit' }} /> 
-                                    </Tabs>
+                                <Tabs value={outerValue} onChange={handleOuterChange}>
+                                    <Tab key={0} label={<Typography id='year-outer-tab'>{"Year"}</Typography>} onClick={() => setView("yearly")}
+                                        sx={{ backgroundColor: outerValue === 0 ? 'lightblue' : 'inherit' }} />
+                                    <Tab key={1} label={<Typography id='month-outer-tab'>{"Month"}</Typography>} onClick={() => setView("monthly")}
+                                        sx={{ backgroundColor: outerValue === 1 ? 'lightblue' : 'inherit' }} /> 
+                                </Tabs>                                   
+                            }
 
-                                    {view && 
-                                        <Tabs value={innerValue} variant="scrollable" scrollButtons allowScrollButtonsMobile aria-label="scrollable force tabs example" onChange={handleInnerChange}
-                                            sx={{ [`& .${tabsClasses.scrollButtons}`]: {'&.Mui-disabled': { opacity: 0.3 },},}} className='scrollable-tabs'>
-                                            {view === 'monthly' ? 
-                                                Array.from(
-                                                    new Set(transactions.map((transaction) => 
-                                                        new Date(transaction.date).toLocaleString('en-US', { month: 'long', year: 'numeric' })
-                                                        ))
-                                                    )
-                                                    .sort((a, b) => new Date(a).getTime() - new Date(b).getTime())
-                                                    .map((month, index) => 
-                                                        <Tab key={index} label={month} onClick={() => handleTabClick(month)} 
-                                                            sx={{ backgroundColor: innerValue === index ? 'lightblue' : 'inherit' }} />)
-                                                : 
-                                                Array.from(
-                                                    new Set(transactions.map((transaction) => 
-                                                        new Date(transaction.date).toLocaleString('en-US', { year: 'numeric' })
-                                                        ))
-                                                    )
-                                                    .sort((a, b) => parseInt(a) - parseInt(b))
-                                                    .map((year, index) => 
-                                                        <Tab key={index} label={year} onClick={() => handleTabClick(year)} 
-                                                            sx={{ backgroundColor: innerValue === index ? 'lightblue' : 'inherit' }} />)
-                                            }
-                                        </Tabs>
+                            {view && 
+                                <Tabs value={innerValue} variant="scrollable" scrollButtons allowScrollButtonsMobile aria-label="scrollable force tabs example" onChange={handleInnerChange}
+                                    sx={{ [`& .${tabsClasses.scrollButtons}`]: {'&.Mui-disabled': { opacity: 0.3 },},}} className='scrollable-tabs'>
+                                    {view === 'monthly' ? 
+                                        Array.from(
+                                            new Set(transactions.map((transaction) => 
+                                                new Date(transaction.date).toLocaleString('en-US', { month: 'long', year: 'numeric' })
+                                            ))
+                                        )
+                                        .sort((a, b) => new Date(a).getTime() - new Date(b).getTime())
+                                        .map((month, index) => 
+                                            <Tab key={index} label={<Typography id='month-inner-tab'>{month}</Typography>} onClick={() => handleTabClick(month)} 
+                                                sx={{ backgroundColor: innerValue === index ? 'lightblue' : 'inherit' }} />)
+                                    : 
+                                        Array.from(
+                                            new Set(transactions.map((transaction) => 
+                                                new Date(transaction.date).toLocaleString('en-US', { year: 'numeric' })
+                                            ))
+                                        )
+                                        .sort((a, b) => parseInt(a) - parseInt(b))
+                                        .map((year, index) => 
+                                            <Tab key={index} label={year} onClick={() => handleTabClick(year)} 
+                                                sx={{ backgroundColor: innerValue === index ? 'lightblue' : 'inherit' }} />)
                                     }
-                                </>
+                                </Tabs>
                             }
                         </Box>
 
@@ -229,12 +233,12 @@ const Overview = () => {
                                             <Avatar> <FunctionsIcon /> </Avatar>
                                         </ListItemAvatar>
                                         <ListItemText 
-                                            primary={<strong>Total</strong>}
-                                            secondary={`${filteredTransactions.length} transaction(s)`}
+                                            primary={<Typography id='total-label'>Total</Typography>}
+                                            secondary={<Typography id='total-count'>{`${filteredTransactions.length} transaction(s)`}</Typography>}
                                         />
                                         <ListItemText 
-                                            primary={`${settings?.currency === 'EUR' ? '€' : (settings?.currency === 'USD' ? '$' : 'BGN')} ${totalSum.toFixed(2)}`}        
-                                            secondary={`100%`} 
+                                            primary={<Typography id='total-amount'>{`${settings?.currency === 'EUR' ? '€' : (settings?.currency === 'USD' ? '$' : 'BGN')} ${totalSum.toFixed(2)}`}</Typography>}
+                                            secondary={<Typography id='total-percentage'>{`100%`}</Typography>}
                                         />
                                     </ListItem>
                                     
@@ -242,15 +246,18 @@ const Overview = () => {
                                         <ListItem key={index} className="custom-list-item">
                                             <ListItemAvatar> {getCategoryIcon(data.label, categories)} </ListItemAvatar>
                                             <ListItemText
-                                                primary={<strong>{data.label}</strong>}
-                                                secondary={`${filteredTransactions.reduce((acc, transaction) => {
-                                                            if (transaction.category === data.label) acc++;
-                                                                return acc;
-                                                            }, 0)} transaction(s)`}
+                                                primary={<Typography id='category-label'>{data.label}</Typography>}
+                                                secondary={<Typography id='category-count'>
+                                                            {`${filteredTransactions.reduce((acc, transaction) => {
+                                                                    if (transaction.category === data.label) acc++;
+                                                                    return acc;
+                                                                }, 0)} transaction(s)`
+                                                            }
+                                                            </Typography>}
                                             />
                                             <ListItemText 
-                                                primary={`${settings?.currency === 'EUR' ? '€' : (settings?.currency === 'USD' ? '$' : 'BGN')} ${data.value.toFixed(2)}`}                                                                                                            
-                                                secondary={`${((data.value / totalSum)*100).toFixed(1)}%`}
+                                                primary={<Typography id='category-amount'>{`${settings?.currency === 'EUR' ? '€' : (settings?.currency === 'USD' ? '$' : 'BGN')} ${data.value.toFixed(2)}`}</Typography>}                                                                                                            
+                                                secondary={<Typography id='category-percentage'>{`${((data.value / totalSum)*100).toFixed(1)}%`}</Typography>}
                                             />
                                         </ListItem>                             
                                     )}
@@ -263,21 +270,23 @@ const Overview = () => {
                         }
                     </Box>           
                     : 
-                    <div className='progress-container'>        
+                    <Box className='progress-container'>        
                         <FormGroup className='switch-button'>
-                            <FormControlLabel control={<Switch checked={switchLabel === 'Progress Over Time' ? true : false} />} 
-                                label={switchLabel} onChange={handleSwitchClick}                         
+                            <FormControlLabel 
+                                control={<Switch checked={switchLabel === 'Progress Over Time' ? true : false} />} 
+                                label={switchLabel} 
+                                onChange={handleSwitchClick}                         
                             />
                         </FormGroup>
 
                         <Progress transactions={transactions} timeSpan={timeSpan} setTimeSpan={setTimeSpan} />
-                    </div>
+                    </Box>
                 )
             )
         }
                
         <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleSnackbarClose}
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} sx={{ marginBottom: 8 }}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         >
             <Alert onClose={handleSnackbarClose} severity={error ? 'error' : 'success'} variant="filled">
                 {error ? error : successMessage}

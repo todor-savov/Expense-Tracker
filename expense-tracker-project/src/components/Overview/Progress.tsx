@@ -105,7 +105,7 @@ const Progress = ({ transactions, timeSpan, setTimeSpan }: ProgressProps) => {
     return (
         <>            
             <Box className="progress-header">
-                <FormControl sx={{ m: 1, minWidth: 200 }}>
+                <FormControl sx={{ minWidth: 200 }}>
                     <InputLabel>Time Span</InputLabel>
                     <Select label="time-span" value={timeSpan} onChange={handleChange}>
                         <MenuItem value={"yearly"}>Yearly</MenuItem>
@@ -143,7 +143,7 @@ const Progress = ({ transactions, timeSpan, setTimeSpan }: ProgressProps) => {
                                     fontSize: 14,
                                     fontWeight: 'bold',
                                     transform: 'translateY(5px)',
-                                },
+                                },                               
                             },
                         ]}                        
                                 
@@ -166,25 +166,25 @@ const Progress = ({ transactions, timeSpan, setTimeSpan }: ProgressProps) => {
                             data: data[category],
                             stack: category !== 'Total' ? 'total' : undefined,
                             area: category !== 'Total' ? true : false,
-                            showMark: true,
+                            showMark: true,                            
                         })) : []}                        
 
                         grid={{ horizontal: true }}
-                        width={900}
-                        height={450}
+                        height={550}
+                        margin={{ top: 75 }}
                                                     
                         slotProps={{
                             legend: {
                                 direction: 'row',
                                 position: { vertical: 'top', horizontal: 'middle' },
-                                padding: 0,
+                                padding: 3,
                                 itemMarkWidth: 15,
                                 itemMarkHeight: 10,
                                 markGap: 5,
-                                itemGap: 20,
+                                itemGap: 10,
                                 labelStyle: {
                                     fontSize: 12,
-                                }, 
+                                },                                 
                             }                            
                         }}
 

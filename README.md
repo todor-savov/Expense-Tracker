@@ -31,4 +31,7 @@ To run the project locally, follow these steps:
    ```sh
    npm install
 4. **Set up Firebase:**
+   *Create a Firebase project at Firebase Console.
+   *Enable Firestore and Authentication.
+   *Copy your Firebase config and create a .env file in the root directory:
    

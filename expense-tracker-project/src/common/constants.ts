@@ -35,5 +35,5 @@ export const ALPHA_NUMERIC_SPACE_REGEX = /^[a-zA-Z0-9\s]+$/;
 export const ALPHA_SPACE_REGEX = /^[a-zA-Z\s]+$/;
 export const LETTERS_ONLY_REGEX = /^[a-zA-Z]+$/;
 export const CATEGORY_NAME_MIN_LENGTH = 3;
-export const CATEGORY_NAME_MAX_LENGTH = 20;
+export const CATEGORY_NAME_MAX_LENGTH = 15;
 export const FEEDBACK_MAX_CHARS = 300;

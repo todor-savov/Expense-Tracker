@@ -33,7 +33,11 @@ To run the project locally, follow these steps:
    ```sh
    npm install
    ```
-4. **Set up Firebase environment variables:**
+4. **Create a Firebase project:**
+   - Go to [Firebase Console](https://console.firebase.google.com/) and create a new project.
+   - Enable **Authentication**, **Firestore Database**, and **Storage** from the Firebase dashboard.
+   - Generate Firebase credentials from **Project Settings > General > Your Apps > Config**.
+5. **Set up Firebase environment variables:**
    - Create a `.env.local` file in the root directory.
    - Add the following environment variables:
      ```sh
@@ -45,11 +49,11 @@ To run the project locally, follow these steps:
      REACT_APP_FIREBASE_APP_ID=your_app_id
      ```
    - **Ensure `.env.local` is added to `.gitignore` to prevent exposing credentials.**
-5. **Start the development server:**
+6. **Start the development server:**
    ```sh
    npm start
    ```
-6. Open [http://localhost:3000](http://localhost:3000) in your browser.
+7. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## 🚢 Deployment
 The application is deployed on **Vercel**. To deploy your own version:

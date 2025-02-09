@@ -15,7 +15,7 @@ The **Expense Tracker** is a web application built with **React, TypeScript, and
 ## 🛠 Tech Stack
 - **Frontend**: React, TypeScript, Material UI
 - **Backend & Database**: Firebase (Realtime Database, Authentication, Storage)
-- **Deployment**: Hosted on Vercel
+- **Deployment**: Hosted on Firebase Hosting
 
 ## 🚀 Installation
 To run the project locally, follow these steps:
@@ -36,7 +36,7 @@ To run the project locally, follow these steps:
    - Go to [Firebase Console](https://console.firebase.google.com/) and create a new project.
    - Enable **Authentication**, **Firebase Realtime Database**, and **Storage** from the Firebase dashboard.
    - Generate Firebase credentials from **Project Settings > General > Your Apps > Config**.
-   - 
+
 5. **Database Structure**
 
 Categories Collection

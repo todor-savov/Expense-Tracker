@@ -36,35 +36,89 @@ To run the project locally, follow these steps:
    - Go to [Firebase Console](https://console.firebase.google.com/) and create a new project.
    - Enable **Authentication**, **Firebase Realtime Database**, and **Storage** from the Firebase dashboard.
    - Generate Firebase credentials from **Project Settings > General > Your Apps > Config**.
-5. **Database structure**
-   ```sh
-   Users Collection (Sample Document)
+   - 
+5. **Database Structure**
+
+### Categories Collection
+```json
 {
-  "user_id": "12345",
-  "name": "John Doe",
-  "email": "johndoe@example.com",
-  "createdAt": "2025-01-01T12:00:00Z",
-  "profile": {
-    "age": 30,
-    "location": "New York"
+  "categories": {
+    "category_id": {
+      "id": "category_id",
+      "imgAlt": "image_alt_name",
+      "imgSrc": "image_source_url",
+      "type": "category_name",
+      "user": "category_owner"
+    }
   }
 }
-Transactions Collection (Sample Document)
+
 {
-  "transaction_id": "tx123",
-  "user_id": "12345",
-  "amount": 100,
-  "date": "2025-02-09T14:00:00Z",
-  "status": "completed"
+  "payments": {
+    "payment_id_1": {
+      "id": "payment_id_1",
+      "imgAlt": "cash-in-hand",
+      "imgSrc": "cash_icon_url",
+      "type": "Cash"
+    },
+    "payment_id_2": {
+      "id": "payment_id_2",
+      "imgAlt": "bank-cards",
+      "imgSrc": "card_icon_url",
+      "type": "Card"
+    }
+  }
 }
-Products Collection (Sample Document)
+
 {
-  "product_id": "prod987",
-  "name": "Product A",
-  "price": 29.99,
-  "category": "Electronics",
-  "stock": 50
+  "transactions": {
+    "transaction_id": {
+      "amount": "transaction_amount",
+      "category": "transaction_category",
+      "currency": "BGN|EUR|USD",
+      "date": "transaction_date",
+      "id": "transaction_id",
+      "name": "transaction_name",
+      "payment": "Cash|Card",
+      "receipt": "receipt_url",
+      "user": "transaction_owner"
+    }
+  }
 }
+
+{
+  "feedbacks": {
+    "-OIf2yA5DlGJd3ie8_8u": {
+      "feedback": "Very good.",
+      "id": "-OIf2yA5DlGJd3ie8_8u",
+      "rating": 3,
+      "user": "todor.savov@abv.bg"
+    }
+  }
+}
+
+{
+  "users": {
+    "username_id": {
+      "email": "user_email_address",
+      "firstName": "user_first_name",
+      "isBlocked": true,
+      "lastName": "user_last_name",
+      "phone": "user_phone_number",
+      "photo": "user_photo_url",
+      "role": "author",
+      "settings": {
+        "activityNotificationLimit": 1-365,
+        "activityNotifications": "enabled",
+        "budgetNotificationLimit": 1-100,
+        "budgetNotifications": "enabled",
+        "currency": "BGN|EUR|USD"
+      },
+      "username": "username_id"
+    }
+  }
+}
+
 7. **Set up Firebase environment variables:**
    - Create a `.env` file in the root directory.
    - Add the following environment variables (the example below uses Vite for project setup):

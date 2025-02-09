@@ -114,16 +114,16 @@ Users Collection
     "username_id": {
       "email": "user_email_address",
       "firstName": "user_first_name",
-      "isBlocked": true,
+      "isBlocked": true|false,
       "lastName": "user_last_name",
       "phone": "user_phone_number",
       "photo": "user_photo_url",
       "role": "author",
       "settings": {
         "activityNotificationLimit": 1-365,
-        "activityNotifications": "enabled",
+        "activityNotifications": "enabled|disabled",
         "budgetNotificationLimit": 1-100,
-        "budgetNotifications": "enabled",
+        "budgetNotifications": "enabled|disabled",
         "currency": "BGN|EUR|USD"
       },
       "username": "username_id"

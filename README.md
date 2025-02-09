@@ -36,7 +36,7 @@ To run the project locally, follow these steps:
    - Go to [Firebase Console](https://console.firebase.google.com/) and create a new project.
    - Enable **Authentication**, **Firebase Realtime Database**, and **Storage** from the Firebase dashboard.
    - Generate Firebase credentials from **Project Settings > General > Your Apps > Config**.
-   - 
+
 5. **Database Structure**
 
 Categories Collection

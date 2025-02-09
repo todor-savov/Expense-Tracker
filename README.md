@@ -54,7 +54,7 @@ Categories Collection
 }
 ```
 
-Payments Collection
+Payments Collection (this is the only collection that needs to be created manually in the database)
 ```json
 {
   "payments": {

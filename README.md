@@ -52,7 +52,10 @@ Categories Collection
     }
   }
 }
+```
 
+Payments Collection
+```json
 {
   "payments": {
     "payment_id_1": {
@@ -69,7 +72,10 @@ Categories Collection
     }
   }
 }
+```
 
+Transactions Collection
+```json
 {
   "transactions": {
     "transaction_id": {
@@ -85,7 +91,10 @@ Categories Collection
     }
   }
 }
+```
 
+Feedbacks collection
+```json
 {
   "feedbacks": {
     "feedback_id": {
@@ -96,7 +105,10 @@ Categories Collection
     }
   }
 }
+```
 
+Users Collection
+```json
 {
   "users": {
     "username_id": {
@@ -118,6 +130,7 @@ Categories Collection
     }
   }
 }
+```
 
 7. **Set up Firebase environment variables:**
    - Create a `.env` file in the root directory.

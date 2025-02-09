@@ -39,7 +39,7 @@ To run the project locally, follow these steps:
    - 
 5. **Database Structure**
 
-### Categories Collection
+Categories Collection
 ```json
 {
   "categories": {
@@ -88,11 +88,11 @@ To run the project locally, follow these steps:
 
 {
   "feedbacks": {
-    "-OIf2yA5DlGJd3ie8_8u": {
-      "feedback": "Very good.",
-      "id": "-OIf2yA5DlGJd3ie8_8u",
-      "rating": 3,
-      "user": "todor.savov@abv.bg"
+    "feedback_id": {
+      "feedback": "feedback_content",
+      "id": "feedback_id",
+      "rating": 1-5,
+      "user": "feedback_owner"
     }
   }
 }

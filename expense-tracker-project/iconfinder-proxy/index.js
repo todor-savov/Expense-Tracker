@@ -15,7 +15,7 @@ app.get('/api/icons', async (req, res) => {
       method: 'GET',
       headers: {
         'accept': 'application/json',
-        'Authorization': `Bearer TFSDEF1JlpHXluuAhZvOxRijfrEGZRE3mVm61M6ZEusHxRhVxTXDphHKp8N1baVk`
+        'Authorization': `Bearer ${import.meta.env.VITE_ICON_FINDER_API_KEY}`
       }
     });
 

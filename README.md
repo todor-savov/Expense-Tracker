@@ -36,7 +36,36 @@ To run the project locally, follow these steps:
    - Go to [Firebase Console](https://console.firebase.google.com/) and create a new project.
    - Enable **Authentication**, **Firebase Realtime Database**, and **Storage** from the Firebase dashboard.
    - Generate Firebase credentials from **Project Settings > General > Your Apps > Config**.
-5. **Set up Firebase environment variables:**
+5. **Database structure**
+   ```sh
+   Users Collection (Sample Document)
+{
+  "user_id": "12345",
+  "name": "John Doe",
+  "email": "johndoe@example.com",
+  "createdAt": "2025-01-01T12:00:00Z",
+  "profile": {
+    "age": 30,
+    "location": "New York"
+  }
+}
+Transactions Collection (Sample Document)
+{
+  "transaction_id": "tx123",
+  "user_id": "12345",
+  "amount": 100,
+  "date": "2025-02-09T14:00:00Z",
+  "status": "completed"
+}
+Products Collection (Sample Document)
+{
+  "product_id": "prod987",
+  "name": "Product A",
+  "price": 29.99,
+  "category": "Electronics",
+  "stock": 50
+}
+7. **Set up Firebase environment variables:**
    - Create a `.env` file in the root directory.
    - Add the following environment variables (the example below uses Vite for project setup):
      ```sh
@@ -50,11 +79,11 @@ To run the project locally, follow these steps:
      VITE_FIREBASE_MEASUREMENT_ID=your_measurement_id
      ```
    - **Ensure `.env` is added to `.gitignore` to prevent exposing credentials.**
-6. **Start the development server:**
+8. **Start the development server:**
    ```sh
    npm start
    ```
-7. Open [http://localhost:5173](http://localhost:5173) in your browser.
+9. Open [http://localhost:5173](http://localhost:5173) in your browser.
 
 ## 🚢 Deployment
 The application is deployed on **Vercel**. To deploy your own version:

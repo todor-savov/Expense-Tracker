@@ -84,7 +84,7 @@ const UploadReceipt: React.FC<UploadReceiptProps> = ({ setSalesReceipt, transact
                         </span>
                     }
                 >
-                    <VisuallyHiddenInput type="file" id="file" name="file" accept="image/*" ref={fileInputRef} onChange={(event) => handleUpload(event)} />
+                    <VisuallyHiddenInput type="file" id="file" name="file" accept="image/*" ref={fileInputRef} onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleUpload(event)} />
                 </Button>
             }            
             {receiptURL ? 

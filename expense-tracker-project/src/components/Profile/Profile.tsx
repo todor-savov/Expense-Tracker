@@ -268,7 +268,7 @@ const Profile = ({ isUserChanged, setIsUserChanged }: ProfileProps) => {
                                         <span id="change-photo-text">Change photo</span>
                                     </div>
                                         
-                                    <VisuallyHiddenInput type="file" id="file" name="file" accept="image/*" ref={fileInputRef} onChange={(event) => handleFileUpload(event)} />
+                                    <VisuallyHiddenInput type="file" id="file" name="file" accept="image/*" ref={fileInputRef} onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleFileUpload(event)} />
 
                                     <TextField error={!!firstNameError} type="text" id="first-name" label='First Name'
                                         defaultValue={userDetails?.firstName} helperText={firstNameError} required

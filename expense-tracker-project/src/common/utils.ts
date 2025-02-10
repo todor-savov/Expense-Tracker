@@ -1,6 +1,5 @@
 import { styled } from "@mui/material";
 import LoadTooltip from "../components/LoadTooltip/LoadTooltip";
-import { StyledComponent } from "@mui/system";
 
 interface Category {
     imgSrc: string;

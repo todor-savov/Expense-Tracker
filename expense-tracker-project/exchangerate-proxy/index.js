@@ -21,7 +21,7 @@ app.get('/api/exchange-rate', async (req, res) => {
       } */
 
       const rates = data.conversion_rates;
-      res.json({ rates });
+      res.json({ response });
     } catch (error) {
       res.status(500).send('Error fetching exchange rates.');
     }

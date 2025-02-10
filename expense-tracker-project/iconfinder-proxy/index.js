@@ -22,7 +22,7 @@ app.get('/api/icons', async (req, res) => {
     const data = await response.json();
     res.json(data);
   } catch (error) {
-    res.status(500).send('Error fetching icons from IconFinder API.');
+    res.status(500).send('Failed to fetch icons');
   }
 });
 

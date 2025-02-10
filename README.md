@@ -152,14 +152,6 @@ Users Collection
    ```
 9. Open [http://localhost:5173](http://localhost:5173) in your browser.
 
-## 🚢 Deployment
-The application is deployed on **Vercel**. To deploy your own version:
-
-1. **Push the latest changes to GitHub.**
-2. **Connect your repository to Vercel.**
-3. **Configure environment variables in Vercel.**
-4. **Deploy the project.**
-
 ## 🤝 Contributing
 Contributions are welcome! Feel free to open issues or submit pull requests.
 

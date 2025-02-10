@@ -152,7 +152,7 @@ Users Collection
    ```
 9. Open [http://localhost:5173](http://localhost:5173) in your browser.
     
-10. ## 🌐 Setting Up API Proxies (Optional)  
+## 🌐 Setting Up API Proxies (Optional)  
 
 To securely interact with external APIs like **Exchange Rate API** and **Icon Finder API**, this project includes two **proxy services** hosted on **Vercel**. Follow these steps to set up your own proxies:  
 

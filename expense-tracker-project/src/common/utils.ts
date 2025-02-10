@@ -1,5 +1,6 @@
 import { styled } from "@mui/material";
 import LoadTooltip from "../components/LoadTooltip/LoadTooltip";
+import { StyledComponent } from "@mui/system";
 
 interface Category {
     imgSrc: string;
@@ -31,7 +32,7 @@ export const getPaymentIcon = (payment: string, payments: Payment[]): JSX.Elemen
     }
 }
 
-export const VisuallyHiddenInput = styled('input')({
+export const VisuallyHiddenInput: any = styled('input')({
     clip: 'rect(0 0 0 0)',
     clipPath: 'inset(50%)',
     height: 1,

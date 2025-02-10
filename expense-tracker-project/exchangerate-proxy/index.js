@@ -13,15 +13,13 @@ app.get('/api/exchange-rate', async (req, res) => {
       const response = await fetch(`https://v6.exchangerate-api.com/v6/${process.env.VITE_EXCHANGE_RATE_API_KEY}/latest/${baseCurrency}`);
 
       const data = await response.json();
-
-    /*   console.log(data);
   
       if (data.result === 'error') {
         return res.status(500).json({ error: 'Failed to fetch exchange rates' });
-      } */
+      }
 
       const rates = data.conversion_rates;
-      res.json({ response });
+      res.json({ rates });
     } catch (error) {
       res.status(500).send('Error fetching exchange rates.');
     }

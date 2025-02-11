@@ -146,11 +146,12 @@ Users Collection
      VITE_FIREBASE_MEASUREMENT_ID=your_measurement_id
      ```
    - **Ensure `.env` is added to `.gitignore` to prevent exposing credentials.**
+     
 8. **Start the development server:**
    ```sh
    npm start
    ```
-9. Open [http://localhost:5173](http://localhost:5173) in your browser.
+9. **Open [http://localhost:5173](http://localhost:5173) in your browser.**
     
 ## 🌐 Setting Up API Proxies (Optional)  
 

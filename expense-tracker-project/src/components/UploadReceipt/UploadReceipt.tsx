@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faReceipt } from '@fortawesome/free-solid-svg-icons';
 import { Box, Button, CircularProgress, Stack } from '@mui/material';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFileUpload } from '@fortawesome/free-solid-svg-icons';
 import { uploadFile } from "../../service/storage-service.ts";
 import { VisuallyHiddenInput } from '../../common/utils.ts';
 import './UploadReceipt.css';
@@ -26,7 +26,8 @@ interface UploadReceiptProps {
     setSuccessMessage: (message: string|null) => void;
 }
 
-const UploadReceipt: React.FC<UploadReceiptProps> = ({ setSalesReceipt, transaction, setOnSaveError, setOpenSnackbar, setSuccessMessage }) => {
+const UploadReceipt: React.FC<UploadReceiptProps> = ({ setSalesReceipt, transaction, setOnSaveError, 
+                                                        setOpenSnackbar, setSuccessMessage }) => {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [fileToUpload, setFileToUpload] = useState<File|null>(null);
     const [receiptURL, setReceiptURL] = useState<string|null>(null);
@@ -77,13 +78,7 @@ const UploadReceipt: React.FC<UploadReceiptProps> = ({ setSalesReceipt, transact
                     <CircularProgress color="success" size='3rem' />
                 </Stack>
                 :
-                <Button component="label" role={undefined} tabIndex={-1}
-                    startIcon={
-                        <span>
-                            <FontAwesomeIcon icon={faReceipt} size="2xl" style={{color: "#74C0FC",}}/> Sales Receipt
-                        </span>
-                    }
-                >
+                <Button component='label' startIcon={<FontAwesomeIcon icon={faFileUpload} />} size="large">
                     <VisuallyHiddenInput type="file" id="file" name="file" accept="image/*" ref={fileInputRef} onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleUpload(event)} />
                 </Button>
             }            

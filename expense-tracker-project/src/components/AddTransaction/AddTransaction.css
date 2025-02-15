@@ -4,11 +4,13 @@
     justify-content: center;
     align-items: center;
     background-color: #fff;
+    padding: 1rem;
 }
 
 .expense-form {
+    width: 100%;
     display: flex;
-    gap: 1rem;
+    flex-direction: column;
     border: 1px solid #ccc;
     border-radius: 5px;
 }
@@ -16,31 +18,38 @@
 .input-fields {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 0.75rem;
     padding: 1rem;
+    gap: 0.75rem;
+}
+
+#receipt-accordion {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    margin: 1.5rem;
+    background-color: #f9f9f9;
 }
 
 .action-buttons {
     display: flex;
-    gap: 1rem;
+    justify-content: center;
     padding: 1rem;
+    gap: 1.5rem;
 }
 
 #add-expense, #cancel-expense {
-    width: 50%;
-    padding: 1rem;
+    width: 6rem;
     border: none;
     color: #fff;
     cursor: pointer;
 }
 
 #add-expense {
-    background-color: rgb(10, 154, 10);
+    background-color: #2c9ef6;
 }
 
 #add-expense:hover {
-    background-color: rgb(45, 187, 45);
+    background-color: #134b76;
 }
 
 #cancel-expense {
@@ -51,6 +60,42 @@
     background-color: #ec865b;
 }
 
-.MuiTextField-root {
-    width: 25ch;
+@media (min-width: 481px) and (max-width: 768px) {   
+    .expense-container {
+        padding: 2rem;
+    }
+     
+    .expense-form {
+        width: 90%;
+        padding: 1rem;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .expense-container {
+        padding: 2rem;
+    }
+
+    .expense-form {
+        width: 80%;
+        padding: 1rem;
+    }
+
+    .input-fields {
+        gap: 1rem;
+    }    
+}
+
+@media (min-width: 1025px) {     
+    .expense-form {
+        width: 50%;
+        padding: 1rem;
+    }
+
+    .form-input {
+        display: flex;
+        justify-content: space-evenly;
+        align-items: baseline;
+        gap: 1rem;
+    }
 }

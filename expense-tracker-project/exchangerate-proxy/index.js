@@ -10,7 +10,7 @@ app.get('/api/exchange-rate', async (req, res) => {
     const baseCurrency = req.query.baseCurrency || 'BGN';
   
     try {
-      const response = await fetch(`https://v6.exchangerate-api.com/v6/${process.env.VITE_EXCHANGE_RATE_API_KEY}/latest/${baseCurrency}`);
+      const response = await fetch(`https://v6.exchangerate-api.com/v6/${process.env.EXCHANGE_RATE_API_KEY}/latest/${baseCurrency}`);
       const data = await response.json();      
       const rates = data.conversion_rates;
       res.json(rates);

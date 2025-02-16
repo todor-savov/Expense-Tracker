@@ -7,8 +7,8 @@ The **Expense Tracker** is a web application built with **React, TypeScript, and
 - ✅ **User Authentication**: Secure login and signup using Firebase Authentication.
 - ✅ **Expense Tracking**: Add, edit, and delete expense entries.
 - ✅ **Categorization**: Assign categories to transactions for better organization.
-- ✅ **Analytics**: Visual representation of financial data using charts.
-- ✅ **Filter & Search**: Easily find specific transactions based on date, category, or amount.
+- ✅ **Graphical Analytics**: Visual representation of financial data using charts.
+- ✅ **Filter & Sort**: Easily find specific transactions based on date, category, or amount and sort them in ascending/descending order.
 - ✅ **Currency Support**: Select preferred currency for financial entries.
 - ✅ **Responsive Design**: Works seamlessly on desktop and mobile devices.
 
@@ -146,19 +146,38 @@ Users Collection
      VITE_FIREBASE_MEASUREMENT_ID=your_measurement_id
      ```
    - **Ensure `.env` is added to `.gitignore` to prevent exposing credentials.**
+     
 8. **Start the development server:**
    ```sh
    npm start
    ```
-9. Open [http://localhost:5173](http://localhost:5173) in your browser.
+9. **Open [http://localhost:5173](http://localhost:5173) in your browser.**
+    
+## 🌐 Setting Up API Proxies (Optional)  
 
-## 🚢 Deployment
-The application is deployed on **Vercel**. To deploy your own version:
+To securely interact with external APIs like **Exchange Rate API** and **Icon Finder API**, this project includes two **proxy services** hosted on **Vercel**. Follow these steps to set up your own proxies:  
 
-1. **Push the latest changes to GitHub.**
-2. **Connect your repository to Vercel.**
-3. **Configure environment variables in Vercel.**
-4. **Deploy the project.**
+1. **Obtain API Access**  
+   - Register for an account and retrieve your API credentials from:  
+     - [Exchange Rate API](https://www.exchangerate-api.com/)  
+     - [Icon Finder API](https://www.iconfinder.com/)
+2. **Create Two Vercel Projects**  
+   - In your **Vercel Dashboard**, create **two separate projects** for the proxies.
+   - Once created, Vercel will generate unique **web URL** for each project.  
+   - In each project's settings, set the **root directory** to match the corresponding **proxy subfolder** from the GitHub repository.
+   - Add the respective service API key as environment variable in the project's settings on Vercel
+
+3. **Configure the Proxy Code**  
+   - Inside each proxy subfolder, update the source code with your **API URL**.
+
+4. **Deploy the Proxies**  
+   - **Commit and push** the updated proxy code to GitHub.  
+   - Vercel will detect the changes and **automatically deploy** the proxies.  
+
+5. **Update the React App**  
+   - Locate the **service layer functions** in the React app and update them to use these new proxy URLs when communicating with Exchange Rate and IconFinder API services.
+
+Now, your React app can securely interact with Exchange Rate and Icon Finder APIs through these proxies, without disposing the API keys! 🚀  
 
 ## 🤝 Contributing
 Contributions are welcome! Feel free to open issues or submit pull requests.

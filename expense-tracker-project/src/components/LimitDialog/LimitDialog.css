@@ -3,14 +3,13 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 0.5rem;
-    margin: 1rem;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 0.5rem;
+    margin: 1rem;
 }
 
 #limit-dialog-title {
-    font-size: 1.5rem;
     font-weight: bold;
 }
 
@@ -18,20 +17,29 @@
     padding: 1rem;
 }
 
-#category-limit-input {
-    padding: 1rem;
-}
-
-#add-category-limit-button {
-    margin-top: 1rem;
-    padding: 0.5rem 1rem;
-    background-color: #4CAF50;
+#add-category-limit-button {   
     color: white;
+    background-color: #4CAF50;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
 }
 
 #add-category-limit-button:hover {
     background-color: #0e6913;
+    transform: scale(1.1);
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+    /* The dialog looks fine on this screen size */
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    /* The dialog looks fine on this screen size */
+}
+
+@media (min-width: 1025px) {
+    /* The dialog looks fine on this screen size */    
 }

@@ -158,62 +158,60 @@ const BudgetGoals = ({ isLimitChanged, setIsLimitChanged }: BudgetGoalsProps) =>
                     :
                     <Box className='budget-items-container'>
                         {categories.map((category: Category) => (
-                            <Box key={category.id} className='budget-item-outer-container'>
-                                <Box className='budget-item-inner-container'>
-                                    <Box id={category.limit ? 'budget-item-with-limit-header' : 'budget-item-without-limit-header'}>
-                                        <img src={category.imgSrc} alt={category.imgAlt} id={category.limit ? 'image-with-limit' : 'image-without-limit'} />
-                                        <Typography>{category.type}</Typography>
-                                    </Box>
-                                
-                                    {category.limit && 
-                                        <Box id='budget-item-with-limit-status'>
-                                            <CircularProgressbarWithChildren
-                                                value={category.costsPercentage as number}
-                                                styles={{              
-                                                    root: {
-                                                        display: 'flex',
-                                                        width: '6rem',
-                                                    },
-                                                    path: {
-                                                        stroke: 
-                                                            settings?.budgetNotificationLimit ?
-                                                            (category.costsPercentage as number > settings.budgetNotificationLimit ? 'red' : 'green')
-                                                            :
-                                                            (category.costsPercentage as number >= 100 ? 'red' : 'green')                                                                                                                                                    
-                                                    },
-                                                    trail: {
-                                                        stroke: '#d6d6d6',
-                                                    }                                                                                
-                                                }}
-                                            >
-                                                <Typography id='absolute-values'>{category.totalCosts?.toFixed(2)} / {category.limit}</Typography>
-                                                <Typography id={settings?.budgetNotificationLimit ?
-                                                    (category.costsPercentage as number > settings.budgetNotificationLimit ?
-                                                    'percentage-over-threshold' : 'percentage-below-threshold')
-                                                    : 
-                                                    (category.costsPercentage as number >= 100 ?
-                                                        'percentage-over-threshold' : 'percentage-below-threshold'
-                                                    )                                                                                        
-                                                }
-                                                >
-                                                    {category.costsPercentage?.toFixed(2)}%
-                                                </Typography>
-                                            </CircularProgressbarWithChildren>
-                                        </Box>
-                                    }
-
-                                    {(category.id === categoryForLimitUpdate?.id && loading) ? 
-                                        <Stack sx={{ color: 'grey.500' }} spacing={2} direction="row" id='spinning-circle'>
-                                            <CircularProgress color="success" size='3rem' />
-                                        </Stack>
-                                        :
-                                        (category.limit ?
-                                            <Button id='remove-limit-button' onClick={() => handleRemoveLimitClick(category)}> Remove Limit </Button>
-                                            :
-                                            <Button id='add-limit-button' onClick={() => handleAddLimitClick(category)}> Add Limit </Button>
-                                        )
-                                    }
+                            <Box key={category.id} className='budget-item-container'>
+                                <Box id={category.limit ? 'budget-item-with-limit-header' : 'budget-item-without-limit-header'}>
+                                    <img src={category.imgSrc} alt={category.imgAlt} id={category.limit ? 'image-with-limit' : 'image-without-limit'} />
+                                    <Typography>{category.type}</Typography>
                                 </Box>
+                                
+                                {category.limit && 
+                                    <Box id='budget-item-with-limit-status'>
+                                        <CircularProgressbarWithChildren
+                                            value={category.costsPercentage as number}
+                                            styles={{              
+                                                root: {
+                                                    display: 'flex',
+                                                    width: '6rem',
+                                                },
+                                                path: {
+                                                    stroke: 
+                                                        settings?.budgetNotificationLimit ?
+                                                        (category.costsPercentage as number > settings.budgetNotificationLimit ? 'red' : 'green')
+                                                        :
+                                                        (category.costsPercentage as number >= 100 ? 'red' : 'green')                                                                                                                                                    
+                                                },
+                                                trail: {
+                                                    stroke: '#d6d6d6',
+                                                }                                                                                
+                                            }}
+                                        >
+                                            <Typography id='absolute-values'>{category.totalCosts?.toFixed(2)} / {category.limit}</Typography>
+                                            <Typography id={settings?.budgetNotificationLimit ?
+                                                (category.costsPercentage as number > settings.budgetNotificationLimit ?
+                                                'percentage-over-threshold' : 'percentage-below-threshold')
+                                                : 
+                                                (category.costsPercentage as number >= 100 ?
+                                                    'percentage-over-threshold' : 'percentage-below-threshold'
+                                                )                                                                                        
+                                            }
+                                            >
+                                                {category.costsPercentage?.toFixed(2)}%
+                                            </Typography>
+                                        </CircularProgressbarWithChildren>
+                                    </Box>
+                                }
+
+                                {(category.id === categoryForLimitUpdate?.id && loading) ? 
+                                    <Stack sx={{ color: 'grey.500' }} spacing={2} direction="row" id='spinning-circle'>
+                                        <CircularProgress color="success" size='3rem' />
+                                    </Stack>
+                                    :
+                                    (category.limit ?
+                                        <Button id='remove-limit-button' onClick={() => handleRemoveLimitClick(category)}> Remove Limit </Button>
+                                        :
+                                        <Button id='add-limit-button' onClick={() => handleAddLimitClick(category)}> Add Limit </Button>
+                                    )
+                                }
                             </Box>
                         ))}
                     </Box>
@@ -230,7 +228,7 @@ const BudgetGoals = ({ isLimitChanged, setIsLimitChanged }: BudgetGoalsProps) =>
             }
             
             <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleSnackbarClose}
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} sx={{ marginBottom: 8 }}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
             >
                 <Alert onClose={handleSnackbarClose} severity={(error || validationError || onSaveError) ? 'error' : 'success'} variant="filled">
                     {error ? error : (validationError ? validationError : (onSaveError ? onSaveError : successMessage))}

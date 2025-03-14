@@ -128,7 +128,7 @@ const AllTransactions = () => {
     }
 
     return (
-        <Box className="all-transactions-container">
+        <Box id="all-transactions-container">
             {error ?
                 <Box className="message-box">
                     <Typography>There was a problem loading your data. Please try again later.</Typography>
@@ -154,7 +154,7 @@ const AllTransactions = () => {
             }
 
             <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleSnackbarClose}
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} sx={{ marginBottom: 8 }}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
             >
                 <Alert onClose={handleSnackbarClose} severity={(error || onSaveError) ? 'error' : 'success'} variant="filled">
                     {error ? error : (onSaveError ? onSaveError : successMessage)}
@@ -164,5 +164,5 @@ const AllTransactions = () => {
     );
 }
 
-export default AllTransactions; 
+export default AllTransactions;
 

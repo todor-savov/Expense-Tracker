@@ -1,61 +1,242 @@
-.all-transactions-container {
-    flex: 1;
+/* Stlying for the main containers */
+#all-transactions-container {
+    width: 100%;
     display: flex;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    background-color: #f5f5f5;
+    background-color: white;
 }
 
-.receipt-content {
+#sticky-table-container {
     display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+}
+
+#sticky-table {
+    table-layout: fixed;
+    overflow-x: auto;
+    margin-top: 1.25rem;
+}
+
+/* Styling for the search filters */
+#search-filters {
+    display: flex;
+    flex-direction: column;   
+    justify-content: center;
+    gap: 0.7rem;
+    margin: 0.5rem;
+}
+
+#search-text-field {
+    padding: 0.5rem;
+}
+
+#clear-all-button {
+    font-size: 0.9rem;
+}
+
+/* Styling for the table cells */
+#column-title {
+    font-size: 0.6rem;
+    font-weight: bold;
+}
+
+.column-title-button {
+    width: 2rem;
+    height: 2rem;
+}
+
+.cell-value, #no-receipt-text {
+    font-size: 0.5rem;
+}
+
+.cell-with-icon, #receipt-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+#receipt-icon { 
+    color: rgb(73, 134, 204);
+    transition: transform 0.2s ease-in-out;
+}
+
+#receipt-icon:hover {
+    transform: scale(1.25);
+}
+
+/* Styling for the edit/delete buttons */
+#edit-button, #delete-button {
+    font-size: 0.5rem;
+    padding: 0.5rem;
+    margin: 0.2rem;
+}
+
+/* Styling for the table footer elements - pagination, currency disclaimer text, total sum text and add button */
+#table-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+p.pagination-select-label, p.pagination-displayed-rows {
+    font-size: 1rem;
+    color: rgb(170, 13, 13);
+    margin-bottom: 0;
+}
+
+div.MuiTablePagination-select {
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+}
+
+#currency-disclaimer-text, #total-sum-text {
+    padding: 0.5rem;
+    font-size: 0.9rem;
+}
+
+#currency-disclaimer-text {
+    font-style: italic;
+}
+
+#add-transaction-button {
+    margin: 1rem;
+}
+
+/* Styling for the receipt modal */
+#receipt-content {
+    opacity: 1;
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 1;
     width: 100%;
     height: 100%;
+    z-index: 5000;
+    display: flex;
     justify-content: center;
     align-items: center;
     background-color: rgba(0, 0, 0, 0.5);
-    opacity: 1;
 }
   
-.receipt-content img {
+#receipt-content img {
     max-width: 75%;
     max-height: 75%;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
     background-color: white;
-    padding: 20px;
-    border-radius: 10px;
+    border-radius: 1rem;
+    padding: 1rem;
 }
 
-.receipt-content-hide {
+#receipt-content-hide {
     opacity: 0;
     position: fixed;
 }
 
-.receipt-icon {
-    cursor: pointer;
-    color: #74C0FC;
+@media (min-width: 481px) and (max-width: 768px) {  
+    #search-filters {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    #column-title {
+        font-size: 0.7rem;
+    }
+
+    .cell-value, #no-receipt-text {
+        font-size: 0.6rem;
+    }
+
+    .cell-with-icon, #receipt-icon {
+        width: 2rem;
+        height: 2rem;
+    }
+
+    #edit-button, #delete-button {
+        font-size: 0.6rem;
+    }
+
+    p.pagination-select-label, p.pagination-displayed-rows {
+        font-size: 1rem;
+    }
+
+    div.MuiTablePagination-select {
+        font-size: 1rem;
+    }
+
+    #currency-disclaimer-text, #total-sum-text {
+        font-size: 1rem;
+    }
 }
 
-.edit-button, .delete-button {
-    cursor: pointer;
-    padding: 10px;
-    margin-left: 10px;
+@media (min-width: 769px) and (max-width: 1024px) {
+    #search-filters {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    #column-title {
+        font-size: 0.9rem;
+    }
+
+    .cell-value, #no-receipt-text {
+        font-size: 0.85rem;
+    }
+
+    .cell-with-icon, #receipt-icon {
+        width: 2.5rem;
+        height: 2.5rem;
+    }   
+
+    #edit-button, #delete-button {
+        font-size: 0.85rem;
+    }
+
+    p.pagination-select-label, p.pagination-displayed-rows {
+        font-size: 1.25rem;
+    }
+
+    div.MuiTablePagination-select {
+        font-size: 1.25rem;
+    }
+
+    #currency-disclaimer-text, #total-sum-text {
+        font-size: 1.25rem;
+    } 
 }
 
-.pagination {
-    display: flex;
-    align-items: center;
-    justify-content: right;
-}
+@media (min-width: 1025px) {
+    #search-filters {
+        flex-direction: row;
+    }
 
-.pagination-select-label {
-    color: rgb(170, 13, 13);
-    margin-bottom: 0;
-}
+    #column-title {
+        font-size: 1rem;
+    }
 
-.pagination-displayed-rows {
-    color: rgb(170, 13, 13);
-    margin-bottom: 0;
+    .cell-value, #no-receipt-text {
+        font-size: 1rem;
+    }
+
+    .cell-with-icon, #receipt-icon {
+        width: 3rem;
+        height: 3rem;
+    }
+
+    #edit-button, #delete-button {
+        font-size: 1rem;
+    }
+
+    p.pagination-select-label, p.pagination-displayed-rows {
+        font-size: 1.4rem;
+    }
+
+    div.MuiTablePagination-select {
+        font-size: 1.4rem;
+    }
+
+    #currency-disclaimer-text, #total-sum-text {
+        font-size: 1.4rem;
+    }
 }

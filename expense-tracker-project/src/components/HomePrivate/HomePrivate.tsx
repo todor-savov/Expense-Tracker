@@ -2,17 +2,15 @@ import { useContext, useEffect, useState } from "react";
 import AuthContext from "../../context/AuthContext";
 import { getCategories, getPayments, getTransactions } from "../../service/database-service";
 import { getExchangeRates } from "../../service/exchange-rate-service";
-import { Alert, Box, Paper, Snackbar, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import { Alert, Box, Snackbar, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faReceipt } from "@fortawesome/free-solid-svg-icons";
-import { getCategoryIcon, getPaymentIcon } from "../../common/utils";
 import './HomePrivate.css';
+import '../AllTransactions/AllTransactions.css';
 
 interface Column {
     id: 'category' | 'date' | 'name' | 'amount' | 'payment' | 'receipt';
     label: string;
-    minWidth: number;
-    align?: 'left';
 }
 
 interface FetchedTransaction {
@@ -55,12 +53,12 @@ const HomePrivate = () => {
     console.log(loading);
 
     const columns: readonly Column[] = [
-        { id: 'category', label: 'Category', minWidth: 50 },
-        { id: 'date', label: 'Date', minWidth: 100 },
-        { id: 'name', label: 'Name', minWidth: 100 },
-        { id: 'amount', label: 'Amount', minWidth: 70 },
-        { id: 'payment', label: 'Payment', minWidth: 70 },
-        { id: 'receipt', label: 'Receipt', minWidth: 120 }
+        { id: 'category', label: 'Category' },
+        { id: 'date', label: 'Date' },
+        { id: 'name', label: 'Name' },
+        { id: 'amount', label: 'Amount' },
+        { id: 'payment', label: 'Payment' },
+        { id: 'receipt', label: 'Receipt' }
     ];
     
     useEffect(() => {
@@ -135,78 +133,100 @@ const HomePrivate = () => {
                             <img src={showReceipt} alt="receipt" />
                         </Box>
 
-                        <Paper>
-                            <TableContainer>
-                                <Table aria-label="sticky table">
-                                    <TableHead>
-                                        <TableRow>
-                                            {columns.map((column) => 
-                                                <TableCell key={column.id} align={column.align} style={{ minWidth: column.minWidth }}>
-                                                    <strong>{column.label}</strong>
-                                                </TableCell>
-                                            )}
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {transactions.sort((t1, t2) => {
-                                            const date1 = new Date(t1['date'] as string);
-                                            const date2 = new Date(t2['date'] as string);
-                                            return date1 < date2 ? 1 : -1;
-                                        })
-                                        .slice(0, 10)
-                                        .map((transaction) =>
-                                            <TableRow hover role="checkbox" tabIndex={-1} key={transaction.id}>
-                                                {columns.map((column) => {
-                                                    const value = transaction[column.id];
-                                                    if (column.id === 'receipt') {
-                                                        return <TableCell key={column.id} align={column.align}>
-                                                            {value === 'none' ? 'No receipt'
-                                                                : <FontAwesomeIcon icon={faReceipt} size="2xl" className="receipt-icon"
+                        <TableContainer id='sticky-table-container'>
+                            <Table id='sticky-table'>
+                                <TableHead>
+                                    <TableRow>
+                                        {columns.map((column) => 
+                                            <TableCell key={column.id} align='center'>
+                                                <Typography id='column-title'> {column.label} </Typography>
+                                            </TableCell>
+                                        )}
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {transactions.sort((t1, t2) => {
+                                        const date1 = new Date(t1['date'] as string);
+                                        const date2 = new Date(t2['date'] as string);
+                                        return date1 < date2 ? 1 : -1;
+                                    })
+                                    .slice(0, 10)
+                                    .map((transaction) =>
+                                        <TableRow key={transaction.id} style={{ cursor: 'pointer' }} hover>
+                                            {columns.map((column) => {
+                                                const value = transaction[column.id];
+                                                if (column.id === 'receipt') {
+                                                    return (
+                                                        <TableCell key={column.id} align='center'>
+                                                            {value === 'none' ?
+                                                                <Typography id='no-receipt-text'> None </Typography>                                                        
+                                                                : 
+                                                                <FontAwesomeIcon icon={faReceipt} id="receipt-icon"
                                                                     onClick={() => setShowReceipt(`${value}`)} />                         
                                                             }
-                                                            </TableCell>
-                                                    } else if (column.id === 'category') {
-                                                        return <TableCell key={column.id} align={column.align}>
-                                                                    {getCategoryIcon(`${value}`, categories)}
-                                                                </TableCell>
-                                                    } else if (column.id === 'date') {
-                                                        return <TableCell key={column.id} align={column.align}>
-                                                                    {new Date(value).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-                                                                </TableCell>
-                                                    } else if (column.id === 'amount') {                                                                                                                                  
-                                                        return <TableCell key={column.id} align={column.align}>
-                                                                    <span>
-                                                                        {`${transaction.currency === 'USD' ? '$' : 
-                                                                            (transaction.currency === 'EUR' ? '€' : 'BGN')} ${(value as number).toFixed(2)}
-                                                                        `}
-                                                                    </span>
-                                                                </TableCell>
-                                                    } else if (column.id === 'payment') {
-                                                        return <TableCell key={column.id} align={column.align}>
-                                                                    {getPaymentIcon(`${value}`, payments)}
-                                                                </TableCell>  
-                                                    } else {
-                                                        return <TableCell key={column.id} align={column.align}>
-                                                                    {value}
-                                                                </TableCell>
-                                                    }
-                                                })} 
-                                            </TableRow>)
-                                        }
-                                    </TableBody>
-                                </Table>
-                            </TableContainer>
+                                                        </TableCell>)
+                                                } else if (column.id === 'category') {
+                                                    return (
+                                                        <TableCell key={column.id} align='center'>
+                                                            <Tooltip title={value} placement="bottom" arrow>
+                                                                <img 
+                                                                    src={categories.find((cat) => cat.type === value)?.imgSrc}
+                                                                    alt={categories.find((cat) => cat.type === value)?.imgAlt}
+                                                                    className='cell-with-icon' 
+                                                                />
+                                                            </Tooltip>
+                                                        </TableCell>)
+                                                } else if (column.id === 'date') {
+                                                    return (
+                                                        <TableCell key={column.id} align='center'>
+                                                            <Box className='cell-value'>
+                                                                {new Date(value).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                                                            </Box>
+                                                        </TableCell>)
+                                                } else if (column.id === 'amount') {                                                                                                                                
+                                                    return (
+                                                        <TableCell key={column.id} align='center'>
+                                                            <Box className='cell-value'>
+                                                                {`${transaction.currency === 'USD' ? '$' : 
+                                                                    (transaction.currency === 'EUR' ? '€' : 'BGN')} ${(value as number).toFixed(2)}
+                                                                `}
+                                                            </Box>
+                                                        </TableCell>)
+                                                } else if (column.id === 'payment') {
+                                                    return (
+                                                        <TableCell key={column.id} align='center'>
+                                                            <Tooltip title={value} placement="bottom" arrow>
+                                                                <img
+                                                                    src={payments.find((pay) => pay.type === value)?.imgSrc}
+                                                                    alt={payments.find((pay) => pay.type === value)?.imgAlt}
+                                                                    className='cell-with-icon'
+                                                                />
+                                                            </Tooltip>
+                                                        </TableCell>)
+                                                } else {
+                                                    return (
+                                                        <TableCell key={column.id} align='center'>
+                                                            <Box className='cell-value'>
+                                                                {value}
+                                                            </Box>
+                                                        </TableCell>)
+                                                }
+                                            })} 
+                                        </TableRow>)
+                                    }
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
 
-                            <Typography variant="h6" sx={{ fontSize: '16px', fontStyle: 'italic', padding: '10px' }}> 
-                                The values in the "Amount" column are in {settings?.currency} currency.
-                            </Typography>
-                        </Paper>
-                    </Box>                   
+                        <Typography id='currency-disclaimer-text'>
+                            The values in the "Amount" column are in {settings?.currency} currency.
+                        </Typography>
+                    </Box>
                 )                                                                
             }
 
             <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleSnackbarClose}
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} sx={{ marginBottom: 8 }}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
             >
                 <Alert onClose={handleSnackbarClose} severity={error ? 'error' : 'success'} variant="filled">
                     {error ? error : successMessage}

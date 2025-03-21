@@ -129,7 +129,7 @@ const HomePrivate = () => {
                     </Box>
                     :
                     <Box className="home-transactions-table">
-                        <Box className={showReceipt ? "receipt-content" : 'receipt-content-hide'} onClick={() => setShowReceipt('')}>
+                        <Box id={showReceipt ? "receipt-content" : 'receipt-content-hide'} onClick={() => setShowReceipt('')}>
                             <img src={showReceipt} alt="receipt" />
                         </Box>
 
@@ -139,7 +139,7 @@ const HomePrivate = () => {
                                     <TableRow>
                                         {columns.map((column) => 
                                             <TableCell key={column.id} align='center'>
-                                                <Typography id='column-title'> {column.label} </Typography>
+                                                <Typography id='home-private-column-title'> {column.label} </Typography>
                                             </TableCell>
                                         )}
                                     </TableRow>
@@ -161,7 +161,7 @@ const HomePrivate = () => {
                                                             {value === 'none' ?
                                                                 <Typography id='no-receipt-text'> None </Typography>                                                        
                                                                 : 
-                                                                <FontAwesomeIcon icon={faReceipt} id="receipt-icon"
+                                                                <FontAwesomeIcon icon={faReceipt} id="home-private-receipt-icon"
                                                                     onClick={() => setShowReceipt(`${value}`)} />                         
                                                             }
                                                         </TableCell>)
@@ -172,21 +172,21 @@ const HomePrivate = () => {
                                                                 <img 
                                                                     src={categories.find((cat) => cat.type === value)?.imgSrc}
                                                                     alt={categories.find((cat) => cat.type === value)?.imgAlt}
-                                                                    className='cell-with-icon' 
+                                                                    className='home-private-cell-with-icon' 
                                                                 />
                                                             </Tooltip>
                                                         </TableCell>)
                                                 } else if (column.id === 'date') {
                                                     return (
                                                         <TableCell key={column.id} align='center'>
-                                                            <Box className='cell-value'>
+                                                            <Box className='home-private-cell-value'>
                                                                 {new Date(value).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
                                                             </Box>
                                                         </TableCell>)
                                                 } else if (column.id === 'amount') {                                                                                                                                
                                                     return (
                                                         <TableCell key={column.id} align='center'>
-                                                            <Box className='cell-value'>
+                                                            <Box className='home-private-cell-value'>
                                                                 {`${transaction.currency === 'USD' ? '$' : 
                                                                     (transaction.currency === 'EUR' ? '€' : 'BGN')} ${(value as number).toFixed(2)}
                                                                 `}
@@ -199,14 +199,14 @@ const HomePrivate = () => {
                                                                 <img
                                                                     src={payments.find((pay) => pay.type === value)?.imgSrc}
                                                                     alt={payments.find((pay) => pay.type === value)?.imgAlt}
-                                                                    className='cell-with-icon'
+                                                                    className='home-private-cell-with-icon'
                                                                 />
                                                             </Tooltip>
                                                         </TableCell>)
                                                 } else {
                                                     return (
                                                         <TableCell key={column.id} align='center'>
-                                                            <Box className='cell-value'>
+                                                            <Box className='home-private-cell-value'>
                                                                 {value}
                                                             </Box>
                                                         </TableCell>)

@@ -1,3 +1,4 @@
+import React from "react";
 import { useContext, useEffect, useState } from "react";
 import AuthContext from "../../context/AuthContext";
 import { getCategories, getPayments, getTransactions } from "../../service/database-service";
@@ -128,17 +129,17 @@ const HomePrivate = () => {
                         <Typography>No transactions, categories or payment methods found.</Typography>                                       
                     </Box>
                     :
-                    <Box className="home-transactions-table">
+                    <React.Fragment>
                         <Box id={showReceipt ? "receipt-content" : 'receipt-content-hide'} onClick={() => setShowReceipt('')}>
                             <img src={showReceipt} alt="receipt" />
                         </Box>
 
-                        <TableContainer id='sticky-table-container'>
-                            <Table id='sticky-table'>
+                        <TableContainer id='home-private-sticky-table-container'>
+                            <Table id='home-private-sticky-table'>
                                 <TableHead>
                                     <TableRow>
                                         {columns.map((column) => 
-                                            <TableCell key={column.id} align='center'>
+                                            <TableCell key={column.id} align='left'>
                                                 <Typography id='home-private-column-title'> {column.label} </Typography>
                                             </TableCell>
                                         )}
@@ -157,7 +158,7 @@ const HomePrivate = () => {
                                                 const value = transaction[column.id];
                                                 if (column.id === 'receipt') {
                                                     return (
-                                                        <TableCell key={column.id} align='center'>
+                                                        <TableCell key={column.id} align='left'>
                                                             {value === 'none' ?
                                                                 <Typography id='no-receipt-text'> None </Typography>                                                        
                                                                 : 
@@ -167,7 +168,7 @@ const HomePrivate = () => {
                                                         </TableCell>)
                                                 } else if (column.id === 'category') {
                                                     return (
-                                                        <TableCell key={column.id} align='center'>
+                                                        <TableCell key={column.id} align='left'>
                                                             <Tooltip title={value} placement="bottom" arrow>
                                                                 <img 
                                                                     src={categories.find((cat) => cat.type === value)?.imgSrc}
@@ -178,14 +179,14 @@ const HomePrivate = () => {
                                                         </TableCell>)
                                                 } else if (column.id === 'date') {
                                                     return (
-                                                        <TableCell key={column.id} align='center'>
+                                                        <TableCell key={column.id} align='left'>
                                                             <Box className='home-private-cell-value'>
                                                                 {new Date(value).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
                                                             </Box>
                                                         </TableCell>)
                                                 } else if (column.id === 'amount') {                                                                                                                                
                                                     return (
-                                                        <TableCell key={column.id} align='center'>
+                                                        <TableCell key={column.id} align='left'>
                                                             <Box className='home-private-cell-value'>
                                                                 {`${transaction.currency === 'USD' ? '$' : 
                                                                     (transaction.currency === 'EUR' ? '€' : 'BGN')} ${(value as number).toFixed(2)}
@@ -194,7 +195,7 @@ const HomePrivate = () => {
                                                         </TableCell>)
                                                 } else if (column.id === 'payment') {
                                                     return (
-                                                        <TableCell key={column.id} align='center'>
+                                                        <TableCell key={column.id} align='left'>
                                                             <Tooltip title={value} placement="bottom" arrow>
                                                                 <img
                                                                     src={payments.find((pay) => pay.type === value)?.imgSrc}
@@ -205,7 +206,7 @@ const HomePrivate = () => {
                                                         </TableCell>)
                                                 } else {
                                                     return (
-                                                        <TableCell key={column.id} align='center'>
+                                                        <TableCell key={column.id} align='left'>
                                                             <Box className='home-private-cell-value'>
                                                                 {value}
                                                             </Box>
@@ -221,7 +222,7 @@ const HomePrivate = () => {
                         <Typography id='currency-disclaimer-text'>
                             The values in the "Amount" column are in {settings?.currency} currency.
                         </Typography>
-                    </Box>
+                    </React.Fragment>
                 )                                                                
             }
 

@@ -89,12 +89,25 @@
     #home-private-receipt-icon {
         width: 3.5rem;
         height: 3.5rem;
-    }      
+    }
 }
 
 @media (min-width: 1025px) {
+    #home-private-column-title {
+        font-size: 1.5rem;
+    }
 
+    .home-private-cell-value {   
+        font-size: 1.4rem;
+    }
 
-    
-   
+    .home-private-cell-with-icon {
+        width: 4.5rem;
+        height: 4.5rem;
+    }
+
+    #home-private-receipt-icon {
+        width: 4.5rem;
+        height: 4.5rem;
+    }   
 }

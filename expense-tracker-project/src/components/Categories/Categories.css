@@ -33,49 +33,39 @@
 }
 
 /* Styling for the add/edit category form */
-.category-details {
-    width: 30%;
+#category-form {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 16px; 
-    padding: 16px;
-    margin: 0 auto;
+    gap: 1rem; 
+    padding: 1rem;
     margin-bottom: 1.5rem;
     border: 1px solid #ccc; 
     border-radius: 8px; 
     background-color: white; 
 }
 
-.category-details .top-row {
+#top-row, #bottom-row {
     display: flex;
-    gap: 16px;
+    gap: 1rem;
     align-items: center;
 }
 
-.category-details .bottom-row {
-    display: flex;
-    gap: 16px; 
+#category-form img {
+    width: 6rem; 
 }
 
-.category-details img {
-    width: 100px; 
-    height: auto;
-}
-
-.bottom-row img {
-    width: 40px; 
-    height: auto;
+#bottom-row img {
+    width: 2.3rem;
 }
 
 .icon-placeholder {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    width: 40%;
+    padding: 0.75rem;
     border: 2px dashed #ccc;
-    border-radius: 10px;
+    border-radius: 1rem;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }

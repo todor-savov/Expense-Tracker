@@ -1,35 +1,43 @@
 /* Styling for the main containers */
-.categories-box {
-    flex: 1;
+#categories-box {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
     background-color: white;
 }
 
+#page-title {
+    font-size: 1.4rem;
+    margin-top: 1rem;
+}
+
 .categories-list {
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 1.25rem;
     padding: 1.5rem !important;
 }
 
 .category-item {
+    max-width: calc(80% - 1rem);
     display: flex;
-    gap: 1rem;
-    padding: 1.5rem !important;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem !important;
     border: 1px solid #bab9b9;
     border-radius: 5px;
     cursor: pointer;
 }
 
-.categories-list img {
-    width: 4rem;
-    height: 4rem;
+.category-item img {
+    width: 3rem;
+    height: 3rem;
 }
 
 .category-title {
-    font-size: 1.25rem;
+    font-size: 1rem;
 }
 
 /* Styling for the add/edit category form */
@@ -120,4 +128,73 @@
 
 .icon-grid img:hover {
     transform: scale(1.15);
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+    #page-title {
+        font-size: 1.6rem;
+    }
+
+    .categories-list {
+        gap: 1.5rem;
+    }
+
+    .category-item {
+        max-width: calc(50% - 1rem);
+    }
+
+    .category-item img {
+        width: 4rem;
+        height: 4rem;
+    }
+
+    .category-title {
+        font-size: 1.2rem;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {    
+    #page-title {
+        font-size: 1.8rem;
+    }
+
+    .categories-list {
+        gap: 2rem;
+    }
+
+    .category-item {
+        max-width: calc(33% - 1rem);
+    }
+
+    .category-item img {
+        width: 5rem;
+        height: 5rem;
+    }
+
+    .category-title {
+        font-size: 1.4rem;
+    }
+}
+
+@media (min-width: 1025px) { 
+    #page-title {
+        font-size: 2rem;
+    }
+
+    .categories-list {
+        gap: 2.5rem;
+    }
+
+    .category-item {
+        max-width: calc(25% - 1rem);
+    }
+
+    .category-item img {
+        width: 6rem;
+        height: 6rem;
+    }
+
+    .category-title {
+        font-size: 1.6rem;
+    }
 }

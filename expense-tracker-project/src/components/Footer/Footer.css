@@ -4,7 +4,7 @@
 }
 
 .footer-container-left button {
-    font-size: 1rem;
+    font-size: 1.25rem;
     font-family: 'Poppins', sans-serif;
     cursor: pointer;
     padding: 0.3rem 0.4rem;
@@ -40,31 +40,42 @@
 #year-span {
     display: flex;
     align-items: center;
-    font-size: 0.8rem;
     gap: 0.2rem;
 }
 
-#author-name {
+#year-span, #author-name {
     font-size: 0.6rem;
+}
+
+#github-icon, #linkedin-icon, #email-contact-icon {
+    font-size: 1.5rem;
 }
 
 @media (min-width: 481px) and (max-width: 768px) {
     .footer-container-left button {
-        font-size: 1.2rem;
+        font-size: 1.5rem;
     }
 
     #year-span, #author-name  {
         font-size: 1rem;
     }
+
+    #github-icon, #linkedin-icon, #email-contact-icon {
+        font-size: 1.8rem;
+    }
 }
 
 @media (min-width: 769px) and (max-width: 1024px) {
     .footer-container-left button {
-        font-size: 1.2rem;
+        font-size: 1.75rem;
     }
 
     #year-span, #author-name {
-        font-size: 1rem;
+        font-size: 1.1rem;
+    }
+
+    #github-icon, #linkedin-icon, #email-contact-icon {
+        font-size: 2rem;
     }
 }
 
@@ -74,10 +85,14 @@
     }
 
     .footer-container-left button {
-        font-size: 1.2rem;
+        font-size: 2rem;
     }
 
     #year-span, #author-name {
-        font-size: 1rem;
+        font-size: 1.2rem;
     }      
+
+    #github-icon, #linkedin-icon, #email-contact-icon {
+        font-size: 2.5rem;
+    }
 }

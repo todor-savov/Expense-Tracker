@@ -8,7 +8,7 @@ const Footer = () => {
 
     return (
         <footer>
-            <AppBar position="static">
+            <AppBar position="static" id='page-footer'>
                 <Toolbar>
                     <Box className="footer-container-left">
                         <IconButton color="inherit" aria-label="menu" onClick={() => navigate('/about')}>
@@ -21,7 +21,7 @@ const Footer = () => {
 
                     <Box className="footer-container-right">
                         <Box id='copyright-box'>
-                            <span id='year-span'> <Copyright fontSize="small" aria-label="menu" color="inherit" /> 2024 </span>
+                            <span id='year-span'> <Copyright color="inherit" /> 2024 </span>
                             <Typography id='author-name' variant="body2" color="inherit"> Todor Savov </Typography>
                         </Box>
                                                 
@@ -33,7 +33,7 @@ const Footer = () => {
                                 aria-label="GitHub"
                                 rel="noopener noreferrer"
                             >
-                                <GitHub fontSize="medium" />
+                                <GitHub id='github-icon' />
                             </IconButton>
                         </Tooltip>
 
@@ -45,7 +45,7 @@ const Footer = () => {
                                 aria-label="LinkedIn"
                                 rel="noopener noreferrer"
                             >
-                                <LinkedIn fontSize="medium" />
+                                <LinkedIn id='linkedin-icon' />
                             </IconButton>
                         </Tooltip>
 
@@ -55,7 +55,7 @@ const Footer = () => {
                                 href="mailto:todor.savov@abv.bg"
                                 aria-label="Email"
                             >
-                                <Email fontSize="medium" />
+                                <Email id='email-contact-icon' />
                             </IconButton>
                         </Tooltip>
                     </Box>

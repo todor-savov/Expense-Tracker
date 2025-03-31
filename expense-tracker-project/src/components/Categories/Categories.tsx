@@ -264,7 +264,7 @@ const Categories = () => {
                             <List className="categories-list">                            
                                 {categories.map((category) => (
                                     <React.Fragment key={category.id}>
-                                        <Tooltip title={"Click to edit/delete this category"} arrow>
+                                        <Tooltip title={<Typography id='tooltip-text'> Click to edit/delete this category </Typography>} arrow>
                                             <ListItem onClick={(event) => handleCategoryItemClick(event, category.type)} className="category-item">
                                                 <ListItemAvatar>
                                                     <img src={category.imgSrc} alt={category.imgAlt} />
@@ -281,16 +281,18 @@ const Categories = () => {
                                             anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
                                             transformOrigin={{ vertical: 'bottom', horizontal: 'center' }}                                        
                                         >
-                                            <Tooltip title="Edit" arrow>
-                                                <Button onClick={() => handleEdit(category)}>
-                                                    <FontAwesomeIcon icon={faPenToSquare} size="lg" />
-                                                </Button>
-                                            </Tooltip>
-                                            <Tooltip title="Delete" arrow>
-                                                <Button onClick={() => setDialog({ open: true, id: category.id })}>
-                                                    <FontAwesomeIcon icon={faTrashCan} size="lg" />
-                                                </Button>
-                                            </Tooltip>
+                                            <Box className='popover-buttons-container'>
+                                                <Tooltip title={<Typography id='tooltip-text'> Edit </Typography>} arrow>
+                                                    <Button onClick={() => handleEdit(category)}>
+                                                        <FontAwesomeIcon icon={faPenToSquare} className='popover-button' />
+                                                    </Button>
+                                                </Tooltip>
+                                                <Tooltip title={<Typography id='tooltip-text'> Delete </Typography>} arrow>
+                                                    <Button onClick={() => setDialog({ open: true, id: category.id })}>
+                                                        <FontAwesomeIcon icon={faTrashCan} className='popover-button' />
+                                                    </Button>
+                                                </Tooltip>
+                                            </Box>
                                         </Popover>                                        
                                     </React.Fragment>
                                 ))}
@@ -365,8 +367,8 @@ const Categories = () => {
                         <CircularProgress color="success" size='3rem' />
                     </Stack> 
                 : (!addCategoryMode && !editedCategory) && 
-                    <Button onClick={handleAddCategoryButtonClick} id='add-category-button'>
-                        <AddBox style={{fontSize: 40 }} />
+                    <Button onClick={handleAddCategoryButtonClick}>
+                        <AddBox id='add-category-button' />
                     </Button>
                 }        
                         

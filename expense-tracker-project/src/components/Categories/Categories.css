@@ -95,7 +95,7 @@
 
 /* Styling for the icon search functionality */
 .icon-search {
-    width: 90%;
+    width: 85%;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -170,7 +170,7 @@
     }
 
     .icon-search {
-        width: 80%;
+        width: 75%;
     }
 }
 
@@ -211,10 +211,6 @@
     #bottom-row img {
         width: 2.8rem;
     }  
-
-    .icon-search {
-        width: 85%;
-    }
 }
 
 @media (min-width: 1025px) { 

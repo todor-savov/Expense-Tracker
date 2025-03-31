@@ -1,6 +1,5 @@
-import { useContext, useEffect, useState } from "react";
-import { Alert, Avatar, Box, Button, CircularProgress, List, ListItem, ListItemAvatar, ListItemText, Modal, Snackbar, Stack, TextField, Tooltip, Typography } from "@mui/material";
-import { useMediaQuery } from '@mui/material';
+import React, { useContext, useEffect, useState } from "react";
+import { Alert, Box, Button, CircularProgress, List, ListItem, ListItemAvatar, ListItemText, Modal, Popover, Snackbar, Stack, TextField, Tooltip, Typography } from "@mui/material";
 import { AddBox } from "@mui/icons-material";
 import { GridAddIcon } from "@mui/x-data-grid";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -50,7 +49,8 @@ const Categories = () => {
     const [categoryToUpdate, setCategoryToUpdate] = useState<Category|null>(null);
     const [dialog, setDialog] = useState<Dialog>({ open: false, id: null });
     const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
-    const isMobile = useMediaQuery('(max-width:600px)');
+    const [selectedCategoryItem, setSelectedCategoryItem] = useState<string>("");
+    const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -229,14 +229,25 @@ const Categories = () => {
         setAddCategoryMode(false);
         setSelectedIcon(category.imgSrc);
         setEditedCategory(category);
+        handlePopoverClose();
     }  
 
     const handleSnackbarClose = () => {
         setOpenSnackbar(false);
     }
 
+    const handleCategoryItemClick = (event: React.MouseEvent<HTMLElement>, category: string) => {
+        setSelectedCategoryItem(category);
+        setAnchorEl(event.currentTarget);
+    }
+
+    const handlePopoverClose = () => {
+        setSelectedCategoryItem("");
+        setAnchorEl(null);
+    }
+
     return (
-            <Box className="categories-box">
+            <Box id="categories-box">
                 {error ?  
                     <Box className="message-box">
                         <Typography>There was a problem loading your data. Please try again later.</Typography>
@@ -246,40 +257,53 @@ const Categories = () => {
                         <Box className="message-box">
                             <Typography>No categories found.</Typography>
                         </Box>
-                        :                         
-                        <List className="categories-list">
-                            <Typography variant="h6"> Existing Categories </Typography>
+                        :       
+                        <>
+                            <Typography id='page-title'> Existing Categories </Typography>    
 
-                            {categories.map((category) => (
-                                <ListItem key={category.id} className={isMobile ? "category-item-mobile" : "category-item"}>
-                                    <ListItemAvatar>
-                                        <Avatar> <img src={category.imgSrc} alt={category.imgAlt} /> </Avatar>
-                                    </ListItemAvatar>
-                                    <ListItemText primary={<span> {category.type} </span>} />
+                            <List className="categories-list">                            
+                                {categories.map((category) => (
+                                    <React.Fragment key={category.id}>
+                                        <Tooltip title={"Click to edit/delete this category"} arrow>
+                                            <ListItem onClick={(event) => handleCategoryItemClick(event, category.type)} className="category-item">
+                                                <ListItemAvatar>
+                                                    <img src={category.imgSrc} alt={category.imgAlt} />
+                                                </ListItemAvatar>
 
-                                    <Box sx={{ display: 'none', flexDirection: isMobile ? 'column' : 'row', gap: 1 }} className="category-buttons">
-                                        <Tooltip title="Edit" arrow>
-                                            <Button onClick={() => handleEdit(category)}>
-                                                <FontAwesomeIcon icon={faPenToSquare} size="lg" />
-                                            </Button>
+                                                <ListItemText primary={<span className="category-title"> {category.type} </span>} />                                   
+                                            </ListItem>
                                         </Tooltip>
-                                        <Tooltip title="Delete" arrow>
-                                            <Button onClick={() => setDialog({ open: true, id: category.id })}>
-                                                <FontAwesomeIcon icon={faTrashCan} size="lg" />
-                                            </Button>
-                                        </Tooltip>
-                                    </Box>
-                                </ListItem>
-                            ))}
-                        </List>                                                                     
+
+                                        <Popover
+                                            open={selectedCategoryItem === category.type}
+                                            anchorEl={anchorEl}
+                                            onClose={handlePopoverClose} 
+                                            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                                            transformOrigin={{ vertical: 'bottom', horizontal: 'center' }}                                        
+                                        >
+                                            <Tooltip title="Edit" arrow>
+                                                <Button onClick={() => handleEdit(category)}>
+                                                    <FontAwesomeIcon icon={faPenToSquare} size="lg" />
+                                                </Button>
+                                            </Tooltip>
+                                            <Tooltip title="Delete" arrow>
+                                                <Button onClick={() => setDialog({ open: true, id: category.id })}>
+                                                    <FontAwesomeIcon icon={faTrashCan} size="lg" />
+                                                </Button>
+                                            </Tooltip>
+                                        </Popover>                                        
+                                    </React.Fragment>
+                                ))}
+                            </List>
+                        </>
                     )
                 }                
 
-                {(addCategoryMode || editedCategory) &&                             
-                    <Box component="form" className="category-details" onSubmit={handleSubmit}>
-                        <Typography variant="h6"> {addCategoryMode ? "Add Category" : "Edit Category"} </Typography>
+                {(addCategoryMode || editedCategory) &&                          
+                    <Box component="form" onSubmit={handleSubmit} id="category-form">
+                        <Typography id='form-title'> {addCategoryMode ? "Add Category" : "Edit Category"} </Typography>
                         {/* First Row: Icon and Category Name */}
-                        <div className="top-row">
+                        <div id="top-row">
                             {addCategoryMode && (
                                 selectedIcon ? 
                                     <img src={selectedIcon} alt="category-icon" onClick={() => setShowIconSearch(true)} className="selected-icon" />
@@ -300,55 +324,54 @@ const Categories = () => {
                             }
 
                             {editedCategory &&
-                                <TextField type="text" id="category-name" label="Category Name" 
-                                    variant="outlined" required value={editedCategory.type} 
+                                <TextField type="text" id="category-name" label="Category Name" variant="outlined" required                                    
                                     onChange={(e) => setEditedCategory({ ...editedCategory, type: e.target.value })} 
+                                    value={editedCategory.type} 
                                 />
                             }
                         </div>
                         {/* Second Row: Buttons */}
-                        <div className="bottom-row">
+                        <div id="bottom-row">
                             <Button type="submit">
-                                <img width="100" height="100" src={SAVE_CATEGORY_ICON} alt="save-button"/>
+                                <img src={SAVE_CATEGORY_ICON} alt="save-button" />
                             </Button>
                             <Button onClick={handleCancelButtonClick}>
-                                <img width="48" height="48" src={CANCEL_CATEGORY_ICON} alt="cancel-button"/>
+                                <img src={CANCEL_CATEGORY_ICON} alt="cancel-button" />
                             </Button>
                         </div>
 
-                        <Modal aria-describedby="transition-modal-description" open={showIconSearch} onClose={() => setShowIconSearch(false)} 
-                            closeAfterTransition>
+                        <Modal open={showIconSearch} onClose={() => setShowIconSearch(false)} closeAfterTransition>
                             <Box className='icon-search'>
                                 <TextField type="text" fullWidth id="search-input" helperText={"Search for category icons (provided by IconFinder)"} 
                                     onChange={(e) => setSearchTerm(e.target.value)} label="Search" variant="outlined" />
 
-                                <Box id="transition-modal-description">
-                                    {foundIcons.length > 0 ?
-                                        <Box className="icon-grid">
-                                            {foundIcons.map((icon, index) => {
-                                                const imageURL = icon.raster_sizes[icon.raster_sizes.length - 1].formats[0].preview_url;
-                                                return <img key={index} onClick={() => handleIconSelect(imageURL)} src={imageURL} alt={icon.tags[0]} />
-                                            })}
-                                        </Box>
-                                        : 
-                                        'No icons found'
-                                    }
-                                </Box>
+                                {foundIcons.length > 0 ?
+                                    <Box className="icon-grid">
+                                        {foundIcons.map((icon, index) => {
+                                            const imageURL = icon.raster_sizes[icon.raster_sizes.length - 1].formats[0].preview_url;
+                                            return <img key={index} onClick={() => handleIconSelect(imageURL)} src={imageURL} alt={icon.tags[0]} />
+                                        })}
+                                    </Box>
+                                    : 
+                                    'No icons found'
+                                }
                             </Box>
                         </Modal>
                     </Box>
                 }                                         
 
                 {loading ?
-                        <Stack sx={{ color: 'grey.500' }} spacing={2} direction="row" id='spinning-circle'>
-                            <CircularProgress color="success" size='3rem' />
-                        </Stack> 
-                        : (!addCategoryMode && !editedCategory) && 
-                        <Button onClick={handleAddCategoryButtonClick} id='add-category-button'><AddBox style={{fontSize: 40 }} /></Button>
+                    <Stack sx={{ color: 'grey.500' }} spacing={2} direction="row" id='spinning-circle'>
+                        <CircularProgress color="success" size='3rem' />
+                    </Stack> 
+                : (!addCategoryMode && !editedCategory) && 
+                    <Button onClick={handleAddCategoryButtonClick} id='add-category-button'>
+                        <AddBox style={{fontSize: 40 }} />
+                    </Button>
                 }        
                         
                 <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleSnackbarClose}
-                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} sx={{ marginBottom: 8 }}
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                 >
                     <Alert onClose={handleSnackbarClose} severity={(error || onSaveError) ? 'error' : 'success'} variant="filled">
                         {error ? error : (onSaveError ? onSaveError : successMessage)}

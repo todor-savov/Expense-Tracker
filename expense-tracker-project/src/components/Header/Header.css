@@ -5,12 +5,28 @@
     z-index: 1500;
 }
 
+#page-header, #page-footer {
+    height: 4rem;
+    display: flex;
+    justify-content: center;
+}
+
 #simple-popover, #menu-appbar {
     z-index: 2000;
 }
 
 #header-title {
     flex-grow: 1;
+    font-size: 1.5rem;
+}
+
+#menu-icon, #email-icon, #profile-photo {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+#email-icon {
+    color: white;
 }
 
 .notifications-box {
@@ -30,9 +46,7 @@
     color: rgb(174, 39, 39);
 }
 
-#profile-photo {
-    width: 2rem;
-    height: 2rem;
+#profile-photo {    
     border-radius: 50%;
 } 
 
@@ -110,6 +124,19 @@
     .feedback-form {
         width: 75%;
     }    
+
+    #page-header, #page-footer {
+        height: 4.5rem;
+    }
+
+    #header-title {
+        font-size: 1.75rem;
+    }
+
+    #menu-icon, #email-icon, #profile-photo {
+        width: 2rem;
+        height: 2rem;
+    }
 }
 
 @media (min-width: 769px) and (max-width: 1024px) {
@@ -119,6 +146,19 @@
 
     .feedback-form {
         width: 85%;
+    }
+
+    #page-header, #page-footer {
+        height: 5rem;
+    }
+
+    #header-title {
+        font-size: 2rem;
+    }
+
+    #menu-icon, #email-icon, #profile-photo {
+        width: 2.5rem;
+        height: 2.5rem;
     }
 }
 
@@ -130,4 +170,17 @@
     .feedback-form {
         width: 50%;
     }   
+
+    #page-header, #page-footer {
+        height: 5.5rem;
+    }
+
+    #header-title {
+        font-size: 2.25rem;
+    }
+
+    #menu-icon, #email-icon, #profile-photo {
+        width: 3rem;
+        height: 3rem;
+    }
 }

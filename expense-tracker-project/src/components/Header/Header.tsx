@@ -263,11 +263,11 @@ const Header = ({ from, isUserChanged, isLimitChanged }: HeaderProps) => {
       <Navigation setIsNavigationOpen={setIsNavigationOpen} /> 
       : 
       <Box className='header-container'>
-        <AppBar position="sticky">
+        <AppBar position="sticky" id='page-header'>
           <Toolbar>
             {(isLoggedIn.status && from !== 'Reset Password') &&
               <IconButton size="large" color="inherit" onClick={() => setIsNavigationOpen(true)}>
-                <MenuIcon />
+                <MenuIcon id='menu-icon' />
               </IconButton>
             }
 
@@ -277,8 +277,10 @@ const Header = ({ from, isUserChanged, isLimitChanged }: HeaderProps) => {
               <div>
                 <span>
                   <IconButton onClick={handleBadgeClick}>
-                    <Badge color="secondary" badgeContent={activityNotifications.length + budgetNotifications.length} invisible={false}>
-                      <Email sx={{color: 'white'}} />
+                    <Badge badgeContent={activityNotifications.length + budgetNotifications.length}
+                      overlap="circular" color="secondary" invisible={false}                                                                  
+                    >
+                      <Email id='email-icon' />
                     </Badge>
                   </IconButton>
 

@@ -1,185 +1,174 @@
-.hero-section {
-    display: flex;
-    flex-direction: column;
-    border-radius: 10px;
-    padding: 2rem;
-    background: linear-gradient(to right, rgba(255, 255, 255, 255) 40%, transparent 60%),
-                url('../../assets/background_image.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: right;
-    margin: 1.5rem;
+/* Main container for the home page */
+#demo-image-full-screen {
+    width: 100%;
 }
 
-.hero-content {
+#home-public-container {
+    width: 100%;
     display: flex;
     flex-direction: column;
     padding: 1rem;
 }
 
-.logo-headline-container {
+/* Styling for the Hero section */
+#hero-section-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 1rem;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.9) 40%, transparent 80%);
+    padding: 1rem;
+    margin: 0.5rem;
+}
+
+#logo-slogan-container {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    margin-bottom: 1rem;
+    gap: 0.5rem;
 }
 
-.app-logo {
-    width: 60px;
-    height: 60px;
+#app-logo {
+    width: 3rem;
+    height: 3rem;
 }
 
-.hero-buttons {
+#slogan {
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+#hero-buttons-container {
     display: flex;
     gap: 1rem;
     margin-top: 1rem;
 }
 
-.features {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-gap: 20px;
-    padding: 20px;
+#section-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin: 0.5rem;
 }
 
-.features img {
-    max-width: 100px;
-    margin: 0 auto 20px auto;
-}
-  
-.swiper {
-    width: 70%;
-    margin-top: 20px;
-}
-  
-.swiper-slide {
-    display: flex;
-    align-items: center;
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-}
-  
-.testimonial-image {
-    width: 150px;
-    height: 150px;
-    object-fit: cover;
-    border-radius: 50%;
-    margin-right: 20px;
-}
-  
-.testimonial-content {
+/* Styling for the features section */
+#features-container {
     display: flex;
     flex-direction: column;
-    flex: 1;
-    padding-left: 20px;
+    gap: 2rem;
+    padding: 1rem;
 }
 
-.testimonial-content h6 {
-    margin-bottom: 12px;
+#features-container img {
+    width: 4rem;
+    height: 4rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+#feature-title {
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+#feature-description {
+    font-size: 0.75rem;
+    margin-top: 0.5rem;
+}
+
+/* Styling for the testimonials section */
+.swiper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: 1rem;
+    background-color: rgba(255, 255, 255, 0.9);
+}
+
+.swiper-slide {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.5rem;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.feedback-image {
+    width: 7rem;
+    height: 7rem;
+    object-fit: cover;
+    border-radius: 50%;
+}
+  
+.feedback-content {
+    display: flex;
+    flex-direction: column;
+}
+
+#feedback-text {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
 }
   
 .rating {
     align-self: center;
-    margin-bottom: 10px;
 }
   
 blockquote {
+    font-size: 0.85rem;
     font-style: italic;
-    font-size: 1rem;
-    margin: 10px 0;
     color: #555;
+    margin: 1rem;
 }
   
 cite {
-    font-size: 0.9rem;
     font-weight: bold;
-    color: #333;
-    margin-top: 10px;
 }
 
-.swiper-pagination {
-    margin-top: 20px;
+.swiper-pagination {   
     position: relative;
-}
-  
-.swiper-pagination-bullet {
-    background-color: white !important;
-    width: 15px;
-    height: 15px;
-    opacity: 0.7;
-    transition: opacity 0.3s ease;
+    margin-top: 0.5rem;
+    padding: 0.5rem;
 }
 
-.swiper-pagination-bullet-active {
-    background-color: blue !important;
-    opacity: 1;
+.swiper-pagination-bullet {
+    width: 1rem;
+    height: 1rem;
+    opacity: 0.7;
+    background-color: grey;
+    transition: opacity 0.3s ease;
 }
 
 .swiper-pagination-bullet:hover {
     opacity: 1;
 }
+
+.swiper-pagination-bullet-active {
+    background-color: blue;
+    opacity: 1;
+}
+
+/* Styling for the demo section */
+.demo-view-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.5rem;
+    gap: 1rem;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
   
-@media (max-width: 768px) {
-    .features {
-        grid-template-columns: 1fr;
-    }
-    
-    .swiper {
-        width: 100%;
-    }
+.demo-view-image {
+    width: 100%;
+    cursor: pointer;
+}
 
-    .swiper-slide {
-        flex-direction: column;
-    }
-
-    .testimonial-image {
-        margin-right: 0;
-        margin-bottom: 20px;
-    }
-
-    .testimonial-content {
-        padding-left: 0;
-    }
-       
-    .hero-section {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 1rem;
-        background: linear-gradient(to right, rgba(255, 255, 255, 255) 40%, transparent 60%);
-    }
-
-    .hero-content {
-        padding: 0;
-    }
-
-    .logo-headline-container {
-        gap: 0.5rem;
-    }
-    
-    .app-logo {
-        width: 80px;
-        height: 80px;
-    }
-
-    .hero-buttons {
-        gap: 0.5rem;
-        margin-top: 1rem;
-    }
-
-    .hero-buttons button {
-        width: 100%;
-    }
-    
-    .hero-background {
-        width: 100%;
-        height: 200px;
-        background: url('../../assets/background_image.png') no-repeat center;
-        background-size: contain;
-        margin-top: 1rem;
-        border-radius: 10px;
-    }              
+#demo-view-text {
+    font-size: 1rem;
 }

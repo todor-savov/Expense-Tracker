@@ -7,6 +7,9 @@
     width: 100%;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
     padding: 1rem;
 }
 
@@ -15,10 +18,9 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    border-radius: 1rem;
     background: linear-gradient(to right, rgba(255, 255, 255, 0.9) 40%, transparent 80%);
+    border-radius: 1rem;
     padding: 1rem;
-    margin: 0.5rem;
 }
 
 #logo-slogan-container {
@@ -53,8 +55,7 @@
 #features-container {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
-    padding: 1rem;
+    gap: 1rem;
 }
 
 #features-container img {
@@ -129,7 +130,7 @@ cite {
     font-weight: bold;
 }
 
-.swiper-pagination {   
+.swiper-pagination {
     position: relative;
     margin-top: 0.5rem;
     padding: 0.5rem;
@@ -152,18 +153,7 @@ cite {
     opacity: 1;
 }
 
-/* Styling for the demo section */
-.demo-view-box {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 0.5rem;
-    gap: 1rem;
-    border-radius: 10px;
-    background-color: #f9f9f9;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-  
+/* Styling for the demo section */  
 .demo-view-image {
     width: 100%;
     cursor: pointer;

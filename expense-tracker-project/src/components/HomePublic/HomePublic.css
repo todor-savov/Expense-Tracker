@@ -162,3 +162,38 @@ cite {
 #demo-view-text {
     font-size: 1rem;
 }
+
+/* Styling for the partners section */
+#partners-container {
+    width: 100%;
+    display: flex;
+    overflow: hidden;
+    border-radius: 1rem;
+    padding: 0.5rem;
+    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#partners-wrapper {
+    display: flex;
+    gap: 0.5rem;
+    animation: scroll 8s linear infinite;
+}
+
+@keyframes scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+}
+
+.partner-logo-wrapper {
+    padding: 1rem;
+    margin: 1rem;
+    border: 1px solid #ccc;
+    background-color: white;
+}
+
+.partner-logo-image {
+    width: 6rem;
+    height: 6rem;
+    object-fit: contain;
+}

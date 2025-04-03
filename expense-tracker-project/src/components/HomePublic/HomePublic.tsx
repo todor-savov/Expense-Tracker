@@ -7,7 +7,7 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/autoplay';
 import YOUR_APP_LOGO from '../../assets/app_logo.png';
-import { APP_FEATURES, CLIENT_FEEDBACK, DEMO_VIEWS } from '../../common/constants';
+import { APP_FEATURES, CLIENT_FEEDBACK, DEMO_VIEWS, PARTNER_LOGOS } from '../../common/constants';
 import './HomePublic.css';
 
 const HomePublic = () => {
@@ -107,6 +107,18 @@ const HomePublic = () => {
                             </SwiperSlide>
                         ))}
                     </Swiper>
+
+                    <Typography id='section-title'> Our Trusted Partners </Typography>
+
+                    <Box id="partners-container">
+                        <Box id='partners-wrapper'>
+                            {PARTNER_LOGOS.concat(PARTNER_LOGOS).map((logo, index) => (     
+                                <Box key={index} className="partner-logo-wrapper">
+                                    <img src={logo.image} alt="PartnerLogo" className="partner-logo-image" />
+                                </Box>
+                            ))}
+                        </Box>
+                    </Box>
                 </React.Fragment>
             } 
         </Box>

@@ -23,15 +23,11 @@ const HomePublic = () => {
                 :
                 <React.Fragment>
                     <Box id="hero-section-container">
-                        <Box id="logo-slogan-container">
-                            <img src={YOUR_APP_LOGO} alt="AppLogo" id="app-logo" />
-                            <Typography id='slogan'> Take Control of Your Finances Today! </Typography>
-                        </Box>
+                        <img src={YOUR_APP_LOGO} alt="AppLogo" id="app-logo" />
+                        <Typography id='slogan'> Take Control of Your Finances Today! </Typography>
 
-                        <Box id="hero-buttons-container">
-                            <Button variant="contained" onClick={() => navigate('/register')}> Register </Button>
-                            <Button variant="outlined" onClick={() => navigate('/login')}> Login </Button>
-                        </Box>
+                        <Button variant="contained" onClick={() => navigate('/register')} sx={{ fontSize: '0.65rem' }}> Register </Button>
+                        <Button variant="outlined" onClick={() => navigate('/login')}> Login </Button>
                     </Box>
             
                     <Typography id='section-title'>Why Choose Us?</Typography>
@@ -47,6 +43,46 @@ const HomePublic = () => {
                             </Card>
                         ))}                
                     </Box>
+
+                    <Typography id='section-title'> Our Trusted Partners </Typography>
+
+                    <Box id="partners-container">
+                        <Box id='partners-wrapper'>
+                            {PARTNER_LOGOS.concat(PARTNER_LOGOS).map((logo, index) => (     
+                                <Box key={index} className="partner-logo-wrapper">
+                                    <img src={logo.image} alt="PartnerLogo" className="partner-logo-image" />
+                                </Box>
+                            ))}
+                        </Box>
+                    </Box>
+
+                    <Typography id='section-title'> Explore the App </Typography>
+                        
+                    <Swiper className="swiper"
+                        modules={[Autoplay, Pagination]} 
+                        autoplay={{ delay: 4000, disableOnInteraction: false, pauseOnMouseEnter: true }}
+                        spaceBetween={20} slidesPerView={1} 
+                        pagination={{   
+                            clickable: true, 
+                            dynamicBullets: true, 
+                            bulletClass: 'swiper-pagination-bullet', 
+                            bulletActiveClass: 'swiper-pagination-bullet-active',
+                        }}
+                        breakpoints={{
+                            480: { slidesPerView: 1 },
+                            768: { slidesPerView: 2 },
+                            1024: { slidesPerView: 3 },
+                            1600: { slidesPerView: 4 },
+                        }}
+                    >
+                        {DEMO_VIEWS.map((view, index) => (
+                            <SwiperSlide key={index} className="swiper-slide">
+                                <Typography id='demo-view-text'> {view.description} </Typography>
+                                <img src={view.imageURL} alt='demo-page' onClick={() => showDemoImage(view.imageURL)} className="demo-view-image" />  
+                                <Button variant="contained" onClick={() => navigate(view.link)}> View </Button>             
+                            </SwiperSlide>
+                        ))}
+                    </Swiper>                
 
                     <Typography id='section-title'> Why Our Users Love Us </Typography>            
 
@@ -79,46 +115,6 @@ const HomePublic = () => {
                             </SwiperSlide>
                         ))}
                     </Swiper>
-
-                    <Typography id='section-title'> Explore the App </Typography>
-                        
-                    <Swiper className="swiper"
-                        modules={[Autoplay, Pagination]} 
-                        autoplay={{ delay: 4000, disableOnInteraction: false, pauseOnMouseEnter: true }}
-                        spaceBetween={20} slidesPerView={1} 
-                        pagination={{   
-                            clickable: true, 
-                            dynamicBullets: true, 
-                            bulletClass: 'swiper-pagination-bullet', 
-                            bulletActiveClass: 'swiper-pagination-bullet-active',
-                        }}
-                        breakpoints={{
-                            480: { slidesPerView: 1 },
-                            768: { slidesPerView: 2 },
-                            1024: { slidesPerView: 3 },
-                            1600: { slidesPerView: 4 },
-                        }}
-                    >
-                        {DEMO_VIEWS.map((view, index) => (
-                            <SwiperSlide key={index} className="swiper-slide">
-                                <Typography id='demo-view-text'> {view.description} </Typography>
-                                <img src={view.imageURL} alt='demo-page' onClick={() => showDemoImage(view.imageURL)} className="demo-view-image" />  
-                                <Button variant="contained" onClick={() => navigate(view.link)}> View </Button>             
-                            </SwiperSlide>
-                        ))}
-                    </Swiper>
-
-                    <Typography id='section-title'> Our Trusted Partners </Typography>
-
-                    <Box id="partners-container">
-                        <Box id='partners-wrapper'>
-                            {PARTNER_LOGOS.concat(PARTNER_LOGOS).map((logo, index) => (     
-                                <Box key={index} className="partner-logo-wrapper">
-                                    <img src={logo.image} alt="PartnerLogo" className="partner-logo-image" />
-                                </Box>
-                            ))}
-                        </Box>
-                    </Box>
                 </React.Fragment>
             } 
         </Box>

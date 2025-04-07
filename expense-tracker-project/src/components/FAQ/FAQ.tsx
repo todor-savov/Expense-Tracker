@@ -69,16 +69,18 @@ const FAQ = () => {
             description: 'Yes, navigate to Overview & Stats in the Navigations menu and use the slider to switch between snapshot mode (Period Overview) and trend mode (Progress over time). Each mode offers options to view data by year or month. When Period Overview is active, selecting a month or year will display a snapshot of that period’s data as a pie chart. In Progress over time mode, selecting Monthly (All years) or Monthly (Current year) will show monthly data for the chosen period as a line chart, while choosing Yearly will display yearly data over the selected timeframe, also in a line chart.'
         },                
     ];
-        
+    
     return (
         <div className='faq-container'>
             {content.map((item, index) => (
-                <Accordion elevation={3} style={{marginTop: '10px', marginBottom: '10px', marginLeft: '50px', marginRight: '50px'}} key={index}>
-                    <AccordionSummary expandIcon={<ArrowDropDownIcon />} aria-controls="panel1-content" id="panel1-header">
-                        <Typography variant="h6">{item.title}</Typography>
+                <Accordion key={index} elevation={3} id='faq-accordion'>
+                    <AccordionSummary expandIcon={<ArrowDropDownIcon />} id="header-question">
+                        <Typography id='faq-title'>
+                            {item.title}
+                        </Typography>
                     </AccordionSummary>
                     <AccordionDetails>
-                        <Typography variant="body1" color="textSecondary" textAlign="justify" fontSize={'16px'}>
+                        <Typography id='faq-description' color="textSecondary">
                             {item.description}
                         </Typography>
                     </AccordionDetails>

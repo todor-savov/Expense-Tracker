@@ -1,129 +1,114 @@
+/* Styling for the main container and intro section */
 .main-container {
+    width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     background-color: rgba(255, 255, 255, 0.9);
     padding: 1rem;
-    max-width: 100%;
 }
 
-.first-container {
+.intro-container {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    padding: 4px;
-    gap: 4px;
+    padding: 1rem;
+    gap: 1rem;
 }
 
 #avatar-photo {
-    width: 25%;
+    width: 30%;
     height: auto;
     border-radius: 10%;
 }
 
-.text-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin: 1rem;
-}
-
 #about-me-text {
-    font-size: 0.8rem;
+    font-size: 1rem;
+    margin: 1rem;
     text-align: justify;
 }
 
-.second-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
+/* Styling for the technology icons and their container */
 #container-scroll {
     overflow: hidden;
+    width: 100%;
 }
 
-.scroll {
+#scroll {
     display: flex;
-    animation: loop 10s linear infinite;
+    width: max-content;
+    animation: loop 20s linear infinite;
 }
 
 @keyframes loop {
-    0% {
-        transform: translateX(0);
-    }
-    100% {
-        transform: translateX(-100%);
-    }
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+.tech-item {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 0.9rem;
+    gap: 0.5rem;
+}
+
+.tech-item:hover {
+    scale: 1.2;
+    cursor: pointer;
 }
 
 .tech-icon {
-    width: 1rem;
-    height: 1rem;
+    width: 1.75rem;
+    height: 1.75rem;
 }
 
-.item {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0.5rem 0.9rem;
-    gap: 3px;
-}
-
-.item:hover {
-    cursor: pointer;
-    scale: 1.2;
-}
-
-.item p {
-    font-size: 0.5rem;
+#tech-name {
+    font-size: 1rem;
 }
 
 @media (min-width: 481px) and (max-width: 768px) {
+    .main-container {
+        padding: 2rem;
+    }
+   
     #about-me-text {
-        font-size: 1.2rem;
+        font-size: 1.4rem;
+        margin: 2rem;
     }
 
-    .first-container {
-        gap: 1rem;
-        margin-bottom: 1rem;
-    }
-
-    .tech-icon {
-        width: 1.5rem;
-        height: 1.5rem;
-    }
-
-    .item p {
-        font-size: 1rem;
-    }
-}
-
-@media (min-width: 769px) and (max-width: 1024px) {   
-    #about-me-text {
-        font-size: 1.5rem;
-    }
-
-    .first-container {
-        gap: 1rem;
-        margin-bottom: 1rem;
-    }
-    
     .tech-icon {
         width: 2.5rem;
         height: 2.5rem;
+    }    
+
+    #tech-name {
+        font-size: 1.2rem;
+    }    
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {   
+    .main-container {
+        padding: 2rem;
     }
 
-    .item p {
-        font-size: 1.5rem;
+    #about-me-text {
+        font-size: 1.6rem;
+        margin: 2rem;
+    }
+
+    .tech-icon {
+        width: 3rem;
+        height: 3rem;
+    }    
+
+    #tech-name {
+        font-size: 1.4rem;
     }
 }
 
 /* This targets Nest Hub 1024 x 600 specifically */
 @media (aspect-ratio: 1024/600) {
-    .first-container {
+    .intro-container {
         flex-direction: row;
     }
 }
@@ -132,22 +117,31 @@
    Device-specific queries were tested but did not work due to resolution/DPR mismatch. */
 
 @media (min-width: 1025px) {
+    .main-container {
+        padding: 2rem;
+    }
+
+    .intro-container {
+        flex-direction: row;
+        margin-bottom: 2rem;
+        gap: 2rem;
+    }
+
     #avatar-photo {
-        width: 15%;
+        width: 20%;
     }
 
     #about-me-text {
-        font-size: 1.4rem;
-        text-align: justify;
-        margin: 3rem;
+        font-size: 2rem;
+        margin: 2rem;
     }
 
     .tech-icon {
-        width: 2rem;
-        height: 2rem;
-    }
+        width: 3.5rem;
+        height: 3.5rem;
+    }    
 
-    .item p {
-        font-size: 1rem;
+    #tech-name {
+        font-size: 1.6rem;
     }
 }

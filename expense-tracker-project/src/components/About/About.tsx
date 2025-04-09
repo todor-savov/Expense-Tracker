@@ -33,25 +33,20 @@ const About = () => {
 
   return (        
         <Box className="main-container">
-            <Box className="first-container">
-                <Avatar alt="Todor-Savov" src={ownPhoto} variant='square' id='avatar-photo' />
-
-                <Box className="text-container">                                    
-                    <Typography variant="body1" color="text.secondary" id='about-me-text'> {introText} </Typography>
-                </Box>
+            <Box className="intro-container">
+                <Avatar src={ownPhoto} alt="Todor-Savov" variant='square' id='avatar-photo' />
+                <Typography color="text.secondary" id='about-me-text'> {introText} </Typography>
             </Box>
 
-            <Box className="second-container">                
-                <div id='container-scroll'>
-                    <div className='scroll'>
-                        {techStack.map((tech, index) => (
-                            <div className='item' key={index}>
-                                {tech.icon}
-                                <Typography variant="body1" color="text.secondary"> {tech.name} </Typography>
-                            </div>
-                        ))}
-                    </div>
-                </div>
+            <Box id='container-scroll'>
+                <Box id='scroll'>
+                    {[...techStack, ...techStack].map((tech, index) => (
+                        <Box key={index} className='tech-item'>
+                            {tech.icon}
+                            <Typography id='tech-name'> {tech.name} </Typography>
+                        </Box>
+                    ))}
+                </Box>
             </Box>
         </Box>
   );

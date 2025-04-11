@@ -4,7 +4,7 @@ import { signInUser } from '../../service/authentication-service.ts';
 import { getUserSettings } from '../../service/database-service.ts';
 import AuthContext from '../../context/AuthContext.tsx';
 import { EMAIL_REGEX } from '../../common/constants.ts';
-import { Alert, CircularProgress, Snackbar, Stack, TextField } from '@mui/material';
+import { Alert, Box, Button, CircularProgress, Snackbar, Stack, TextField, Typography } from '@mui/material';
 import './Login.css';
 
 interface Form {
@@ -69,14 +69,14 @@ const Login = () => {
     }
 
     return (
-        <div className='loginContainer'>
-            <form onSubmit={handleSubmit} className="login-form">
-                <p><strong>Welcome back to Expense Tracker</strong></p>
+        <Box id='login-container'>
+            <Box component={"form" } onSubmit={handleSubmit} id="login-form">
+                <Typography id='greeting-text'>Welcome back to Expense Tracker</Typography>
 
-                {!loading && <Link to="/forgot-password" className='forgot-password'>Forgot password?</Link>}
+                {!loading && 
+                    <Link to="/forgot-password" id='forgot-password'>Forgot password?</Link>}
 
                 <TextField type="email" id="email" name="email" label={'Email address'} required />
-
                 <TextField type="password" id="password" name="password" label={'Password'} required />
 
                 {loading ?
@@ -85,20 +85,21 @@ const Login = () => {
                     </Stack>
                     :   
                     <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleSnackbarClose}
-                        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} sx={{ marginBottom: 8 }}
+                        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                     >
                         <Alert onClose={handleSnackbarClose} severity='error' variant="filled"> {error} </Alert>
                     </Snackbar>
                 }
 
                 {!loading && 
-                    <div>
-                        <button className='btn' type="submit">Login</button>            
-                        New user? Register <span onClick={()=> navigate("/register")} id='span-sign-up'>here.</span>
-                    </div>
+                    <>
+                        <Button type="submit" id='login-button'> Login </Button>
+                        <Typography id='or-text'>OR</Typography>
+                        <Link to="/register" id='span-sign-up'>Sign up</Link>
+                    </>
                 }
-            </form>
-        </div>
+            </Box>
+        </Box>
     )
 }
 

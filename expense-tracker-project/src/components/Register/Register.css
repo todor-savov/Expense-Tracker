@@ -1,35 +1,95 @@
-.registerContainer {
+#registration-container {
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+    background-image: url('../../assets/background-image.jpeg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
 }
 
-.register-form {
+#registration-form {
+    opacity: 0.9;
     display: flex;
     flex-direction: column;
-    background-color: rgba(255, 255, 255, 255); 
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
+    border-radius: 1rem;
+    background-color: rgba(255, 255, 255, 0.8);
     padding: 2rem;
+    margin: 1rem;
+    gap: 1rem;
 }
 
-.register-form p {
-    text-align: center;
-    margin-bottom: 0.8rem;
+.input-field label.MuiInputLabel-root {
+    transition: all 0.3s ease;
 }
 
-.input__field i {
-    color: #ee0d0d;
+.input-field label.MuiInputLabel-root.MuiInputLabel-shrink {
+    font-size: 1rem;
 }
 
-.register-button {
-    color: #fff;
-    background-color: #007bff;
+.input-field input {
     padding: 1rem;
+}
+
+.input-field i {
+    color: #ee0d0d;
+    font-size: 0.9rem;
+}
+
+#registration-button {
+    align-self: center;
     border: none;
+    color: #fff;
+    background-color: #338eef;
     transition: background-color 0.3s ease;
 }
 
-.register-button:hover {
-    background-color: #0056b3;
+#registration-button:hover {
+    background-color: #014996;
+}
+
+@media (min-width: 481px) and (max-width: 768px) {         
+    .input-field label.MuiInputLabel-root, .input-field input {
+        font-size: 1.1rem;
+    }
+
+    .input-field i {
+        font-size: 1rem;
+    } 
+
+    #registration-button {
+        padding: 0.5rem 1rem;
+        font-size: 1.3rem;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {        
+    .input-field label.MuiInputLabel-root, .input-field input {
+        font-size: 1.2rem;
+    }
+
+    .input-field i {
+        font-size: 1.1rem;
+    } 
+
+    #registration-button {
+        padding: 0.5rem 1rem;
+        font-size: 1.4rem;
+    }
+}
+
+@media (min-width: 1025px) {  
+    .input-field label.MuiInputLabel-root, .input-field input {
+        font-size: 1.3rem;
+    }
+
+    .input-field i {
+        font-size: 1.2rem;
+    } 
+
+    #registration-button {
+        padding: 0.5rem 1rem;
+        font-size: 1.5rem;
+    }
 }

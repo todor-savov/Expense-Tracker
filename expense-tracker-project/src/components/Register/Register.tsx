@@ -7,7 +7,7 @@ import { NAME_MIN_CHARS, NAME_MAX_CHARS, USERNAME_MIN_LENGTH, USERNAME_MAX_LENGT
         PASSWORD_MIN_CHARS, PASSWORD_MAX_CHARS, EMAIL_REGEX, PHONE_REGEX, PHONE_DIGITS, 
         DIGIT_REGEX, LETTER_REGEX, ALPHA_NUMERIC_REGEX, SPECIAL_CHARS_REGEX, DEFAULT_IMAGE, 
         } from '../../common/constants.js';
-import { Alert, CircularProgress, Snackbar, Stack, TextField } from '@mui/material';
+import { Alert, Box, CircularProgress, Snackbar, Stack, TextField } from '@mui/material';
 import './Register.css';
 
 interface Form {
@@ -155,47 +155,47 @@ const Register = () => {
     }
 
     return (
-        <div className='registerContainer'>
-            <form onSubmit={handleSubmit} className="register-form">                
-                <TextField type="text" id="firstName" name="firstName" label={'First Name'} className='input__field' required
+        <Box id='registration-container'>
+            <Box component='form' onSubmit={handleSubmit} id="registration-form">                            
+                <TextField type="text" id="firstName" name="firstName" label={'First Name'} className='input-field' required
                     helperText={<i>{NAME_MIN_CHARS}-{NAME_MAX_CHARS} symbols</i>}
                 />
 
-                <TextField type="text" id="lastName" name="lastName" label={'Last Name'} className='input__field' required
+                <TextField type="text" id="lastName" name="lastName" label={'Last Name'} className='input-field' required
                     helperText={<i>{NAME_MIN_CHARS}-{NAME_MAX_CHARS} symbols</i>}
                 /> 
 
-                <TextField type="email" id="email" name="email" label={'Email'} className='input__field' required 
+                <TextField type="email" id="email" name="email" label={'Email'} className='input-field' required 
                     helperText={<i>Standard email symbols, @ and domain</i>} 
                 />
 
-                <TextField type="text" id="phone" name="phone" label={'Phone'} className='input__field' required
+                <TextField type="text" id="phone" name="phone" label={'Phone'} className='input-field' required
                     helperText={<i>{PHONE_DIGITS} digits exactly</i>} 
                 /> 
 
-                <TextField type="text" id="username" name="username" label={'Username'} className='input__field' required
+                <TextField type="text" id="username" name="username" label={'Username'} className='input-field' required
                     helperText={<i>{USERNAME_MIN_LENGTH}-{USERNAME_MAX_LENGTH} symbols, letters or digits</i>}
                 /> 
 
-                <TextField type="password" id="password" name="password" label={'Password'} className='input__field' required
+                <TextField type="password" id="password" name="password" label={'Password'} className='input-field' required
                     helperText={<i>{PASSWORD_MIN_CHARS}-{PASSWORD_MAX_CHARS} symbols, ONE digit, letter AND a special symbol</i>} 
-                /> 
-
-                {loading ?
+                />
+                
+                {loading ? 
                     <Stack sx={{ color: 'grey.500' }} spacing={2} direction="row" id='spinning-circle'>
                         <CircularProgress color="success" size='3rem' />
                     </Stack>
-                    :   
-                    <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleSnackbarClose}
-                        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} sx={{ marginBottom: 6 }}
-                    >
-                        <Alert onClose={handleSnackbarClose} severity='error' variant="filled"> {error} </Alert>
-                    </Snackbar>
-                }
-
-                {!loading && <button className='register-button' type="submit">Register</button>}
-            </form>
-        </div>
+                    :
+                    <button id='registration-button' type="submit">Register</button>
+                }   
+            </Box>
+                
+            <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleSnackbarClose}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} 
+            >
+                <Alert onClose={handleSnackbarClose} severity='error' variant="filled"> {error} </Alert>
+            </Snackbar>
+        </Box>
     )
 }
 

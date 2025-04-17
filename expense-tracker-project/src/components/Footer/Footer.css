@@ -12,68 +12,26 @@
     scale: 1.2;
 }
 
-.footer-container-right {
-    display: flex;
-}
-
-.footer-container-right a {
-    color: #fff;
-    transition: background-color 0.3s;
-}
-
-.footer-container-right a:hover {
-    background-color: #5ba7ea;
-    scale: 1.2;
-}
-
 #year-span {
     display: flex;
     align-items: center;
-    font-size: 0.6rem;
-}
-
-#github-icon, #linkedin-icon, #email-contact-icon {
-    font-size: 1.5rem;
+    font-size: 1rem;
 }
 
 @media (min-width: 481px) and (max-width: 768px) {
-    .footer-container-left button {
+    .footer-container-left button, #year-span {
         font-size: 1.25rem;
-    }
-
-    #year-span {
-        font-size: 1rem;
-    }
-
-    #github-icon, #linkedin-icon, #email-contact-icon {
-        font-size: 1.8rem;
     }
 }
 
 @media (min-width: 769px) and (max-width: 1024px) {
-    .footer-container-left button {
-        font-size: 1.5rem;
-    }
-
-    #year-span {
+    .footer-container-left button, #year-span {
         font-size: 1.25rem;
-    }
-
-    #github-icon, #linkedin-icon, #email-contact-icon {
-        font-size: 2rem;
     }
 }
 
 @media (min-width: 1025px) {
-    .footer-container-left button {
+    .footer-container-left button, #year-span {
         font-size: 1.25rem;
-    }
-
-    #year-span {
-        font-size: 1rem;
-    }      
-
-    #github-icon, #linkedin-icon, #email-contact-icon {
-        font-size: 2rem;
-    }
+    }    
 }

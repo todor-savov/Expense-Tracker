@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import { AppBar, Toolbar, Box, IconButton, Tooltip } from "@mui/material";
-import { Copyright, Email, GitHub, LinkedIn } from "@mui/icons-material";
+import { AppBar, Toolbar, Box, IconButton } from "@mui/material";
+import { Copyright } from "@mui/icons-material";
 import './Footer.css';
 
 const Footer = () => {
@@ -19,43 +19,9 @@ const Footer = () => {
                         </IconButton>
                     </Box>
 
-                    <Box className="footer-container-right">
-                        <span id='year-span'> <Copyright color="inherit" /> 2024 Todor Savov </span>
-                                                
-                        <Tooltip title="GitHub" placement="top" arrow>
-                            <IconButton
-                                component="a"
-                                href="https://github.com/todor-savov"
-                                target="_blank"
-                                aria-label="GitHub"
-                                rel="noopener noreferrer"
-                            >
-                                <GitHub id='github-icon' />
-                            </IconButton>
-                        </Tooltip>
-
-                        <Tooltip title="LinkedIn" placement="top" arrow>
-                            <IconButton
-                                component="a"
-                                href="https://www.linkedin.com/in/todor-savov-4a14253b/"
-                                target="_blank"
-                                aria-label="LinkedIn"
-                                rel="noopener noreferrer"
-                            >
-                                <LinkedIn id='linkedin-icon' />
-                            </IconButton>
-                        </Tooltip>
-
-                        <Tooltip title="Email" placement="top" arrow>
-                            <IconButton
-                                component="a"
-                                href="mailto:todor.savov@abv.bg"
-                                aria-label="Email"
-                            >
-                                <Email id='email-contact-icon' />
-                            </IconButton>
-                        </Tooltip>
-                    </Box>
+                    <span id='year-span'> 
+                        <Copyright color="inherit" /> 2024 Todor Savov 
+                    </span>                                                                   
                 </Toolbar>
             </AppBar>
         </footer>

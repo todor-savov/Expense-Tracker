@@ -7,7 +7,7 @@ import { NAME_MIN_CHARS, NAME_MAX_CHARS, USERNAME_MIN_LENGTH, USERNAME_MAX_LENGT
         PASSWORD_MIN_CHARS, PASSWORD_MAX_CHARS, EMAIL_REGEX, PHONE_REGEX, PHONE_DIGITS, 
         DIGIT_REGEX, LETTER_REGEX, ALPHA_NUMERIC_REGEX, SPECIAL_CHARS_REGEX, DEFAULT_IMAGE, 
         } from '../../common/constants.js';
-import { Alert, Box, CircularProgress, Snackbar, Stack, TextField } from '@mui/material';
+import { Alert, Box, CircularProgress, Snackbar, Stack, TextField, Typography } from '@mui/material';
 import './Register.css';
 
 interface Form {
@@ -156,7 +156,12 @@ const Register = () => {
 
     return (
         <Box id='registration-container'>
-            <Box component='form' onSubmit={handleSubmit} id="registration-form">                            
+            <Box id="illustration-side"></Box>
+
+            <Box component='form' onSubmit={handleSubmit} id="registration-form">   
+                <Typography id='registration-subtitle'>Fill in the form to create your account</Typography>
+                <Typography id='registration-subtitle'>Already have an account? <a href="/login">Log in</a></Typography>
+
                 <TextField type="text" id="firstName" name="firstName" label={'First Name'} className='input-field' required
                     helperText={<i>{NAME_MIN_CHARS}-{NAME_MAX_CHARS} symbols</i>}
                 />

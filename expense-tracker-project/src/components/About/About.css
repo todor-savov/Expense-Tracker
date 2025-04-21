@@ -1,18 +1,35 @@
 /* Styling for the main container and intro section */
-.main-container {
+#main-container {
     width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    background-color: rgba(255, 255, 255, 0.9);
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.7);
     padding: 1rem;
+    gap: 1rem;
 }
 
-.intro-container {
+#intro-container {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+}
+
+/* Stlying for the photo and social icons */
+#intro-photo-box {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 1rem;
+    justify-content: center;
+    padding: 0.5rem;
+    gap: 1rem;
+}
+
+#intro-social-icons {
+    display: flex;
     gap: 1rem;
 }
 
@@ -22,9 +39,12 @@
     border-radius: 10%;
 }
 
-#about-me-text {
-    font-size: 1rem;
-    margin: 1rem;
+#github-icon, #linkedin-icon, #email-contact-icon {
+    color: black;
+}
+
+/* Styling for the text section */
+#about-me-text {    
     text-align: justify;
 }
 
@@ -62,18 +82,46 @@
     height: 1.75rem;
 }
 
-#tech-name {
-    font-size: 1rem;
-}
-
 @media (min-width: 481px) and (max-width: 768px) {
-    .main-container {
+    #main-container {
+        padding: 2rem;
+        gap: 2rem;
+    }
+
+    #intro-container {
         padding: 2rem;
     }
    
     #about-me-text {
-        font-size: 1.4rem;
-        margin: 2rem;
+        font-size: 1.35rem;
+    }
+
+    .tech-icon {
+        width: 2rem;
+        height: 2rem;
+    }    
+
+    #tech-name {
+        font-size: 1.2rem;
+    }    
+
+    #github-icon, #linkedin-icon, #email-contact-icon {
+        font-size: 2rem;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {   
+    #main-container {
+        padding: 3rem;
+        gap: 2rem;
+    }
+
+    #intro-container {       
+        padding: 2rem;
+    }
+
+    #about-me-text {
+        font-size: 1.5rem;
     }
 
     .tech-icon {
@@ -82,66 +130,62 @@
     }    
 
     #tech-name {
-        font-size: 1.2rem;
-    }    
-}
-
-@media (min-width: 769px) and (max-width: 1024px) {   
-    .main-container {
-        padding: 2rem;
+        font-size: 1.3rem;
     }
 
-    #about-me-text {
-        font-size: 1.6rem;
-        margin: 2rem;
-    }
-
-    .tech-icon {
-        width: 3rem;
-        height: 3rem;
-    }    
-
-    #tech-name {
-        font-size: 1.4rem;
+    #github-icon, #linkedin-icon, #email-contact-icon {
+        font-size: 2rem;
     }
 }
 
 /* This targets Nest Hub 1024 x 600 specifically */
 @media (aspect-ratio: 1024/600) {
-    .intro-container {
+    #intro-container {
         flex-direction: row;
     }
 }
 
-/* Known Issue: Layout might not render perfectly on Google Nest Hub (1280x800). 
-   Device-specific queries were tested but did not work due to resolution/DPR mismatch. */
-
 @media (min-width: 1025px) {
-    .main-container {
+    #main-container {
         padding: 2rem;
+        gap: 2rem;
     }
-
-    .intro-container {
+    
+    #intro-container {
+        width: 75%;
         flex-direction: row;
-        margin-bottom: 2rem;
+        align-items: center;
+        padding: 2rem;
         gap: 2rem;
     }
 
+    #intro-social-icons {
+        gap: 2rem;
+    }
+    
     #avatar-photo {
-        width: 20%;
+        width: 18vw;
+        height: 40vh;
     }
 
     #about-me-text {
-        font-size: 2rem;
-        margin: 2rem;
+        font-size: 1.25rem;
     }
 
+    #container-scroll {
+        width: 60%;
+    }
+    
     .tech-icon {
-        width: 3.5rem;
-        height: 3.5rem;
+        width: 2rem;
+        height: 2rem;
     }    
 
     #tech-name {
-        font-size: 1.6rem;
+        font-size: 1.2rem;
+    }
+
+    #github-icon, #linkedin-icon, #email-contact-icon {
+        font-size: 2rem;
     }
 }

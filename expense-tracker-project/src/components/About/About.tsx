@@ -1,9 +1,10 @@
-import { Box, Typography, Avatar } from '@mui/material';
+import { Box, Typography, Avatar, Tooltip, IconButton } from '@mui/material';
 import { FaReact, FaJsSquare, FaHtml5 } from 'react-icons/fa';
 import { SiTypescript, SiFirebase, SiCss3 } from 'react-icons/si';
 import ownPhoto from '../../assets/IMG_0004-Photoroom.png';
 import MaterialUILogo from '../../assets/MaterialUILogo.png';
 import './About.css';
+import { Email, GitHub, LinkedIn } from '@mui/icons-material';
 
 const About = () => {
     
@@ -32,12 +33,51 @@ const About = () => {
         `;
 
   return (        
-        <Box className="main-container">
-            <Box className="intro-container">
-                <Avatar src={ownPhoto} alt="Todor-Savov" variant='square' id='avatar-photo' />
-                <Typography color="text.secondary" id='about-me-text'> {introText} </Typography>
-            </Box>
+        <Box id="main-container">
+            <Box id="intro-container">
+                <Box id='intro-photo-box'>
+                    <Avatar src={ownPhoto} alt="Todor-Savov" variant='square' id='avatar-photo' />
 
+                    <Box id='intro-social-icons'>
+                        <Tooltip title="GitHub" placement="top" arrow>
+                            <IconButton
+                                component="a"
+                                href="https://github.com/todor-savov"
+                                target="_blank"
+                                aria-label="GitHub"
+                                rel="noopener noreferrer"
+                            >
+                                <GitHub id='github-icon' />
+                            </IconButton>
+                        </Tooltip>
+
+                        <Tooltip title="LinkedIn" placement="top" arrow>
+                            <IconButton
+                                component="a"
+                                href="https://www.linkedin.com/in/todor-savov-4a14253b/"
+                                target="_blank"
+                                aria-label="LinkedIn"
+                                rel="noopener noreferrer"
+                            >
+                                <LinkedIn id='linkedin-icon' />
+                            </IconButton>
+                        </Tooltip>
+
+                        <Tooltip title="Email" placement="top" arrow>
+                            <IconButton
+                                component="a"
+                                href="mailto:todor.savov@abv.bg"
+                                aria-label="Email"
+                            >
+                                <Email id='email-contact-icon' />
+                            </IconButton>
+                        </Tooltip>
+                    </Box>
+                </Box>
+
+                <Typography color="text.secondary" id='about-me-text'> {introText} </Typography>                                          
+            </Box>
+                   
             <Box id='container-scroll'>
                 <Box id='scroll'>
                     {[...techStack, ...techStack].map((tech, index) => (

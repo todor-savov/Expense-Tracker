@@ -6,7 +6,7 @@ const RegisterView = () => {
 
     return (
         <>
-            <Header from={"Register a new user"} />
+            <Header from={"New user registration"} />
             <div className="central-container">
                 <Register />
             </div>

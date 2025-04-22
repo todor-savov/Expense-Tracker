@@ -1,66 +1,89 @@
-.faq-container {
+#faq-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background-color: #f9f9f9;
+  background-image: url('../../assets/faq-background.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
   padding: 0.75rem;
 }
 
-#faq-accordion {   
-  margin: 1rem 0.5rem;
+#faq-image {
+  display: none;
+}
+
+#accordion-container {
+  display: flex;
+  flex-direction: column;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 1rem;
+  padding: 1rem;
+}
+
+#accordion-item {   
+  opacity: 0.9;
+  margin: 0.5rem 0.75rem;
 }
 
 #header-question {
   text-align: left;
 }
 
-#faq-title {
-  font-size: 1rem;
+#accordion-title {
+  font-weight: bold;
 }
 
-#faq-description {
+#accordion-description {
   font-size: 0.9rem;
   text-align: justify;
 }
 
 @media (min-width: 481px) and (max-width: 768px) {
-  .faq-container {
+  #faq-container {
     padding: 1rem;
   }
-
-  #faq-title {
-    font-size: 1.2rem;
-  }
-
-  #faq-description {
-    font-size: 1.1rem;
-  } 
 }
 
 @media (min-width: 769px) and (max-width: 1024px) {
-  .faq-container {
+  #faq-container {
     padding: 1.5rem;
   }
 
-  #faq-title {
-    font-size: 1.5rem;
+  #accordion-title {
+    font-size: 1.25rem;
   }
 
-  #faq-description {
-    font-size: 1.4rem;
+  #accordion-description {
+    font-size: 1.15rem;
   }
 }
 
-@media (min-width: 1025px) { 
-  .faq-container {
-    padding: 2rem;
+@media (min-width: 1025px) {
+  #faq-container {
+    flex-direction: row;
+    background-image: none;
+    align-items: stretch;
+    padding: 0;
   }
 
-  #faq-title {
-    font-size: 1.8rem;
+  #accordion-container {
+    order: 1;
+    flex: 0.5;
+    border-radius: 0;
   }
 
-  #faq-description {
-    font-size: 1.6rem;
+  #faq-image {
+    order: 2;
+    flex: 0.75;
+    display: block;
+    background-image: url('../../assets/faq-background.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+  }
+
+  #accordion-description {
+    font-size: 1rem;
   }
 }

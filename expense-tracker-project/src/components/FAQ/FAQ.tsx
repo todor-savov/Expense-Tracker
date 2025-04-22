@@ -3,6 +3,7 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import { Box } from '@mui/material';
 import './FAQ.css';
 
 const FAQ = () => {
@@ -71,22 +72,26 @@ const FAQ = () => {
     ];
     
     return (
-        <div className='faq-container'>
-            {content.map((item, index) => (
-                <Accordion key={index} elevation={3} id='faq-accordion'>
-                    <AccordionSummary expandIcon={<ArrowDropDownIcon />} id="header-question">
-                        <Typography id='faq-title'>
-                            {item.title}
-                        </Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        <Typography id='faq-description' color="textSecondary">
-                            {item.description}
-                        </Typography>
-                    </AccordionDetails>
-                </Accordion>
-            ))}                    
-        </div>
+        <Box id="faq-container">
+            <Box id='faq-image'></Box>
+
+            <Box id='accordion-container'>
+                {content.map((item, index) => (
+                    <Accordion key={index} elevation={3} id='accordion-item'>
+                        <AccordionSummary expandIcon={<ArrowDropDownIcon />} id="header-question">
+                            <Typography id='accordion-title'>
+                                {item.title}
+                            </Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            <Typography id='accordion-description' color="textSecondary">
+                                {item.description}
+                            </Typography>
+                        </AccordionDetails>
+                    </Accordion>
+                ))}
+            </Box>       
+        </Box>
     );
 }
 

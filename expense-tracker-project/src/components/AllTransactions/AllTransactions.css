@@ -55,12 +55,12 @@
 }
 
 #column-title, .cell-value, #no-receipt-text {
-    font-size: 0.55rem;
+    font-size: 0.6rem;
 }
 
 .cell-with-icon, #receipt-icon {
-    width: 1.35rem;
-    height: 1.35rem;
+    width: 1.4rem;
+    height: 1.4rem;
 }
 
 #receipt-icon { 
@@ -150,12 +150,12 @@ div.MuiTablePagination-toolbar {
     }
 
     #column-title, .cell-value, #no-receipt-text {
-        font-size: 0.7rem;
+        font-size: 0.8rem;
     }
 
     .cell-with-icon, #receipt-icon {
-        width: 1.7rem;
-        height: 1.7rem;
+        width: 1.85rem;
+        height: 1.85rem;
     }
 
     #edit-button, #delete-button {
@@ -187,12 +187,12 @@ div.MuiTablePagination-toolbar {
     }
 
     #column-title, .cell-value, #no-receipt-text {
-        font-size: 0.9rem;
+        font-size: 1rem;
     }
 
     .cell-with-icon, #receipt-icon {
-        width: 2.15rem;
-        height: 2.15rem;
+        width: 2.3rem;
+        height: 2.3rem;
     }
 
     #edit-button, #delete-button {
@@ -224,12 +224,12 @@ div.MuiTablePagination-toolbar {
     }
 
     #column-title, .cell-value, #no-receipt-text {
-        font-size: 0.9rem;
+        font-size: 1rem;
     }
 
     .cell-with-icon, #receipt-icon {
-        width: 2.3rem;
-        height: 2.3rem;
+        width: 2.45rem;
+        height: 2.45rem;
     }
 
     #edit-button, #delete-button {

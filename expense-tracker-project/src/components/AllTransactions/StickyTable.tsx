@@ -217,40 +217,41 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, categories, pay
         
           <TableContainer id='sticky-table-container'>
             {loadSearchFilters()}
-            
-            <Table id='sticky-table'>
+             
+            <Table id='sticky-table'>            
               <TableHead>
                 <TableRow>
                   {columns.map(column => 
                   <React.Fragment>
-                    <Tooltip title={`Click to sort/filter by ${column.label}`} placement="bottom" arrow>
-                      <TableCell key={column.id} align='center' className={column.className}
-                        onClick={(event) => handleTitleClick(event, column.id)}
-                        sx={{ cursor: 'pointer', backgroundColor: '#f1f1f1' }}
-                      >
+                    <TableCell key={column.id} align='center' className={column.className}
+                      onClick={(event) => handleTitleClick(event, column.id)}
+                      sx={{ cursor: 'pointer', backgroundColor: '#f1f1f1' }}
+                    >
+                      <Tooltip title={`Click to sort/filter by ${column.label}`} classes={{tooltip: 'custom-tooltip-text'}} 
+                        placement="bottom" arrow>
                         <Typography id='column-title'> {column.label} </Typography>
-                      </TableCell>
-                    </Tooltip>
+                      </Tooltip>
+                    </TableCell>
 
                     <Popover 
                       open={hoveredColumnTitle === column.id}
                       anchorEl={anchorEl}
                       onClose={handleTitlePopoverClose}
-                      anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-                      transformOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+                      anchorOrigin={{ vertical: 'center', horizontal: 'center' }}
+                      transformOrigin={{ vertical: 'center', horizontal: 'center' }}                     
                     >
-                     <IconButton onClick={() => handleFilterButtonClick(column.id)} className='column-title-button'>
-                       <SearchIcon />
+                     <IconButton onClick={() => handleFilterButtonClick(column.id)}>
+                       <SearchIcon id='column-title-button-icon' />
                      </IconButton>
 
                      {sortParams.column === column.id ?
-                       <IconButton onClick={handleSortChange} className='column-title-button'>
-                         {sortParams.ascending ? <ArrowUpward /> : <ArrowDownward />}
+                       <IconButton onClick={handleSortChange}>
+                         {sortParams.ascending ? <ArrowUpward id='column-title-button-icon' /> : <ArrowDownward id='column-title-button-icon' />}
                        </IconButton>
                        : 
                        (hoveredColumnTitle === column.id && 
-                         <IconButton onClick={() => handleSort(column.id)} className='column-title-button'>
-                           <ArrowUpward />
+                         <IconButton onClick={() => handleSort(column.id)}>
+                           <ArrowUpward id='column-title-button-icon' />
                          </IconButton>
                        )
                      }
@@ -277,7 +278,7 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, categories, pay
                     .map((transaction) => 
                       <React.Fragment>
                         <TableRow key={transaction.id} style={{ cursor: 'pointer' }} hover
-                          onClick={(event) => handleRowClick(event, transaction.id)}                        
+                          onClick={(event) => handleRowClick(event, transaction.id)}
                         >
                           {columns.map((column) => {
                             const value = transaction[column.id];
@@ -294,7 +295,7 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, categories, pay
                               } else if (column.id === 'category') {
                                   return (
                                     <TableCell key={column.id} align='center' className={column.className}>
-                                      <Tooltip title={value} placement="bottom" arrow>
+                                      <Tooltip title={value} placement="bottom" classes={{tooltip: 'custom-tooltip-text'}} arrow>
                                         <img 
                                           src={categories.find((cat) => cat.type === value)?.imgSrc}
                                           alt={categories.find((cat) => cat.type === value)?.imgAlt}
@@ -321,7 +322,7 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, categories, pay
                               } else if (column.id === 'payment') {
                                   return (
                                     <TableCell key={column.id} align='center' className={column.className}>  
-                                      <Tooltip title={value} placement="bottom" arrow>
+                                      <Tooltip title={value} placement="bottom" classes={{tooltip: 'custom-tooltip-text'}} arrow>
                                         <img
                                           src={payments.find((pay) => pay.type === value)?.imgSrc}
                                           alt={payments.find((pay) => pay.type === value)?.imgAlt}
@@ -344,11 +345,11 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, categories, pay
                           open={selectedRow === transaction.id}
                           anchorEl={anchorEl}
                           onClose={handleRowPopoverClose} 
-                          anchorOrigin={{ vertical: 'center', horizontal: 'right' }}
+                          anchorOrigin={{ vertical: 'center', horizontal: 'center' }}
                           transformOrigin={{ vertical: 'center', horizontal: 'center' }}
                         >
                           <button id="edit-button" onClick={() => navigate(`/edit-transaction/${transaction.id}`)}>
-                            <FontAwesomeIcon icon={faPenToSquare}  />
+                            <FontAwesomeIcon icon={faPenToSquare} />
                           </button>
                           <button id="delete-button" onClick={() => setDialog({ open: true, id: transaction.id })}>
                             <FontAwesomeIcon icon={faTrashCan} />
@@ -359,10 +360,8 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, categories, pay
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 }
               </TableBody>                                  
-            </Table>                      
-          </TableContainer>
+            </Table>     
 
-          <Box id='table-footer'>
             <TablePagination
               rowsPerPageOptions={[10, 25, 100]}
               component="div"
@@ -373,20 +372,16 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, categories, pay
               onRowsPerPageChange={handleChangeRowsPerPage}
               classes={{ root: 'pagination', selectLabel: 'pagination-select-label', displayedRows: 'pagination-displayed-rows' }}
             />
+          </TableContainer>
 
-            <Typography id='currency-disclaimer-text'>
-              The values in the "Amount" column are in {settings?.currency} currency.
-            </Typography>
+          <Typography id='total-sum-text'>
+            <strong>TOTAL:</strong>
+            {` ${settings?.currency === 'USD' ? '$' : (settings?.currency === 'EUR' ? '€' : 'BGN')} ${sum.toFixed(2)}`}                      
+          </Typography>
 
-            <Box id='total-sum-text'>
-              <strong>TOTAL: </strong>
-                {`${settings?.currency === 'USD' ? '$' : (settings?.currency === 'EUR' ? '€' : 'BGN')} ${sum.toFixed(2)}`}                      
-            </Box>  
-
-            <Button id='add-transaction-button' variant="contained" onClick={() => navigate('/add-transaction')}>
-              <Add />
-            </Button>
-          </Box>
+          <Button id='add-transaction-button' variant="contained" onClick={() => navigate('/add-transaction')}>
+            <Add />
+          </Button>
         </>
   );
 }

@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Alert, Box, Button, Snackbar, Typography } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import AuthContext from "../../context/AuthContext";
@@ -130,21 +130,27 @@ const AllTransactions = () => {
     return (
         <Box id="all-transactions-container">
             {error ?
-                <Box className="message-box">
-                    <Typography>There was a problem loading your data. Please try again later.</Typography>
+                <Box className='message-box error'>
+                    <Typography>There was a problem loading your data.</Typography>
+                    <Typography sx={{fontStyle: 'italic'}}>Please try again later.</Typography>
                 </Box>
                 : 
-                ((categories.length === 0 || payments.length === 0) ? 
+                ((categories.length === 0) ? 
                     <Box className="message-box">
-                        <Typography>No categories or payment methods found.</Typography>                                       
+                        <Typography sx={{color: 'red'}}>No categories found.</Typography>
+                        <Typography sx={{fontStyle: 'italic'}}>
+                            Make sure to add at least one category before adding transactions.
+                        </Typography>
+                        <Typography>
+                            Click <Link to="/categories" style={{textDecoration: 'underline'}}>here</Link> to add a new category.
+                        </Typography>
                     </Box>
                     :
                     (transactions.length === 0 ?
                         <Box className="message-box">
-                            <Typography>No transactions found.</Typography> 
-                            <Button onClick={() => navigate('/add-transaction')} variant="contained" sx={{marginTop: '1rem'}}>
-                                <Add />
-                            </Button>                                         
+                            <Typography sx={{color: 'red'}}>No transactions found.</Typography> 
+                            <Typography>Add your first transaction using the button below:</Typography>
+                            <Button onClick={() => navigate('/add-transaction')} variant="contained"> <Add /> </Button>
                         </Box>
                         :
                         <StickyTable key={transactions.length} transactions={transactions} categories={categories} payments={payments} 

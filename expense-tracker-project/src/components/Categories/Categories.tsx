@@ -249,13 +249,14 @@ const Categories = () => {
     return (
             <Box id="categories-box">
                 {error ?  
-                    <Box className="message-box">
-                        <Typography>There was a problem loading your data. Please try again later.</Typography>
+                    <Box className='message-box error'>
+                        <Typography>There was a problem loading your categories.</Typography>
+                        <Typography sx={{fontStyle: 'italic'}}>Please try again later.</Typography>
                     </Box>
                     :
                     (categories.length === 0 ? 
                         <Box className="message-box">
-                            <Typography>No categories found.</Typography>
+                            <Typography sx={{color: 'red'}}>No categories found.</Typography>
                         </Box>
                         :       
                         <>
@@ -366,10 +367,8 @@ const Categories = () => {
                     <Stack sx={{ color: 'grey.500' }} spacing={2} direction="row" id='spinning-circle'>
                         <CircularProgress color="success" size='3rem' />
                     </Stack> 
-                : (!addCategoryMode && !editedCategory) && 
-                    <Button onClick={handleAddCategoryButtonClick}>
-                        <AddBox id='add-category-button' />
-                    </Button>
+                : (!addCategoryMode && !editedCategory && !error) && 
+                    <Button onClick={handleAddCategoryButtonClick}> <AddBox id='add-category-button' /> </Button>
                 }        
                         
                 <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleSnackbarClose}

@@ -135,7 +135,7 @@ const AllTransactions = () => {
                     <Typography sx={{fontStyle: 'italic'}}>Please try again later.</Typography>
                 </Box>
                 : 
-                ((categories.length === 0) ? 
+                ((categories.length === 0 && transactions.length === 0) ? 
                     <Box className="message-box">
                         <Typography sx={{color: 'red'}}>No categories found.</Typography>
                         <Typography sx={{fontStyle: 'italic'}}>

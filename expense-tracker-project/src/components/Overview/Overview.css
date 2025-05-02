@@ -1,10 +1,21 @@
-.overview-container, .progress-container {
+#overview-main-container {
+    flex: 1;  
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    padding: 1rem;
+}
+
+#overview-container, #progress-container {
     flex: 1;
+    width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     background-color: white;
-    padding: 1rem;
+    gap: 0.5rem;
 }
 
 .switch-button {    
@@ -30,15 +41,6 @@
 .scrollable-tabs {
     margin-top: 0.5rem;
     max-width: 75vw;
-}
-
-.error-message-box {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #f5f5f5;
-    padding: 1rem;
 }
 
 .default-message-box {
@@ -129,11 +131,6 @@
 }
 
 @media (min-width: 1025px) { 
-    .overview-container, .progress-container {
-        gap: 1rem;
-        padding: 2rem;
-    }
-
     .overview-content {
         flex-direction: row;
         justify-content: space-evenly;

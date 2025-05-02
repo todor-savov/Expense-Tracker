@@ -154,145 +154,146 @@ const Overview = () => {
     }
   
     return (
-    <> 
-        {error ? 
-            <Box className="error-message-box">
-                <Typography>There was a problem loading your data. Please try again later.</Typography>
-            </Box>
-            : 
-            ((transactions.length === 0 || categories.length === 0) ? 
-                <Box className="default-message-box">
-                    <Typography>No transactions or categories found.</Typography>
+        <Box id='overview-main-container'> 
+            {error ? 
+                <Box className='message-box error'>
+                    <Typography>There was a problem loading your data.</Typography>
+                    <Typography sx={{fontStyle: 'italic'}}>Please try again later.</Typography>
                 </Box>
-                :
-                (switchLabel === 'Period Overview' ? 
-                    <Box className="overview-container">     
-                        <FormGroup className='switch-button'>
-                            <FormControlLabel 
-                                control={<Switch />} 
-                                label={switchLabel} 
-                                onChange={handleSwitchClick} 
-                            />
-                        </FormGroup>
-                            
-                        <Box className="overview-header">
-                            {loading ? 
-                                <Stack sx={{ color: 'grey.500' }} spacing={2} direction="row" id='spinning-circle'>
-                                    <CircularProgress color="success" size='3rem' />
-                                </Stack>
-                                :
-                                <Tabs value={outerValue} onChange={handleOuterChange}>
-                                    <Tab key={0} label={<Typography id='year-outer-tab'>{"Year"}</Typography>} onClick={() => setView("yearly")}
-                                        sx={{ backgroundColor: outerValue === 0 ? 'lightblue' : 'inherit' }} />
-                                    <Tab key={1} label={<Typography id='month-outer-tab'>{"Month"}</Typography>} onClick={() => setView("monthly")}
-                                        sx={{ backgroundColor: outerValue === 1 ? 'lightblue' : 'inherit' }} /> 
-                                </Tabs>                                   
-                            }
+                : 
+                (transactions.length === 0 ? 
+                    <Box className="message-box">
+                        <Typography sx={{color: 'red'}}>No transactions found.</Typography>
+                    </Box>
+                    :
+                    (switchLabel === 'Period Overview' ? 
+                        <Box id='overview-container'>
+                            <FormGroup className='switch-button'>
+                                <FormControlLabel 
+                                    control={<Switch />} 
+                                    label={switchLabel} 
+                                    onChange={handleSwitchClick} 
+                                />
+                            </FormGroup>
+                                
+                            <Box className="overview-header">
+                                {loading ? 
+                                    <Stack sx={{ color: 'grey.500' }} spacing={2} direction="row" id='spinning-circle'>
+                                        <CircularProgress color="success" size='3rem' />
+                                    </Stack>
+                                    :
+                                    <Tabs value={outerValue} onChange={handleOuterChange}>
+                                        <Tab key={0} label={<Typography id='year-outer-tab'>{"Year"}</Typography>} onClick={() => setView("yearly")}
+                                            sx={{ backgroundColor: outerValue === 0 ? 'lightblue' : 'inherit' }} />
+                                        <Tab key={1} label={<Typography id='month-outer-tab'>{"Month"}</Typography>} onClick={() => setView("monthly")}
+                                            sx={{ backgroundColor: outerValue === 1 ? 'lightblue' : 'inherit' }} /> 
+                                    </Tabs>                                   
+                                }
 
-                            {view && 
-                                <Tabs value={innerValue} variant="scrollable" scrollButtons allowScrollButtonsMobile aria-label="scrollable force tabs example" onChange={handleInnerChange}
-                                    sx={{ [`& .${tabsClasses.scrollButtons}`]: {'&.Mui-disabled': { opacity: 0.3 },},}} className='scrollable-tabs'>
-                                    {view === 'monthly' ? 
-                                        Array.from(
-                                            new Set(transactions.map((transaction) => 
-                                                new Date(transaction.date).toLocaleString('en-US', { month: 'long', year: 'numeric' })
-                                            ))
-                                        )
-                                        .sort((a, b) => new Date(a).getTime() - new Date(b).getTime())
-                                        .map((month, index) => 
-                                            <Tab key={index} label={<Typography id='month-inner-tab'>{month}</Typography>} onClick={() => handleTabClick(month)} 
-                                                sx={{ backgroundColor: innerValue === index ? 'lightblue' : 'inherit' }} />)
-                                    : 
-                                        Array.from(
-                                            new Set(transactions.map((transaction) => 
-                                                new Date(transaction.date).toLocaleString('en-US', { year: 'numeric' })
-                                            ))
-                                        )
-                                        .sort((a, b) => parseInt(a) - parseInt(b))
-                                        .map((year, index) => 
-                                            <Tab key={index} label={year} onClick={() => handleTabClick(year)} 
-                                                sx={{ backgroundColor: innerValue === index ? 'lightblue' : 'inherit' }} />)
-                                    }
-                                </Tabs>
-                            }
-                        </Box>
+                                {view && 
+                                    <Tabs value={innerValue} variant="scrollable" scrollButtons allowScrollButtonsMobile aria-label="scrollable force tabs example" onChange={handleInnerChange}
+                                        sx={{ [`& .${tabsClasses.scrollButtons}`]: {'&.Mui-disabled': { opacity: 0.3 },},}} className='scrollable-tabs'>
+                                        {view === 'monthly' ? 
+                                            Array.from(
+                                                new Set(transactions.map((transaction) => 
+                                                    new Date(transaction.date).toLocaleString('en-US', { month: 'long', year: 'numeric' })
+                                                ))
+                                            )
+                                            .sort((a, b) => new Date(a).getTime() - new Date(b).getTime())
+                                            .map((month, index) => 
+                                                <Tab key={index} label={<Typography id='month-inner-tab'>{month}</Typography>} onClick={() => handleTabClick(month)} 
+                                                    sx={{ backgroundColor: innerValue === index ? 'lightblue' : 'inherit' }} />)
+                                        : 
+                                            Array.from(
+                                                new Set(transactions.map((transaction) => 
+                                                    new Date(transaction.date).toLocaleString('en-US', { year: 'numeric' })
+                                                ))
+                                            )
+                                            .sort((a, b) => parseInt(a) - parseInt(b))
+                                            .map((year, index) => 
+                                                <Tab key={index} label={year} onClick={() => handleTabClick(year)} 
+                                                    sx={{ backgroundColor: innerValue === index ? 'lightblue' : 'inherit' }} />)
+                                        }
+                                    </Tabs>
+                                }
+                            </Box>
 
-                        {pieData.length > 0 ? 
-                            <Box className="overview-content">        
-                                <Box className="pie-container">
-                                    <PieActiveArc data={ pieData.map((category) => {return {...category, value: +((category.value / totalSum)*100).toFixed(2)}}) } />
-                                </Box>
-                                        
-                                <List className='list-container'>
-                                    <Typography variant="h6" id='graph-info-text'>
-                                        The provided values are in {settings?.currency} currency.
-                                    </Typography>
+                            {pieData.length > 0 ? 
+                                <Box className="overview-content">        
+                                    <Box className="pie-container">
+                                        <PieActiveArc data={ pieData.map((category) => {return {...category, value: +((category.value / totalSum)*100).toFixed(2)}}) } />
+                                    </Box>
+                                            
+                                    <List className='list-container'>
+                                        <Typography variant="h6" id='graph-info-text'>
+                                            The provided values are in {settings?.currency} currency.
+                                        </Typography>
 
-                                    <ListItem className="custom-list-item">
-                                        <ListItemAvatar>
-                                            <Avatar> <FunctionsIcon /> </Avatar>
-                                        </ListItemAvatar>
-                                        <ListItemText 
-                                            primary={<Typography id='total-label'>Total</Typography>}
-                                            secondary={<Typography id='total-count'>{`${filteredTransactions.length} transaction(s)`}</Typography>}
-                                        />
-                                        <ListItemText 
-                                            primary={<Typography id='total-amount'>{`${settings?.currency === 'EUR' ? '€' : (settings?.currency === 'USD' ? '$' : 'BGN')} ${totalSum.toFixed(2)}`}</Typography>}
-                                            secondary={<Typography id='total-percentage'>{`100%`}</Typography>}
-                                        />
-                                    </ListItem>
-                                    
-                                    {pieData.map((data, index) =>                             
-                                        <ListItem key={index} className="custom-list-item">
-                                            <ListItemAvatar> {getCategoryIcon(data.label, categories)} </ListItemAvatar>
-                                            <ListItemText
-                                                primary={<Typography id='category-label'>{data.label}</Typography>}
-                                                secondary={<Typography id='category-count'>
-                                                            {`${filteredTransactions.reduce((acc, transaction) => {
-                                                                    if (transaction.category === data.label) acc++;
-                                                                    return acc;
-                                                                }, 0)} transaction(s)`
-                                                            }
-                                                            </Typography>}
+                                        <ListItem className="custom-list-item">
+                                            <ListItemAvatar>
+                                                <Avatar> <FunctionsIcon /> </Avatar>
+                                            </ListItemAvatar>
+                                            <ListItemText 
+                                                primary={<Typography id='total-label'>Total</Typography>}
+                                                secondary={<Typography id='total-count'>{`${filteredTransactions.length} transaction(s)`}</Typography>}
                                             />
                                             <ListItemText 
-                                                primary={<Typography id='category-amount'>{`${settings?.currency === 'EUR' ? '€' : (settings?.currency === 'USD' ? '$' : 'BGN')} ${data.value.toFixed(2)}`}</Typography>}                                                                                                            
-                                                secondary={<Typography id='category-percentage'>{`${((data.value / totalSum)*100).toFixed(1)}%`}</Typography>}
+                                                primary={<Typography id='total-amount'>{`${settings?.currency === 'EUR' ? '€' : (settings?.currency === 'USD' ? '$' : 'BGN')} ${totalSum.toFixed(2)}`}</Typography>}
+                                                secondary={<Typography id='total-percentage'>{`100%`}</Typography>}
                                             />
-                                        </ListItem>                             
-                                    )}
-                                </List>
-                            </Box> 
-                            : 
-                            <Box className="default-message-box">
-                                <Typography> Select a period to preview graph </Typography>
-                            </Box>
-                        }
-                    </Box>           
-                    : 
-                    <Box className='progress-container'>        
-                        <FormGroup className='switch-button'>
-                            <FormControlLabel 
-                                control={<Switch checked={switchLabel === 'Progress Over Time' ? true : false} />} 
-                                label={switchLabel} 
-                                onChange={handleSwitchClick}                         
-                            />
-                        </FormGroup>
+                                        </ListItem>
+                                        
+                                        {pieData.map((data, index) =>                             
+                                            <ListItem key={index} className="custom-list-item">
+                                                <ListItemAvatar> {getCategoryIcon(data.label, categories)} </ListItemAvatar>
+                                                <ListItemText
+                                                    primary={<Typography id='category-label'>{data.label}</Typography>}
+                                                    secondary={<Typography id='category-count'>
+                                                                {`${filteredTransactions.reduce((acc, transaction) => {
+                                                                        if (transaction.category === data.label) acc++;
+                                                                        return acc;
+                                                                    }, 0)} transaction(s)`
+                                                                }
+                                                                </Typography>}
+                                                />
+                                                <ListItemText 
+                                                    primary={<Typography id='category-amount'>{`${settings?.currency === 'EUR' ? '€' : (settings?.currency === 'USD' ? '$' : 'BGN')} ${data.value.toFixed(2)}`}</Typography>}                                                                                                            
+                                                    secondary={<Typography id='category-percentage'>{`${((data.value / totalSum)*100).toFixed(1)}%`}</Typography>}
+                                                />
+                                            </ListItem>                             
+                                        )}
+                                    </List>
+                                </Box> 
+                                : 
+                                <Box className="default-message-box">
+                                    <Typography> Select a period to preview graph </Typography>
+                                </Box>
+                            }
+                        </Box>           
+                        : 
+                        <Box id='progress-container'>
+                            <FormGroup className='switch-button'>
+                                <FormControlLabel 
+                                    control={<Switch checked={switchLabel === 'Progress Over Time' ? true : false} />} 
+                                    label={switchLabel} 
+                                    onChange={handleSwitchClick}                         
+                                />
+                            </FormGroup>
 
-                        <Progress transactions={transactions} timeSpan={timeSpan} setTimeSpan={setTimeSpan} />
-                    </Box>
+                            <Progress transactions={transactions} timeSpan={timeSpan} setTimeSpan={setTimeSpan} />
+                        </Box>
+                    )
                 )
-            )
-        }
-               
-        <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleSnackbarClose}
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        >
-            <Alert onClose={handleSnackbarClose} severity={error ? 'error' : 'success'} variant="filled">
-                {error ? error : successMessage}
-            </Alert>
-        </Snackbar>        
-    </>
+            }
+                
+            <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleSnackbarClose}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            >
+                <Alert onClose={handleSnackbarClose} severity={error ? 'error' : 'success'} variant="filled">
+                    {error ? error : successMessage}
+                </Alert>
+            </Snackbar>        
+        </Box>
     );  
 }
 

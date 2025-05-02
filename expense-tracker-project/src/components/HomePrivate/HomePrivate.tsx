@@ -120,13 +120,14 @@ const HomePrivate = () => {
     return ( 
         <Box className="home-private-container">
             {error ?                 
-                <Box className="message-box">
-                    <Typography>There was a problem loading your data. Please try again later.</Typography>
+                <Box className='message-box error'>
+                    <Typography>There was a problem loading your data.</Typography>
+                    <Typography sx={{fontStyle: 'italic'}}>Please try again later.</Typography>
                 </Box>
                 : 
-                ((transactions.length === 0 || categories.length === 0 || payments.length === 0) ?
+                (transactions.length === 0 ?
                     <Box className="message-box">
-                        <Typography>No transactions, categories or payment methods found.</Typography>                                       
+                        <Typography sx={{color: 'red'}}>No transactions found.</Typography>
                     </Box>
                     :
                     <React.Fragment>

@@ -147,13 +147,14 @@ const BudgetGoals = ({ isLimitChanged, setIsLimitChanged }: BudgetGoalsProps) =>
     return (
         <Box className='main-budget-container'>
             {error ? 
-                <Box className="message-box">
-                    <Typography>There was a problem loading your data. Please try again later.</Typography>
+                <Box className='message-box error'>
+                    <Typography>There was a problem loading your data.</Typography>
+                    <Typography sx={{fontStyle: 'italic'}}>Please try again later.</Typography>
                 </Box>
                 :
-                ((categories.length === 0 || transactions.length === 0) ? 
+                (categories.length === 0 ? 
                     <Box className="message-box">
-                        <Typography>No transactions or categories found.</Typography>
+                        <Typography sx={{color: 'red'}}>No categories found.</Typography>
                     </Box>
                     :
                     <Box className='budget-items-container'>
@@ -223,7 +224,8 @@ const BudgetGoals = ({ isLimitChanged, setIsLimitChanged }: BudgetGoalsProps) =>
                             categoryForLimitUpdate={categoryForLimitUpdate} 
                             setCategoryForLimitUpdate={setCategoryForLimitUpdate}
                             setUpdateCategoryLimit={setUpdateCategoryLimit}
-                            setValidationError={setValidationError} setOpenSnackbar={setOpenSnackbar}
+                            setValidationError={setValidationError} 
+                            setOpenSnackbar={setOpenSnackbar}
                 />
             }
             

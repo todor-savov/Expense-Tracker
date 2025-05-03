@@ -248,49 +248,50 @@ const Profile = ({ isUserChanged, setIsUserChanged }: ProfileProps) => {
     return (
         <Box className="profile-container">
             {error ? 
-                <Box className="message-box">
-                    <Typography>There was a problem loading your data. Please try again later.</Typography>
+                <Box className='message-box error'>
+                    <Typography>There was a problem loading your data.</Typography>
+                    <Typography sx={{fontStyle: 'italic'}}>Please try again later.</Typography>
                 </Box>
                 :
                 (userDetails &&
-                    <>
-                        <Box component="form" noValidate autoComplete="off" onSubmit={handleUserChange}>
-                            <div id="profile-fields">
-                                <div id="photo-name-container">
-                                    <div id="image-text-container">
-                                        {(loading && fileToUpload) ?
-                                            <Stack sx={{ color: 'grey.500' }} spacing={2} direction="row" id='spinning-circle'>
-                                                <CircularProgress color="success" size='3rem' />
-                                            </Stack>
-                                            :
-                                            <img src={newPhotoURL ? newPhotoURL : userDetails?.photo} alt="profile" onClick={() => fileInputRef.current?.click()} />
-                                        }
-                                        <span id="change-photo-text">Change photo</span>
-                                    </div>
-                                        
-                                    <VisuallyHiddenInput type="file" id="file" name="file" accept="image/*" ref={fileInputRef} onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleFileUpload(event)} />
-
-                                    <TextField error={!!firstNameError} type="text" id="first-name" label='First Name'
-                                        defaultValue={userDetails?.firstName} helperText={firstNameError} required
-                                    />
-
-                                    <TextField error={!!lastNameError} type="text" id="last-name" label='Last Name'
-                                        defaultValue={userDetails?.lastName} helperText={lastNameError} required
-                                    />
+                    <Box id='forms-container'>
+                        <Box component="form" noValidate autoComplete="off" onSubmit={handleUserChange} id="profile-fields">
+                            <div id="photo-name-container">
+                                <div id="image-text-container">
+                                    {(loading && fileToUpload) ?
+                                        <Stack sx={{ color: 'grey.500' }} spacing={2} direction="row" id='spinning-circle'>
+                                            <CircularProgress color="success" size='3rem' />
+                                        </Stack>
+                                        :
+                                        <img src={newPhotoURL ? newPhotoURL : userDetails?.photo} alt="profile" onClick={() => fileInputRef.current?.click()} />
+                                    }
+                                    <span id="change-photo-text">Change photo</span>
                                 </div>
-
-                                <TextField type="email" id="email" label="Email Address" disabled
-                                    defaultValue={userDetails?.email} helperText={"Not editable"} required
-                                />
-                                    
-                                <TextField type="text" id="username" label="Username" disabled
-                                    defaultValue={userDetails?.username} helperText={"Not editable"} required
+                                        
+                                <VisuallyHiddenInput type="file" id="file" name="file" accept="image/*" ref={fileInputRef} 
+                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleFileUpload(event)} 
                                 />
 
-                                <TextField error={!!phoneError} type="number" id="phone" label="Phone Number"
-                                    defaultValue={userDetails?.phone} helperText={phoneError} required
+                                <TextField error={!!firstNameError} type="text" id="first-name" label='First Name'
+                                    defaultValue={userDetails?.firstName} helperText={firstNameError} required
+                                />
+
+                                <TextField error={!!lastNameError} type="text" id="last-name" label='Last Name'
+                                    defaultValue={userDetails?.lastName} helperText={lastNameError} required
                                 />
                             </div>
+
+                            <TextField type="email" id="email" label="Email Address" disabled
+                                defaultValue={userDetails?.email} helperText={"Not editable"} required
+                            />
+                                    
+                            <TextField type="text" id="username" label="Username" disabled
+                                defaultValue={userDetails?.username} helperText={"Not editable"} required
+                            />
+
+                            <TextField error={!!phoneError} type="number" id="phone" label="Phone Number"
+                                defaultValue={userDetails?.phone} helperText={phoneError} required
+                            />
 
                             {(loading && userToUpdate) ?
                                 <Stack sx={{ color: 'grey.500' }} spacing={2} direction="row" id='spinning-circle'>
@@ -301,16 +302,14 @@ const Profile = ({ isUserChanged, setIsUserChanged }: ProfileProps) => {
                             }
                         </Box>
 
-                        <Box component="form" noValidate autoComplete="off" onSubmit={handlePasswordChange}>
-                            <div id="password-fields">
-                                <TextField error={!!oldPasswordError} type="password" id="old-password" label="Old Password"
-                                    helperText={oldPasswordError}
-                                />
+                        <Box component="form" noValidate autoComplete="off" onSubmit={handlePasswordChange} id="password-fields">
+                            <TextField error={!!oldPasswordError} type="password" id="old-password" label="Old Password"
+                                helperText={oldPasswordError}
+                            />
 
-                                <TextField error={!!newPasswordError} type="password" id="new-password" label="New Password"
-                                    helperText={newPasswordError || `${PASSWORD_MIN_CHARS}-${PASSWORD_MAX_CHARS} symbols, ONE digit, letter AND a special symbol`}
-                                />
-                            </div>
+                            <TextField error={!!newPasswordError} type="password" id="new-password" label="New Password"
+                                helperText={newPasswordError || `${PASSWORD_MIN_CHARS}-${PASSWORD_MAX_CHARS} symbols, ONE digit, letter AND a special symbol`}
+                            />
                                     
                             {(loading && passwordCredentials) ? 
                                 <Stack sx={{ color: 'grey.500' }} spacing={2} direction="row" id='spinning-circle'>
@@ -319,8 +318,8 @@ const Profile = ({ isUserChanged, setIsUserChanged }: ProfileProps) => {
                                 :
                                 <Button id='update-password-button' type="submit">Update password</Button>
                             }
-                        </Box> 
-                    </>    
+                        </Box>
+                    </Box>
                 )   
             }                                            
                         

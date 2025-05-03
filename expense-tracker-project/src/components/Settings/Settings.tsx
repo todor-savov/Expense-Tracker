@@ -103,8 +103,9 @@ const Settings = ({ isLimitChanged, setIsLimitChanged }: SettingsProps) => {
     return (
         <Box className='settings-container'>
             {error ? 
-                <Box className="message-box">
-                    <Typography>There was a problem loading your data. Please try again later.</Typography>
+                <Box className='message-box error'>
+                    <Typography>There was a problem loading your data.</Typography>
+                    <Typography sx={{fontStyle: 'italic'}}>Please try again later.</Typography>
                 </Box>
                 :
                 <Box component={"form"} onSubmit={handleSubmit} className="settings-form">

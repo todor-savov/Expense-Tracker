@@ -236,15 +236,16 @@ const AddTransaction = ({ mode }: { mode: string }) => {
     return (
         <Box className="expense-container">
             {error ? 
-                <Box className="message-box">
-                    <Typography>There was a problem loading your data. Please try again later.</Typography>
+                <Box className='message-box error'>
+                    <Typography>There was a problem loading your data.</Typography>
+                    <Typography sx={{fontStyle: 'italic'}}>Please try again later.</Typography>
                 </Box>
                 :
-                ((mode === 'edit' && !fetchedTransaction || categories.length === 0 || payments.length === 0) ?
+                (categories.length === 0 ?
                     <Box className="message-box">
-                       <Typography>No transaction found. / No categories or payment methods found.</Typography>
+                        <Typography sx={{color: 'red'}}>Categories not found.</Typography>
                     </Box>
-                    :                      
+                    :
                     <Box component="form" noValidate autoComplete="off" onSubmit={handleSubmit} className="expense-form">
                         <Box className='form-input'>
                             <Box className='input-fields'>

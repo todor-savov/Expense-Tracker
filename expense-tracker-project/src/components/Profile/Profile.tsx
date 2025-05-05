@@ -246,7 +246,7 @@ const Profile = ({ isUserChanged, setIsUserChanged }: ProfileProps) => {
     }
 
     return (
-        <Box className="profile-container">
+        <Box id="profile-container">
             {error ? 
                 <Box className='message-box error'>
                     <Typography>There was a problem loading your data.</Typography>
@@ -256,17 +256,19 @@ const Profile = ({ isUserChanged, setIsUserChanged }: ProfileProps) => {
                 (userDetails &&
                     <Box id='forms-container'>
                         <Box component="form" noValidate autoComplete="off" onSubmit={handleUserChange} id="profile-fields">
-                            <div id="photo-name-container">
-                                <div id="image-text-container">
+                            <Box id="photo-name-container">
+                                <Box>
                                     {(loading && fileToUpload) ?
                                         <Stack sx={{ color: 'grey.500' }} spacing={2} direction="row" id='spinning-circle'>
                                             <CircularProgress color="success" size='3rem' />
                                         </Stack>
                                         :
-                                        <img src={newPhotoURL ? newPhotoURL : userDetails?.photo} alt="profile" onClick={() => fileInputRef.current?.click()} />
+                                        <Box id="profile-image-wrapper" onClick={() => fileInputRef.current?.click()}>
+                                            <img src={newPhotoURL ? newPhotoURL : userDetails?.photo} alt="profile" />
+                                            <span id="change-photo-text">Change photo</span>
+                                        </Box>
                                     }
-                                    <span id="change-photo-text">Change photo</span>
-                                </div>
+                                </Box>
                                         
                                 <VisuallyHiddenInput type="file" id="file" name="file" accept="image/*" ref={fileInputRef} 
                                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleFileUpload(event)} 
@@ -279,7 +281,7 @@ const Profile = ({ isUserChanged, setIsUserChanged }: ProfileProps) => {
                                 <TextField error={!!lastNameError} type="text" id="last-name" label='Last Name'
                                     defaultValue={userDetails?.lastName} helperText={lastNameError} required
                                 />
-                            </div>
+                            </Box>
 
                             <TextField type="email" id="email" label="Email Address" disabled
                                 defaultValue={userDetails?.email} helperText={"Not editable"} required

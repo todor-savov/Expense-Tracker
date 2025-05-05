@@ -1,4 +1,5 @@
-.profile-container {
+/* Styling for the main containers */
+#profile-container {
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -6,7 +7,7 @@
     align-items: center;
     background-color: #f9f9f9;
     padding: 1.5rem;
-    gap: 1rem;    
+    gap: 1rem;
 }
 
 #forms-container {
@@ -22,49 +23,67 @@
 #profile-fields, #password-fields {
     display: flex;
     flex-direction: column;
-    align-items: center;
     padding: 1rem;
     gap: 1rem;
 }
 
+/* Styling for the profile image and first name/last name container */
 #photo-name-container {
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 1rem;
 }
 
-#image-text-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-#image-text-container img {
+/* Styling for the profile image and "Change photo" text on hover */
+#profile-image-wrapper {
+    position: relative;
     width: 7rem;
     height: 7rem;
-    cursor: pointer;
     border-radius: 50%;
-    border: 2px solid #74C0FC;
-    transition: transform 0.3s ease;
+    overflow: hidden;
+    cursor: pointer;
+    margin-bottom: 0.5rem;
 }
 
-#image-text-container img:hover {
-    transform: scale(1.1);
+#profile-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #74C0FC;
+    transition: filter 0.3s ease;
+}
+
+#profile-image-wrapper:hover img {
+    filter: blur(2px);
 }
 
 #change-photo-text {
     opacity: 0;
-    color: grey;
-    font-weight: bold;
-    margin: 0.5rem;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    background-color: rgba(0, 0, 0, 0.5);    
+    padding: 0.5rem;
+    white-space: nowrap;
     transition: opacity 0.3s ease;
 }
 
-#image-text-container img:hover + #change-photo-text {
+#profile-image-wrapper:hover #change-photo-text {
     opacity: 1;
 }
 
+/* Styling for the text fields width */
+#profile-fields .MuiTextField-root, #password-fields .MuiTextField-root {
+    width: 100%;
+}
+
+/* Styling for the form submit buttons */
 #update-user-button, #update-password-button {
+    align-self: center;
     color: #fff;
     background-color: #007BFF;
     font-weight: bold;
@@ -76,66 +95,27 @@
     background-color: #0056b3;
 }
 
-#spinning-circle {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 1rem;
-}
-
 @media (min-width: 481px) and (max-width: 768px) {
     #photo-name-container { 
         flex-direction: row;
-        align-items: center;
     }
-
-    #change-photo-text {
-        margin: 0;
-    }
-
-    #profile-fields .MuiTextField-root {
-        width: 100%;
-    }
-
-    #password-fields .MuiTextField-root {
-        width: 100%;
-    }    
 }
 
 @media (min-width: 769px) and (max-width: 1024px) {
     #photo-name-container { 
         flex-direction: row;
-        align-items: center;
     }
-
-    #change-photo-text {
-        margin: 0;
-    }
-
-    #profile-fields .MuiTextField-root {
-        width: 100%;
-    }
-
-    #password-fields .MuiTextField-root {
-        width: 100%;
-    }       
 }
 
 @media (min-width: 1025px) { 
     #photo-name-container { 
         flex-direction: row;
-        align-items: center;
     }
+}
 
-    #change-photo-text {
-        margin: 0;
-    }
-
-    #profile-fields .MuiTextField-root {
-        width: 100%;
-    }
-
-    #password-fields .MuiTextField-root {
-        width: 100%;
-    }
+#spinning-circle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
 }

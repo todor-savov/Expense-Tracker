@@ -1,25 +1,24 @@
-.settings-container {
+#settings-container {
     flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: white;
+    background-color: #f9f9f9;
+    padding: 1.5rem;
 }
 
-.settings-form {
+#settings-form {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-    padding: 1rem;
+    background-color: #fff;
+    border-radius: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
     gap: 1rem;
 }
 
 #settings-header {
-    font-size: 1.5rem;
     font-weight: bold;
-    margin-bottom: 0.5rem;
 }
 
 .form-group {
@@ -27,35 +26,20 @@
     flex-direction: column;
     border: 1px solid #ccc;
     border-radius: 5px;
-    background-color: white;
-    padding: 2rem;
+    padding: 1rem;
     gap: 1rem;
 }
 
-#activity-notification-limit, #budget-notification-limit {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.notification-limit-input {    
-    width: 4rem;    
-}
-
-#currency-select-box {
-    margin-top: 1rem;
-}
-
-#currency-select-dropdown {
-    margin: 0.2rem;
+#notification-label {
+    font-size: 0.9rem;
 }
 
 #update-settings-button {
+    align-self: center;
+    cursor: pointer;
+    border: none;
     color: #fff;
     background-color: #007BFF;
-    padding: 0.5rem 1rem;
-    border: none;
-    cursor: pointer;
 }
 
 #update-settings-button:hover {
@@ -63,20 +47,73 @@
 }
 
 @media (min-width: 481px) and (max-width: 768px) {
-    /* The page looks good on this screen size */    
+    #settings-header {
+        font-size: 1.05rem;
+    }
+
+    #settings-form {
+        padding: 2rem;
+        gap: 1.5rem;
+    }
+
+    .form-group {
+        padding: 2rem;
+        gap: 2rem;
+    }
+
+    #notification-label {
+        font-size: 1.05rem;
+    }
+
+    #update-settings-button {
+        font-size: 1.05rem;
+    }
 }
 
 @media (min-width: 769px) and (max-width: 1024px) {
     #settings-header {
-        font-size: 2rem;
+        font-size: 1.3rem;
+    }
+
+    #settings-form {
+        padding: 2rem;
+        gap: 1.5rem;
     }
 
     .form-group {
-        padding: 3rem;
+        padding: 2rem;
         gap: 2rem;
+    }
+
+    #notification-label {
+        font-size: 1.2rem;
+    }
+
+    #update-settings-button {
+        font-size: 1.15rem;
     }
 }
 
 @media (min-width: 1025px) { 
-    /* The page looks good on this screen size */
+    #settings-header {
+        font-size: 1.1rem;
+    }
+
+    #settings-form {
+        padding: 2rem;
+        gap: 1.5rem;
+    }
+
+    .form-group {
+        padding: 2rem;
+        gap: 2rem;
+    }
+
+    #notification-label {
+        font-size: 1.1rem;
+    }
+
+    #update-settings-button {
+        font-size: 1.1rem;
+    }
 }

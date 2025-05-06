@@ -101,49 +101,41 @@ const Settings = ({ isLimitChanged, setIsLimitChanged }: SettingsProps) => {
     }
 
     return (
-        <Box className='settings-container'>
+        <Box id='settings-container'>
             {error ? 
                 <Box className='message-box error'>
                     <Typography>There was a problem loading your data.</Typography>
                     <Typography sx={{fontStyle: 'italic'}}>Please try again later.</Typography>
                 </Box>
                 :
-                <Box component={"form"} onSubmit={handleSubmit} className="settings-form">
-                    <Typography variant="h5" id='settings-header'>Choose your preferred settings:</Typography>
+                <Box component={"form"} onSubmit={handleSubmit} id="settings-form">
+                    <Typography id='settings-header'>Choose your preferred settings:</Typography>
                     
                     <FormGroup className="form-group">
                         <FormControlLabel control={
                             <Switch checked={activityNotifications} onChange={(e) => setActivityNotifications(e.target.checked)} />
                             } 
-                            label="Enable activity notifications"
+                            label={<Typography id='notification-label'>Enable activity notifications</Typography>}
                         />
 
                         {activityNotifications && 
-                            <Box id="activity-notification-limit">
-                                <TextField type="number" label="Days" required 
-                                    name="activity-notification-limit" 
-                                    className="notification-limit-input"                                    
-                                    defaultValue={settings?.activityNotificationLimit ? settings.activityNotificationLimit : ''}
-                                />
-                                <span> of inactivity.</span>
-                            </Box>
+                            <TextField type="number" label="Days" name="activity-notification-limit" required 
+                                defaultValue={settings?.activityNotificationLimit ? settings.activityNotificationLimit : ''}
+                                helperText="Number of days without activity"
+                            />
                         } 
 
                         <FormControlLabel control={
                             <Switch checked={budgetNotifications} onChange={(e) => setBudgetNotifications(e.target.checked)} />
                             }
-                            label="Enable budget notifications" 
+                            label={<Typography id='notification-label'>Enable budget notifications</Typography>}
                         />
 
                         {budgetNotifications && 
-                            <Box id="budget-notification-limit">
-                                <TextField type="number" label="%" required
-                                    name='budget-notification-limit'
-                                    className="notification-limit-input"
-                                    defaultValue={settings?.budgetNotificationLimit ? settings.budgetNotificationLimit : ''}
-                                />
-                                <span> of the category budget.</span>
-                            </Box>
+                            <TextField type="number" label="%" name='budget-notification-limit' required 
+                                defaultValue={settings?.budgetNotificationLimit ? settings.budgetNotificationLimit : ''}
+                                helperText="Percentage of the category budget"
+                            />
                         }
 
                         <FormControl id="currency-select-box">

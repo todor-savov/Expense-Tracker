@@ -31,10 +31,15 @@
 }
 
 #notification-label {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
+}
+
+.notification-limit p {
+    color: red;
 }
 
 #update-settings-button {
+    font-size: 0.9rem;
     align-self: center;
     cursor: pointer;
     border: none;
@@ -53,40 +58,34 @@
 
     #settings-form {
         padding: 2rem;
-        gap: 1.5rem;
     }
 
     .form-group {
-        padding: 2rem;
-        gap: 2rem;
+        padding: 1.5rem;
+        gap: 1.25rem;
     }
 
     #notification-label {
-        font-size: 1.05rem;
-    }
-
-    #update-settings-button {
-        font-size: 1.05rem;
+        font-size: 1rem;
     }
 }
 
 @media (min-width: 769px) and (max-width: 1024px) {
     #settings-header {
-        font-size: 1.3rem;
+        font-size: 1.25rem;
     }
 
     #settings-form {
         padding: 2rem;
-        gap: 1.5rem;
     }
 
     .form-group {
         padding: 2rem;
-        gap: 2rem;
+        gap: 1.25rem;
     }
 
     #notification-label {
-        font-size: 1.2rem;
+        font-size: 1.15rem;
     }
 
     #update-settings-button {
@@ -95,25 +94,23 @@
 }
 
 @media (min-width: 1025px) { 
+    #settings-form {
+        padding: 2rem;
+    }
+
     #settings-header {
         font-size: 1.1rem;
     }
 
-    #settings-form {
-        padding: 2rem;
-        gap: 1.5rem;
-    }
-
     .form-group {
-        padding: 2rem;
-        gap: 2rem;
+        padding: 1.5rem;
     }
 
     #notification-label {
-        font-size: 1.1rem;
+        font-size: 1rem;
     }
 
     #update-settings-button {
-        font-size: 1.1rem;
+        font-size: 1rem;
     }
 }

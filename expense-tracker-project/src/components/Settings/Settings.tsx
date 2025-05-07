@@ -122,6 +122,7 @@ const Settings = ({ isLimitChanged, setIsLimitChanged }: SettingsProps) => {
                             <TextField type="number" label="Days" name="activity-notification-limit" required 
                                 defaultValue={settings?.activityNotificationLimit ? settings.activityNotificationLimit : ''}
                                 helperText="Number of days without activity"
+                                className="notification-limit"
                             />
                         } 
 
@@ -135,6 +136,7 @@ const Settings = ({ isLimitChanged, setIsLimitChanged }: SettingsProps) => {
                             <TextField type="number" label="%" name='budget-notification-limit' required 
                                 defaultValue={settings?.budgetNotificationLimit ? settings.budgetNotificationLimit : ''}
                                 helperText="Percentage of the category budget"
+                                className="notification-limit"
                             />
                         }
 

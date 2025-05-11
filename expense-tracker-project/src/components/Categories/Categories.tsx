@@ -1,13 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Alert, Box, Button, CircularProgress, List, ListItem, ListItemAvatar, ListItemText, Modal, Popover, Snackbar, Stack, TextField, Tooltip, Typography } from "@mui/material";
-import { AddBox } from "@mui/icons-material";
-import { GridAddIcon } from "@mui/x-data-grid";
+import { Alert, Box, Button, CircularProgress, IconButton, List, ListItem, ListItemAvatar, ListItemText, Modal, Popover, Snackbar, Stack, TextField, Tooltip, Typography } from "@mui/material";
+import { AddBox, CancelOutlined, CheckCircle } from "@mui/icons-material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import AuthContext from "../../context/AuthContext";
 import { searchIcons } from "../../service/icons-service";
 import { createCategory, deleteCategory, updateCategory, getCategories } from "../../service/database-service";
-import { CANCEL_CATEGORY_ICON, SAVE_CATEGORY_ICON, CATEGORY_NAME_MIN_LENGTH, CATEGORY_NAME_MAX_LENGTH, SPECIAL_CHARS_REGEX } from "../../common/constants";
+import { CATEGORY_NAME_MIN_LENGTH, CATEGORY_NAME_MAX_LENGTH, SPECIAL_CHARS_REGEX } from "../../common/constants";
+import DEFAULT_CATEGORY_ICON from "../../../src/assets/money_stack.png";
 import ConfirmDialog from "../ConfirmDialog/ConfirmDialog";
 import "./Categories.css";
 
@@ -51,6 +51,8 @@ const Categories = () => {
     const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
     const [selectedCategoryItem, setSelectedCategoryItem] = useState<string>("");
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
+
+    const [showAddEditForm, setShowAddEditForm] = useState<boolean>(false);
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -178,40 +180,55 @@ const Categories = () => {
         }
     
         if (addCategoryMode) {
-            if (categoryName && selectedIcon) {                
-                setNewCategory({ type: categoryName, imgSrc: selectedIcon, imgAlt: categoryName, user: isLoggedIn.user });
-                setAddCategoryMode(false);
-                setSelectedIcon("");
-                setSearchTerm("");
-                setFoundIcons([]);
+            if (categoryName) {                
+                setNewCategory({
+                    type: categoryName, 
+                    imgSrc: selectedIcon ? selectedIcon : DEFAULT_CATEGORY_ICON,
+                    imgAlt: categoryName, 
+                    user: isLoggedIn.user 
+                });
+                setAddCategoryMode(false);                
             }
             else {
-                setOnSaveError("Please select a category icon and provide a name");
+                setOnSaveError("Please select a category name");
                 setOpenSnackbar(true);
             }
         }
 
         if (editedCategory) {
             if (categoryName) {
-                setCategoryToUpdate({id: editedCategory.id, type: categoryName, 
+                setCategoryToUpdate({
+                    id: editedCategory.id,
+                    type: categoryName, 
                     imgSrc: selectedIcon ? selectedIcon : editedCategory.imgSrc, 
-                    imgAlt: categoryName, user: isLoggedIn.user
+                    imgAlt: categoryName, 
+                    user: isLoggedIn.user
                 });
-                setEditedCategory(null);
-                setSelectedIcon("");
-                setSearchTerm("");
-                setFoundIcons([]);
+                setEditedCategory(null);                 
             }
             else {
-                setOnSaveError("Please select a category icon and provide a name");
+                setOnSaveError("Please select a category name");
                 setOpenSnackbar(true);
             }
         }
+
+        setSelectedIcon("");
+        setSearchTerm("");
+        setFoundIcons([]);
+        setShowAddEditForm(false);
     }
 
     const handleAddCategoryButtonClick = () => {
         setEditedCategory(null);
         setAddCategoryMode(true);
+        setShowAddEditForm(true);
+    }
+
+    const handleModalClose = () => {
+        setSelectedIcon("");
+        setEditedCategory(null);
+        setAddCategoryMode(false);
+        setShowAddEditForm(false);
     }
 
     const handleIconSelect = (imageURL: string) => {
@@ -223,13 +240,15 @@ const Categories = () => {
         setSelectedIcon("");
         setEditedCategory(null);
         setAddCategoryMode(false);
+        setShowAddEditForm(false);
     }
 
     const handleEdit = (category: Category) => {
         setAddCategoryMode(false);
-        setSelectedIcon(category.imgSrc);
         setEditedCategory(category);
+        setSelectedIcon(category.imgSrc);
         handlePopoverClose();
+        setShowAddEditForm(true);
     }  
 
     const handleSnackbarClose = () => {
@@ -260,18 +279,20 @@ const Categories = () => {
                         </Box>
                         :       
                         <>
-                            <Typography id='page-title'> Existing Categories </Typography>    
+                            <Typography id='page-title'> Existing Categories </Typography>
 
-                            <List className="categories-list">                            
+                            <List id="categories-list">
                                 {categories.map((category) => (
                                     <React.Fragment key={category.id}>
-                                        <Tooltip title={<Typography id='tooltip-text'> Click to edit/delete this category </Typography>} arrow>
-                                            <ListItem onClick={(event) => handleCategoryItemClick(event, category.type)} className="category-item">
-                                                <ListItemAvatar>
-                                                    <img src={category.imgSrc} alt={category.imgAlt} />
-                                                </ListItemAvatar>
-
-                                                <ListItemText primary={<span className="category-title"> {category.type} </span>} />                                   
+                                        <Tooltip title='Click to edit/delete this category' placement="top" arrow                                            
+                                            classes={{tooltip: 'category-item-tooltip'}}
+                                        >
+                                            <ListItem
+                                                onClick={(event) => handleCategoryItemClick(event, category.type)}
+                                                className={`category-item ${selectedCategoryItem === category.type ? 'blurred-category' : ''}`}
+                                            >                                                
+                                                <ListItemAvatar> <img src={category.imgSrc} alt={category.imgAlt} /> </ListItemAvatar>
+                                                <ListItemText primary={<Typography id="category-title"> {category.type} </Typography>} />
                                             </ListItem>
                                         </Tooltip>
 
@@ -279,22 +300,18 @@ const Categories = () => {
                                             open={selectedCategoryItem === category.type}
                                             anchorEl={anchorEl}
                                             onClose={handlePopoverClose} 
-                                            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-                                            transformOrigin={{ vertical: 'bottom', horizontal: 'center' }}                                        
+                                            anchorOrigin={{ vertical: 'center', horizontal: 'center' }}
+                                            transformOrigin={{ vertical: 'center', horizontal: 'center' }}                                        
                                         >
                                             <Box className='popover-buttons-container'>
-                                                <Tooltip title={<Typography id='tooltip-text'> Edit </Typography>} arrow>
-                                                    <Button onClick={() => handleEdit(category)}>
-                                                        <FontAwesomeIcon icon={faPenToSquare} className='popover-button' />
-                                                    </Button>
-                                                </Tooltip>
-                                                <Tooltip title={<Typography id='tooltip-text'> Delete </Typography>} arrow>
-                                                    <Button onClick={() => setDialog({ open: true, id: category.id })}>
-                                                        <FontAwesomeIcon icon={faTrashCan} className='popover-button' />
-                                                    </Button>
-                                                </Tooltip>
+                                                <Button onClick={() => handleEdit(category)}>
+                                                    <FontAwesomeIcon icon={faPenToSquare} className='popover-button' />
+                                                </Button>
+                                                <Button onClick={() => setDialog({ open: true, id: category.id })}>
+                                                    <FontAwesomeIcon icon={faTrashCan} className='popover-button' />
+                                                </Button>
                                             </Box>
-                                        </Popover>                                        
+                                        </Popover>
                                     </React.Fragment>
                                 ))}
                             </List>
@@ -302,66 +319,53 @@ const Categories = () => {
                     )
                 }                
 
-                {(addCategoryMode || editedCategory) &&                          
+                <Modal open={showAddEditForm} onClose={handleModalClose} closeAfterTransition>
                     <Box component="form" onSubmit={handleSubmit} id="category-form">
                         <Typography id='form-title'> {addCategoryMode ? "Add Category" : "Edit Category"} </Typography>
                         {/* First Row: Icon and Category Name */}
-                        <div id="top-row">
-                            {addCategoryMode && (
-                                selectedIcon ? 
-                                    <img src={selectedIcon} alt="category-icon" onClick={() => setShowIconSearch(true)} className="selected-icon" />
-                                    :
-                                    <div className="icon-placeholder" onClick={() => setShowIconSearch(true)}>
-                                        <GridAddIcon style={{ fontSize: 50, color: "#9e9e9e" }} />
-                                        <Typography variant="caption">Select an icon</Typography>
-                                    </div>
-                            )}
+                        <Box id="top-row">
+                            {addCategoryMode ? 
+                                <img src={selectedIcon ? selectedIcon : DEFAULT_CATEGORY_ICON} alt="category-icon"
+                                    onClick={() => setShowIconSearch(true)} className="selected-icon" />
+                                :
+                                <img src={selectedIcon ? selectedIcon : editedCategory?.imgSrc} alt="category-icon"
+                                    onClick={() => setShowIconSearch(true)} className="selected-icon" />
+                            }
 
-                            {addCategoryMode && 
+                            {addCategoryMode ?
                                 <TextField type="text" id="category-name" label="Category Name" variant="outlined" required />
-                            }
-
-                            {editedCategory && 
-                                <img src={selectedIcon ? selectedIcon : editedCategory.imgSrc} alt="category-icon" onClick={() => setShowIconSearch(true)} 
-                                    className="selected-icon" />
-                            }
-
-                            {editedCategory &&
+                                :
                                 <TextField type="text" id="category-name" label="Category Name" variant="outlined" required                                    
-                                    onChange={(e) => setEditedCategory({ ...editedCategory, type: e.target.value })} 
-                                    value={editedCategory.type} 
+                                    onChange={(e) => setEditedCategory({ ...editedCategory as Category, type: e.target.value })} 
+                                    value={editedCategory?.type} 
                                 />
                             }
-                        </div>
+                        </Box>
                         {/* Second Row: Buttons */}
-                        <div id="bottom-row">
-                            <Button type="submit">
-                                <img src={SAVE_CATEGORY_ICON} alt="save-button" />
-                            </Button>
-                            <Button onClick={handleCancelButtonClick}>
-                                <img src={CANCEL_CATEGORY_ICON} alt="cancel-button" />
-                            </Button>
-                        </div>
-
-                        <Modal open={showIconSearch} onClose={() => setShowIconSearch(false)} closeAfterTransition>
-                            <Box className='icon-search'>
-                                <TextField type="text" fullWidth id="search-input" helperText={"Search for category icons (provided by IconFinder)"} 
-                                    onChange={(e) => setSearchTerm(e.target.value)} label="Search" variant="outlined" />
-
-                                {foundIcons.length > 0 ?
-                                    <Box className="icon-grid">
-                                        {foundIcons.map((icon, index) => {
-                                            const imageURL = icon.raster_sizes[icon.raster_sizes.length - 1].formats[0].preview_url;
-                                            return <img key={index} onClick={() => handleIconSelect(imageURL)} src={imageURL} alt={icon.tags[0]} />
-                                        })}
-                                    </Box>
-                                    : 
-                                    'No icons found'
-                                }
-                            </Box>
-                        </Modal>
+                        <Box id="bottom-row">
+                            <IconButton type="submit"> <CheckCircle id='save-category-button' /> </IconButton>
+                            <IconButton onClick={handleCancelButtonClick}> <CancelOutlined id='cancel-category-button' /> </IconButton>
+                        </Box>
                     </Box>
-                }                                         
+                </Modal>
+
+                <Modal open={showIconSearch} onClose={() => setShowIconSearch(false)} closeAfterTransition>
+                    <Box id='icon-search-form'>
+                        <TextField type="text" fullWidth id="search-input" helperText={"Search for category icons (provided by IconFinder)"} 
+                            onChange={(e) => setSearchTerm(e.target.value)} label="Search" variant="outlined" />
+
+                        {foundIcons.length > 0 ?
+                            <Box className="icon-grid">
+                                {foundIcons.map((icon, index) => {
+                                    const imageURL = icon.raster_sizes[icon.raster_sizes.length - 1].formats[0].preview_url;
+                                    return <img key={index} onClick={() => handleIconSelect(imageURL)} src={imageURL} alt={icon.tags[0]} />
+                                })}
+                            </Box>
+                            : 
+                            'No icons found'
+                        }
+                    </Box>
+                </Modal>
 
                 {loading ?
                     <Stack sx={{ color: 'grey.500' }} spacing={2} direction="row" id='spinning-circle'>

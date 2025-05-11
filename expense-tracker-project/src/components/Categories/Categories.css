@@ -1,29 +1,55 @@
-/* Styling for the main containers */
+/* Styling for the main elements */
 #categories-box {
     flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: white;
+    background-color: #f9f9f9;
+    padding: 1.5rem;
 }
 
 #page-title {
-    font-size: 1.4rem;
-    margin-top: 1rem;
+    font-size: 1.2rem;
+    font-weight: bold;
 }
 
-.categories-list {
+#categories-list {
+    width: 100%;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 1.25rem;
-    padding: 1.5rem !important;
+    padding: 1rem;
+    gap: 1rem;
+}
+
+.category-item {
+    max-width: 70%;
+    display: flex;    
+    border: 1px solid #bab9b9;
+    border-radius: 1rem;
+    cursor: pointer;
+    background-color: white;
+    transition: filter 0.3s ease;
+    padding: 1rem !important;
+    gap: 1rem;
+}
+
+.category-item-tooltip {
+    font-size: 0.85rem !important;
+    margin: 0 !important;
+}
+
+.category-item img {
+    width: 3rem;
+    height: 3rem;
+}
+
+#category-title {
+    font-size: 1.2rem;
 }
 
 .popover-buttons-container {
-    display: flex;
-    gap: 0.5rem;
     padding: 0.5rem;
 }
 
@@ -32,88 +58,92 @@
     height: 1rem;
 }
 
-#tooltip-text {   
-    font-size: 0.8rem;
+.blurred-category {
+    filter: blur(2px);
+    background-color: #8d8888;
 }
-
-.category-item {
-    max-width: calc(80% - 1rem);
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    padding: 1rem !important;
-    border: 1px solid #bab9b9;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.category-item img {
-    width: 3rem;
-    height: 3rem;
-}
-
-.category-title {
-    font-size: 1rem;
-}
-
-/* Styling for the add/edit category form */
+/* Styling for the add/edit category form which displays in a modal */
 #category-form {
+    width: 90%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 1rem; 
-    padding: 1rem;
-    margin-bottom: 1.5rem;
-    border: 1px solid #ccc;
+    background-color: white;
     border-radius: 0.75rem;
+    padding: 1.5rem;
+    gap: 2rem;
+}
+
+#form-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin: 0 auto;
 }
 
 #top-row, #bottom-row {
     display: flex;
     gap: 1rem;
+}
+
+#top-row {
     align-items: center;
+    margin: 0 auto;
 }
 
-#category-form img {
-    width: 6rem; 
-}
-
-#bottom-row img {
-    width: 2.3rem;
-}
-
-.icon-placeholder {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 0.75rem;
-    border: 2px dashed #ccc;
-    border-radius: 1rem;
-    cursor: pointer;
-}
-
-.icon-placeholder:hover {
+#bottom-row button {
+    flex: 1;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
     background-color: #f0f0f0;
+    transition: background-color 0.2s ease;
+}
+  
+#bottom-row button:hover {
+    background-color: #e0e0e0;
+}
+  
+#save-category-button {
+    color: green;
+}
+
+#cancel-category-button {
+    color: red;
+}
+
+#save-category-button, #cancel-category-button {
+    font-size: 1.75rem;
 }
 
 .selected-icon {  
+    width: 4rem;
+    height: 4rem;
     cursor: pointer;
     transition: transform 0.2s ease;
 }
 
 .selected-icon:hover {
-    transform: scale(1.1);
+    transform: scale(1.15);
+}
+
+#category-name, #category-form .MuiInputLabel-root {
+    font-size: 1.15rem;
+}
+
+#category-form .MuiInputLabel-shrink {
+    font-size: 1rem;
 }
 
 #add-category-button {
-    width: 2rem;
-    height: 2rem;
-    margin-bottom: 1rem;
+    width: 2.5rem;
+    height: 2.5rem;
 }
 
 /* Styling for the icon search functionality */
-.icon-search {
-    width: 85%;
+#icon-search-form {
+    width: 80%;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -150,188 +180,207 @@
 }
 
 @media (min-width: 481px) and (max-width: 768px) {
-    #page-title {
-        font-size: 1.6rem;
+    /* Styling for the main elements */
+    #categories-box {
+        gap: 1.25rem;
+    }  
+    
+    #categories-list {
+        gap: 1.25rem;
     }
 
-    .categories-list {
+    .category-item {
+        max-width: calc(50% - 2.5rem);
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .category-item img {
+        width: 3.25rem;
+        height: 3.25rem;
+    }
+
+    .category-item-tooltip {
+        font-size: 1rem !important;
+    }
+
+    .popover-buttons-container {
+        padding: 0.75rem;
+    }   
+    /* Styling for the add/edit category form which displays in a modal */
+    #category-form {
+        width: 60%;
         gap: 1.5rem;
     }
-    
-    .popover-buttons-container {
-        gap: 0.75rem;
-        padding: 0.75rem;
-    }
-
-    .popover-button {
-        width: 1.5rem;
-        height: 1.5rem;
-    }
-
-    #tooltip-text {   
-        font-size: 0.9rem;
-    }
-
-    .category-item {
-        max-width: calc(50% - 5rem);
-    }
-
-    .category-item img {
-        width: 4rem;
-        height: 4rem;
-    }
-
-    .category-title {
-        font-size: 1.2rem;
-    }
-
-    #category-form {
-        padding: 1.25rem;
-    }
-
-    #form-title {
-        font-size: 1.2rem;
-    }
-
-    #category-name {
-        font-size: 1rem;
-    }
-
-    #bottom-row img {
-        width: 2.5rem;
-    }
-
-    #add-category-button {
-        width: 2.5rem;
-        height: 2.5rem;
-    }
-
-    .icon-search {
-        width: 75%;
-    }
-}
-
-@media (min-width: 769px) and (max-width: 1024px) {    
-    #page-title {
-        font-size: 1.8rem;
-    }
-
-    .categories-list {
-        gap: 2rem;
-    }
-
-    .popover-buttons-container {
-        gap: 1rem;
-        padding: 1rem;
-    }
-
-    .popover-button {
-        width: 2rem;
-        height: 2rem;
-    }
-
-    #tooltip-text {   
-        font-size: 1rem;
-    }
-
-    .category-item {
-        max-width: calc(33% - 1rem);
-    }
-
-    .category-item img {
-        width: 5rem;
-        height: 5rem;
-    }
-
-    .category-title {
-        font-size: 1.4rem;
-    }
-
-    #category-form {
-        padding: 1.5rem;
-    }
 
     #form-title {
         font-size: 1.4rem;
-    }   
+    }
     
-    #category-name {
-        font-size: 1.2rem;
+    #category-name, #category-form .MuiInputLabel-root {
+        font-size: 1.3rem;
     }
 
-    #bottom-row img {
-        width: 2.8rem;
-    }  
-
-    #add-category-button {
-        width: 3rem;
-        height: 3rem;
+    #category-form .MuiInputLabel-shrink {
+        font-size: 1rem;
     }
-}
 
-@media (min-width: 1025px) { 
-    #page-title {
+    #save-category-button, #cancel-category-button {
         font-size: 2rem;
     }
 
-    .categories-list {
-        gap: 2.5rem;
+    /* Styling for the icon search functionality */
+    #icon-search-form {
+        width: 60%;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) { 
+    /* Styling for the main elements */   
+    #categories-box {
+        gap: 1.5rem;
+    }
+    
+    #page-title {
+        font-size: 1.4rem;
     }
 
-    .popover-buttons-container {
-        gap: 1.25rem;
-        padding: 1.25rem;
-    }
-
-    .popover-button {
-        width: 2.5rem;
-        height: 2.5rem;
-    }
-
-    #tooltip-text {   
-        font-size: 1.2rem;
+    #categories-list {
+        gap: 1.5rem;
     }
 
     .category-item {
-        max-width: calc(25% - 1rem);
+        max-width: calc(50% - 2.5rem);
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .category-item-tooltip {
+        font-size: 1.15rem !important;
     }
 
     .category-item img {
-        width: 6rem;
-        height: 6rem;
+        width: 3.5rem;
+        height: 3.5rem;
     }
 
-    .category-title {
-        font-size: 1.6rem;
+    #category-title {
+        font-size: 1.3rem;
     }
 
+    .popover-buttons-container {
+        padding: 0.75rem;
+    }
+    /* Styling for the add/edit category form which displays in a modal */
     #category-form {
+        width: 60%;
         padding: 1.75rem;
     }
 
     #form-title {
-        font-size: 1.6rem;
-    }
-
-    #category-name {
         font-size: 1.4rem;
     }
 
-    #bottom-row img {
-        width: 3rem;
+    #top-row {
+        gap: 1.25rem;
+    }
+    
+    .selected-icon {
+        width: 4.5rem;
+        height: 4.5rem;
+    }
+    
+    #category-name, #category-form .MuiInputLabel-root {
+        font-size: 1.3rem;
+    }
+
+    #category-form .MuiInputLabel-shrink {
+        font-size: 1rem;
+    }
+    
+    #save-category-button, #cancel-category-button {
+        font-size: 2rem;
     }
 
     #add-category-button {
-        width: 2.5rem;
-        height: 2.5rem;
+        width: 2.75rem;
+        height: 2.75rem;
+    }
+    /* Styling for the icon search functionality */
+    #icon-search-form {
+        width: 60%;
+    }
+}
+
+@media (min-width: 1025px) { 
+    /* Styling for the main elements */
+    #categories-box {
+        gap: 2rem;
+        padding: 3rem;
+    }
+    
+    #categories-list {
+        gap: 1.5rem;
+    }
+
+    .category-item {
+        max-width: calc(20% - 1rem);
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .category-item img {
+        width: 3.25rem;
+        height: 3.25rem;
+    }
+
+    .category-item-tooltip {
+        font-size: 0.95rem !important;
+    }
+
+    .popover-button {
+        width: 0.9rem;
+        height: 0.9rem;
+    }  
+
+    #category-title {
+        font-size: 1.1rem;
+    }
+    
+    /* Styling for the add/edit category form which displays in a modal */
+    #category-form {
+        width: 25%;
+        padding: 1.3rem;
+    }
+
+    #form-title {
+        font-size: 1.2rem;
+    }
+
+    #top-row {
+        gap: 1.5rem;
+    }
+
+    .selected-icon {
+        width: 4.5rem;
+        height: 4.5rem;
+    }
+    
+    #category-name, #category-form .MuiInputLabel-root {
+        font-size: 1.1rem;
+    }
+
+    #category-form .MuiInputLabel-shrink {
+        font-size: 1rem;
+    }
+
+    /* Styling for the icon search functionality */
+    #icon-search-form {
+        width: 40%;
     }
 
     .icon-grid {
         grid-template-columns: repeat(5, 1fr);
         grid-template-rows: repeat(4, auto);
-    }
-
-    .icon-search {
-        width: 45%;
-    }
+    }    
 }

@@ -40,9 +40,9 @@
 }
 
 /* Styling for the table cells */
-#column-title-button-icon {
-    width: 0.75rem;
-    height: 0.75rem;
+.table-cell {
+    border: 1px solid rgb(206, 211, 217);
+    cursor: pointer;
 }
 
 .custom-tooltip-text {
@@ -73,10 +73,20 @@
 }
 
 /* Styling for the edit/delete buttons */
-#edit-button, #delete-button {
-    font-size: 0.5rem;
-    padding: 0.5rem;
-    margin: 0.2rem;
+.sticky-table-popover-box {    
+    display: flex;
+    padding: 0.15rem;
+    gap: 1rem;
+}
+
+.sticky-table-popover-button {
+    font-size: 0.75rem;
+    color: black;
+}
+
+.blurred-row, .blurred-column-cell {
+    filter: blur(5px);
+    background-color: #eeebeb;
 }
 
 /* Styling for the table footer elements - pagination, total sum text and add button */
@@ -135,17 +145,7 @@ div.MuiTablePagination-toolbar {
 }
 
 @media (min-width: 481px) and (max-width: 768px) {       
-    #search-filters {
-        width: 100%;
-    }
-
-    #column-title-button-icon {
-        width: 1rem;
-        height: 1rem;
-    }
-
     .custom-tooltip-text {
-        margin: 0.5rem !important;
         font-size: 0.6rem !important;
     }
 
@@ -158,8 +158,8 @@ div.MuiTablePagination-toolbar {
         height: 1.85rem;
     }
 
-    #edit-button, #delete-button {
-        font-size: 0.6rem;
+    .sticky-table-popover-button {
+        font-size: 0.8rem;
     }
 
     p.pagination-select-label, p.pagination-displayed-rows, div.MuiTablePagination-select {
@@ -171,18 +171,8 @@ div.MuiTablePagination-toolbar {
     }
 }
 
-@media (min-width: 769px) and (max-width: 1024px) {
-    #search-filters {
-        width: 100%;
-    }
-
-    #column-title-button-icon {
-        width: 1.25rem;
-        height: 1.25rem;
-    }
-
+@media (min-width: 769px) and (max-width: 1024px) {    
     .custom-tooltip-text {
-        margin: 0.5rem !important;
         font-size: 0.8rem !important;
     }
 
@@ -195,8 +185,8 @@ div.MuiTablePagination-toolbar {
         height: 2.3rem;
     }
 
-    #edit-button, #delete-button {
-        font-size: 0.85rem;
+    .sticky-table-popover-button {
+        font-size: 0.9rem;
     }
 
     p.pagination-select-label, p.pagination-displayed-rows, div.MuiTablePagination-select {
@@ -213,13 +203,7 @@ div.MuiTablePagination-toolbar {
         flex-direction: row;
     }
 
-    #column-title-button-icon {
-        width: 1.25rem;
-        height: 1.25rem;
-    }
-
     .custom-tooltip-text {
-        margin: 0.5rem !important;
         font-size: 0.9rem !important;
     }
 
@@ -232,15 +216,15 @@ div.MuiTablePagination-toolbar {
         height: 2.45rem;
     }
 
-    #edit-button, #delete-button {
-        font-size: 1rem;
+    .sticky-table-popover-button {
+        font-size: 0.85rem;
     }
 
     p.pagination-select-label, p.pagination-displayed-rows, div.MuiTablePagination-select {
-        font-size: 1.1rem;
+        font-size: 1.2rem;
     }
 
     #total-sum-text {
-        font-size: 1.1rem;
+        font-size: 1.2rem;
     }
 }

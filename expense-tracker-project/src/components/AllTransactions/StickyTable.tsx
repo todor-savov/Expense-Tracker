@@ -12,10 +12,9 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { Button, IconButton, InputAdornment, Popover, Tooltip, Typography } from '@mui/material';
 import { ClearIcon } from '@mui/x-date-pickers';
-import { ArrowUpward, ArrowDownward, Add } from '@mui/icons-material';
-import SearchIcon from '@mui/icons-material/Search';
+import { Add } from '@mui/icons-material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPenToSquare, faReceipt, faTrashCan } from '@fortawesome/free-solid-svg-icons';
+import { faArrowDown, faArrowUp, faPenToSquare, faReceipt, faSearch, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import AuthContext from '../../context/AuthContext';
 import ConfirmDialog from '../ConfirmDialog/ConfirmDialog.tsx';
 
@@ -77,7 +76,7 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, categories, pay
   const [searchFilters, setSearchFilters] = useState<Map<string, string>>(new Map());
   const [sortParams, setSortParams] = useState<sortParams>({'column': 'date', 'ascending': false});
   const [selectedRow, setSelectedRow] = useState<string|null>(null);
-  const [hoveredColumnTitle, setHoveredColumnTitle] = useState<string>('');
+  const [clickedColumnTitle, setClickedColumnTitle] = useState<string>('');
   const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
   const [sum, setSum] = useState<number>(0); 
   const [dialog, setDialog] = useState<Dialog>({ open: false, id: null });
@@ -94,12 +93,12 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, categories, pay
 
   const handleTitleClick = (event: React.MouseEvent<HTMLTableCellElement>, columnId: string) => {
     setAnchorEl(event.currentTarget);  
-    setHoveredColumnTitle(columnId);
+    setClickedColumnTitle(columnId);
   }
 
   const handleTitlePopoverClose = () => {
     setAnchorEl(null);
-    setHoveredColumnTitle('');
+    setClickedColumnTitle('');
   }
 
   const handleRowClick = (event: React.MouseEvent<HTMLTableRowElement>, transactionId: string) => {
@@ -223,9 +222,9 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, categories, pay
                 <TableRow>
                   {columns.map(column => 
                   <React.Fragment>
-                    <TableCell key={column.id} align='center' className={column.className}
+                    <TableCell key={column.id} align='center'
+                      style={{backgroundColor: '#eeebeb'}} className={column.className}                                            
                       onClick={(event) => handleTitleClick(event, column.id)}
-                      sx={{ cursor: 'pointer', backgroundColor: '#f1f1f1' }}
                     >
                       <Tooltip title={`Click to sort/filter by ${column.label}`} classes={{tooltip: 'custom-tooltip-text'}} 
                         placement="bottom" arrow>
@@ -234,27 +233,32 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, categories, pay
                     </TableCell>
 
                     <Popover 
-                      open={hoveredColumnTitle === column.id}
+                      open={clickedColumnTitle === column.id}
                       anchorEl={anchorEl}
                       onClose={handleTitlePopoverClose}
-                      anchorOrigin={{ vertical: 'center', horizontal: 'center' }}
-                      transformOrigin={{ vertical: 'center', horizontal: 'center' }}                     
+                      anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+                      transformOrigin={{ vertical: 'center', horizontal: 'center' }}
                     >
-                     <IconButton onClick={() => handleFilterButtonClick(column.id)}>
-                       <SearchIcon id='column-title-button-icon' />
-                     </IconButton>
+                      <Box className='sticky-table-popover-box'>
+                        <IconButton onClick={() => handleFilterButtonClick(column.id)}>
+                          <FontAwesomeIcon icon={faSearch} className='sticky-table-popover-button' />
+                        </IconButton>
 
-                     {sortParams.column === column.id ?
-                       <IconButton onClick={handleSortChange}>
-                         {sortParams.ascending ? <ArrowUpward id='column-title-button-icon' /> : <ArrowDownward id='column-title-button-icon' />}
-                       </IconButton>
-                       : 
-                       (hoveredColumnTitle === column.id && 
-                         <IconButton onClick={() => handleSort(column.id)}>
-                           <ArrowUpward id='column-title-button-icon' />
-                         </IconButton>
-                       )
-                     }
+                        {sortParams.column === column.id ?
+                          <IconButton onClick={handleSortChange}>
+                            {sortParams.ascending ? 
+                              <FontAwesomeIcon icon={faArrowUp} className='sticky-table-popover-button' /> 
+                              : 
+                              <FontAwesomeIcon icon={faArrowDown} className='sticky-table-popover-button' />}
+                          </IconButton>
+                          : 
+                          (clickedColumnTitle === column.id && 
+                            <IconButton onClick={() => handleSort(column.id)}>
+                              <FontAwesomeIcon icon={faArrowUp} className='sticky-table-popover-button' />
+                            </IconButton>
+                          )
+                        }
+                      </Box>
                     </Popover>
                   </React.Fragment>
                   )}
@@ -277,14 +281,16 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, categories, pay
                     })
                     .map((transaction) => 
                       <React.Fragment>
-                        <TableRow key={transaction.id} style={{ cursor: 'pointer' }} hover
-                          onClick={(event) => handleRowClick(event, transaction.id)}
+                        <TableRow onClick={(event) => handleRowClick(event, transaction.id)}
+                          className={selectedRow === transaction.id ? 'blurred-row' : ''}
+                          key={transaction.id} hover
                         >
                           {columns.map((column) => {
                             const value = transaction[column.id];
                               if (column.id === 'receipt') {                                                              
                                   return (
-                                    <TableCell key={column.id} align='center' className={column.className}>
+                                    <TableCell className={`${clickedColumnTitle === column.id ? 'blurred-column-cell' : column.className}`}
+                                      key={column.id} align='center'>
                                       {value === 'none' ?
                                         <Typography id='no-receipt-text'> None </Typography>
                                         :
@@ -294,7 +300,8 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, categories, pay
                                     </TableCell>)
                               } else if (column.id === 'category') {
                                   return (
-                                    <TableCell key={column.id} align='center' className={column.className}>
+                                    <TableCell className={`${clickedColumnTitle === column.id ? 'blurred-column-cell' : column.className}`}
+                                      key={column.id} align='center'>
                                       <Tooltip title={value} placement="bottom" classes={{tooltip: 'custom-tooltip-text'}} arrow>
                                         <img 
                                           src={categories.find((cat) => cat.type === value)?.imgSrc}
@@ -305,14 +312,16 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, categories, pay
                                     </TableCell>)
                               } else if (column.id === 'date') {
                                   return (
-                                    <TableCell key={column.id} align='center' className={column.className}>
+                                    <TableCell className={`${clickedColumnTitle === column.id ? 'blurred-column-cell' : column.className}`}
+                                      key={column.id} align='center'>
                                       <Box className='cell-value'>
                                         {new Date(value).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
                                       </Box>
                                     </TableCell>)
                               } else if (column.id === 'amount') {                                
                                   return (
-                                    <TableCell key={column.id} align='center' className={column.className}>
+                                    <TableCell className={`${clickedColumnTitle === column.id ? 'blurred-column-cell' : column.className}`}
+                                      key={column.id} align='center'>
                                       <Box className='cell-value'>
                                         {`${transaction.currency === 'USD' ? '$' : 
                                           (transaction.currency === 'EUR' ? '€' : 'BGN')} ${(value as number).toFixed(2)}
@@ -321,7 +330,8 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, categories, pay
                                     </TableCell>)
                               } else if (column.id === 'payment') {
                                   return (
-                                    <TableCell key={column.id} align='center' className={column.className}>  
+                                    <TableCell className={`${clickedColumnTitle === column.id ? 'blurred-column-cell' : column.className}`}
+                                      key={column.id} align='center'>
                                       <Tooltip title={value} placement="bottom" classes={{tooltip: 'custom-tooltip-text'}} arrow>
                                         <img
                                           src={payments.find((pay) => pay.type === value)?.imgSrc}
@@ -332,7 +342,8 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, categories, pay
                                     </TableCell>)
                               } else {
                                   return (
-                                    <TableCell key={column.id} align='center' className={column.className}>
+                                    <TableCell className={`${clickedColumnTitle === column.id ? 'blurred-column-cell' : column.className}`}
+                                      key={column.id} align='center'>
                                       <Box className='cell-value'>
                                         {value}
                                       </Box>
@@ -348,19 +359,21 @@ const StickyTable: React.FC<StickyTableProps> = ({ transactions, categories, pay
                           anchorOrigin={{ vertical: 'center', horizontal: 'center' }}
                           transformOrigin={{ vertical: 'center', horizontal: 'center' }}
                         >
-                          <button id="edit-button" onClick={() => navigate(`/edit-transaction/${transaction.id}`)}>
-                            <FontAwesomeIcon icon={faPenToSquare} />
-                          </button>
-                          <button id="delete-button" onClick={() => setDialog({ open: true, id: transaction.id })}>
-                            <FontAwesomeIcon icon={faTrashCan} />
-                          </button>
+                          <Box className='sticky-table-popover-box'>
+                            <IconButton onClick={() => navigate(`/edit-transaction/${transaction.id}`)}>
+                              <FontAwesomeIcon icon={faPenToSquare} className="sticky-table-popover-button" />
+                            </IconButton>
+                            <IconButton onClick={() => setDialog({ open: true, id: transaction.id })}>
+                              <FontAwesomeIcon icon={faTrashCan} className="sticky-table-popover-button" />
+                            </IconButton>
+                          </Box>
                         </Popover>
                       </React.Fragment>
                     )
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 }
-              </TableBody>                                  
-            </Table>     
+              </TableBody>
+            </Table>
 
             <TablePagination
               rowsPerPageOptions={[10, 25, 100]}

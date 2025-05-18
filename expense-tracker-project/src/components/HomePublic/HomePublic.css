@@ -1,4 +1,4 @@
-/* Main container for the home page */
+/* Styling for the main containers */
 #demo-image-full-screen {
     width: 100%;
 }
@@ -8,131 +8,151 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 0.5rem;
-    padding: 1rem;
+    align-items: center;
+    padding: 2rem;
+    gap: 1rem;
+    background-color: #f1f1f1;
 }
 
 /* Styling for the Hero section */
 #hero-section-container {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
     background: linear-gradient(to right, rgba(255, 255, 255, 0.9) 40%, transparent 80%);
+    border: 1px solid #ccc;
     border-radius: 1rem;
     padding: 0.75rem;
     gap: 0.75rem;
 }
 
+#app-logo-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
 #app-logo {
-    width: 3rem;
-    height: 3rem;
+    width: 2.5rem;
+    height: 2.5rem;
 }
 
-#slogan {
-    font-size: 1rem;
+#slogan-text {
     font-weight: bold;
 }
 
+#hero-buttons-container {
+    display: flex;
+    gap: 1rem;
+}
+
+#hero-buttons-container button {
+    font-size: 0.8rem;
+}
+
+/* Styling for the section titles */
 #section-title {
-    font-size: 1.25rem;
+    font-size: 1.2rem;
     font-weight: bold;
-    margin: 0.5rem;
 }
 
 /* Styling for the features section */
 #features-container {
     display: flex;
     flex-direction: column;
+    padding: 0 0.5rem 0 0.5rem;
     gap: 1rem;
 }
 
-#features-container .MuiCard-root {
+.feature-card {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-}
-
-#features-container img {
-    width: 4rem;
-    height: 4rem;
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
+    padding: 1rem;
+    gap: 1rem;
 }
 
 #feature-title {
-    font-size: 1rem;
     font-weight: bold;
 }
 
-#feature-description {
-    font-size: 0.75rem;
-    margin-top: 0.5rem;
+.feature-image {
+    width: 4.5rem;
+    height: 4.5rem;
 }
 
-/* Styling for the testimonials section */
+#feature-description {
+    font-size: 0.9rem;
+}
+
+/* Styling for the swiper sections */
 .swiper {
-    width: 100%;
+    width: 90%;
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    padding: 1rem;
-    border-radius: 1rem;
-    background-color: rgba(255, 255, 255, 0.9);
 }
 
 .swiper-slide {
     display: flex;
     flex-direction: column;
+    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ccc;
+    border-radius: 1rem;
     justify-content: center;
     align-items: center;
+    padding: 1rem;
     gap: 1rem;
-    padding: 0.5rem;
-    background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* Styling for the demo section */  
+#demo-view-text {
+    font-size: 0.9rem;
+}
+
+.demo-view-image {
+    width: 75%;
+    cursor: pointer;
+    border: 1px solid #ccc;
+}
+
+#demo-view-button {
+    font-size: 0.8rem;
+    border-radius: 0.5rem;
+    transition: background-color 0.3s ease;
+}
+
+#demo-view-button:hover {
+    background-color: rgb(85, 138, 236);
+    color: white;
+}
+
+/* Styling for the feedback section */
 .feedback-image {
-    width: 7rem;
-    height: 7rem;
-    object-fit: cover;
+    width: 5rem;
+    height: 5rem;
     border-radius: 50%;
 }
   
-.feedback-content {
-    display: flex;
-    flex-direction: column;
-}
-
-#feedback-text {
-    font-size: 1rem;
-    font-weight: bold;
-    margin-bottom: 1rem;
-}
-  
-.rating {
-    align-self: center;
-}
-  
 blockquote {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     font-style: italic;
     color: #555;
-    margin: 1rem;
+    margin: 0;
 }
   
 cite {
     font-weight: bold;
 }
 
-.swiper-pagination {
+/* Styling for the swiper pagination */
+.swiper-pagination {   
     position: relative;
-    margin-top: 0.5rem;
     padding: 0.5rem;
 }
 
-.swiper-pagination-bullet {
-    width: 1rem;
-    height: 1rem;
+.swiper-pagination-bullet {      
     opacity: 0.7;
     background-color: grey;
     transition: opacity 0.3s ease;
@@ -147,22 +167,11 @@ cite {
     opacity: 1;
 }
 
-/* Styling for the demo section */  
-.demo-view-image {
-    width: 100%;
-    cursor: pointer;
-}
-
-#demo-view-text {
-    font-size: 1rem;
-}
-
 /* Styling for the partners section */
 #partners-container {
     width: 100%;
-    display: flex;
     overflow: hidden;
-    border-radius: 1rem;
+    display: flex;
     padding: 0.5rem;
     background-color: rgba(255, 255, 255, 0.9);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -170,7 +179,7 @@ cite {
 
 #partners-wrapper {
     display: flex;
-    gap: 0.5rem;
+    gap: 2.5rem;
     animation: scroll 8s linear infinite;
 }
 
@@ -179,143 +188,200 @@ cite {
     to { transform: translateX(-50%); }
 }
 
-.partner-logo-wrapper {
-    padding: 1rem;
-    margin: 1rem;
-    border: 1px solid #ccc;
-    background-color: white;
-}
-
 .partner-logo-image {
-    width: 6rem;
-    height: 6rem;
+    width: 5rem;
+    height: 5rem;
     object-fit: contain;
 }
 
-@media (min-width: 481px) and (max-width: 768px) {   
+@media (min-width: 481px) and (max-width: 768px) { 
+    #section-title {
+        font-size: 1.15rem;
+    }
+    /* Styling for the Hero section */
+    #slogan-text {
+        font-size: 1.25rem;
+    }
+
+    #hero-buttons-container button {
+        font-size: 0.9rem;
+    }
+    /* Styling for the features section */ 
     #features-container {
         flex-direction: row;
         flex-wrap: wrap;
     }
     
-    #features-container .MuiCard-root {
+    .feature-card {
         width: calc(50% - 0.5rem);
+    }
+
+    #feature-description {
+        font-size: 0.9rem;
+    }
+    /* Styling for the demo section */
+    #demo-view-text {
+        font-size: 0.9rem;
+    }
+
+    .demo-view-image {
+        width: 100%;
+    }
+
+    #demo-view-button {
+        font-size: 0.9rem;
+    }
+    /* Styling for the feedback section */
+    .feedback-image {
+        width: 5.5rem;
+        height: 5.5rem;
+    }
+    /* Styling for the partners section */
+    .partner-logo-image {
+        width: 6rem;
+        height: 6rem;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    #section-title {
+        font-size: 1.35rem;
+    }
+    /* Styling for the Hero section */
+    #app-logo {
+        width: 3rem;
+        height: 3rem;
+    }
+    
+    #slogan-text {
+        font-size: 1.45rem;
+    }
+
+    #hero-buttons-container button {
+        font-size: 1rem;
+    }    
+    /* Styling for the features section */
+    #features-container {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .feature-card {
+        width: calc(30% - 0.5rem);
     }
 
     #feature-title {
         font-size: 1.1rem;
     }
 
+    .feature-image {
+        width: 5rem;
+        height: 5rem;
+    }
+
     #feature-description {
-        font-size: 0.8rem;
+        font-size: 1rem;
     }
-
+    /* Styling for the demo section */
     #demo-view-text {
-        font-size: 0.8rem;
-    }
-
-    .partner-logo-wrapper {
-        padding: 0.5rem;
-        margin: 0.5rem;
-    }
-
-    .partner-logo-image {
-        width: 7rem;
-        height: 7rem;
-    }
-}
-
-@media (min-width: 769px) and (max-width: 1024px) {
-    #app-logo {
-        width: 4rem;
-        height: 4rem;
-    }
-
-    #features-container {
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-    
-    #features-container .MuiCard-root {
-        width: calc(40% - 5rem);
-    }
-
-    #feature-title {
         font-size: 1rem;
     }
 
-    #feature-description {
-        font-size: 0.9rem;
+    .demo-view-image {
+        width: 100%;
     }
 
-    #demo-view-text {
-        font-size: 0.9rem;
+    #demo-view-button {
+        font-size: 1rem;
     }
-
-    .partner-logo-wrapper {
-        padding: 0.5rem;
-        margin: 0.5rem;
-    }
-
-    .partner-logo-image {
-        width: 8rem;
-        height: 8rem;
-    }
-}
-
-@media (min-width: 1025px) { 
-    #app-logo {
-        width: 5rem;
-        height: 5rem;
-    }
-
-    #slogan {
-        font-size: 1.5rem;
-    }
-    
-    #section-title {
-        font-size: 1.4rem;
-    }
-
-    #features-container {
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-    
-    #features-container .MuiCard-root {
-        width: calc(30% - 5rem);
-    }
-    
-    #feature-title {
-        font-size: 1.2rem;
-    }
-
-    #features-container img {
-        width: 5rem;
-        height: 5rem;
-    }
-
-    #feature-description {
-        font-size: 1.2rem;
-    }
-
-    .partner-logo-wrapper {
-        padding: 0.5rem;
-        margin: 0.5rem;
-    }
-
-    .partner-logo-image {
-        width: 9rem;
-        height: 9rem;
-    }
-   
-    #feedback-text {
-        font-size: 1.2rem;
+    /* Styling for the feedback section */
+    .feedback-image {
+        width: 5.5rem;
+        height: 5.5rem;
     }
 
     blockquote {
         font-size: 1rem;
-    }    
+    }
+
+    cite {
+        font-size: 1.1rem;
+    }
+    /* Styling for the partners section */
+    .partner-logo-image {
+        width: 6.25rem;
+        height: 6.25rem;
+    }
+}
+
+@media (min-width: 1025px) {
+    #demo-image-full-screen {
+        width: 50%;
+    }
+    /* Styling for the Hero section */
+    #app-logo {
+        width: 3rem;
+        height: 3rem;
+    }
+
+    #slogan-text {
+        font-size: 1.3rem;
+    }
+
+    #hero-buttons-container button {
+        font-size: 0.85rem;
+    }
+    /* Styling for the features section */
+    #features-container {
+        flex-direction: row;
+        justify-content: center;
+    }
+    
+    .feature-card {
+        width: calc(25% - 0.5rem);
+    }
+
+    #feature-title {
+        font-size: 1.1rem;
+    }
+
+    .feature-image {
+        width: 5.5rem;
+        height: 5.5rem;
+    }
+
+    #feature-description {
+        font-size: 1rem;
+    }
+    /* Styling for the swiper sections */
+    .swiper {
+        width: 75%;
+    }
+    /* Styling for the demo section */
+    #demo-view-text {
+        font-size: 1rem;
+    }
+
+    .demo-view-image {
+        width: 90%;
+    }
+
+    #demo-view-button {
+        font-size: 0.9rem;
+    }
+    /* Styling for the feedback section */
+    .feedback-image {
+        width: 6rem;
+        height: 6rem;
+    }
+
+    blockquote {
+        font-size: 1rem;
+    }
+    /* Styling for the partners section */
+    .partner-logo-image {
+        width: 7.5rem;
+        height: 7.5rem;
+    }
 }

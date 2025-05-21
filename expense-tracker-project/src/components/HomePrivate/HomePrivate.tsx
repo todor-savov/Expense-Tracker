@@ -7,7 +7,6 @@ import { Alert, Box, Snackbar, Table, TableBody, TableCell, TableContainer, Tabl
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faReceipt } from "@fortawesome/free-solid-svg-icons";
 import './HomePrivate.css';
-import '../AllTransactions/AllTransactions.css';
 
 interface Column {
     id: 'category' | 'date' | 'name' | 'amount' | 'payment' | 'receipt';
@@ -118,7 +117,7 @@ const HomePrivate = () => {
     }
 
     return ( 
-        <Box className="home-private-container">
+        <Box id="home-private-container">
             {error ?                 
                 <Box className='message-box error'>
                     <Typography>There was a problem loading your data.</Typography>
@@ -135,13 +134,15 @@ const HomePrivate = () => {
                             <img src={showReceipt} alt="receipt" />
                         </Box>
 
-                        <TableContainer id='home-private-sticky-table-container'>
-                            <Table id='home-private-sticky-table'>
+                        <TableContainer id='sticky-table-container'>
+                            <Table id='sticky-table'>
                                 <TableHead>
                                     <TableRow>
                                         {columns.map((column) => 
-                                            <TableCell key={column.id} align='left'>
-                                                <Typography id='home-private-column-title'> {column.label} </Typography>
+                                            <TableCell key={column.id} align='center'
+                                                style={{backgroundColor: '#eeebeb'}} className='table-cell'
+                                            >
+                                                <Typography id='column-title'> {column.label} </Typography>
                                             </TableCell>
                                         )}
                                     </TableRow>
@@ -154,41 +155,41 @@ const HomePrivate = () => {
                                     })
                                     .slice(0, 10)
                                     .map((transaction) =>
-                                        <TableRow key={transaction.id} style={{ cursor: 'pointer' }} hover>
+                                        <TableRow key={transaction.id} hover style={{ cursor: 'pointer' }}>
                                             {columns.map((column) => {
                                                 const value = transaction[column.id];
                                                 if (column.id === 'receipt') {
                                                     return (
-                                                        <TableCell key={column.id} align='left'>
+                                                        <TableCell key={column.id} align='center' className='table-cell'>
                                                             {value === 'none' ?
                                                                 <Typography id='no-receipt-text'> None </Typography>                                                        
                                                                 : 
-                                                                <FontAwesomeIcon icon={faReceipt} id="home-private-receipt-icon"
+                                                                <FontAwesomeIcon icon={faReceipt} id="receipt-icon"
                                                                     onClick={() => setShowReceipt(`${value}`)} />                         
                                                             }
                                                         </TableCell>)
                                                 } else if (column.id === 'category') {
                                                     return (
-                                                        <TableCell key={column.id} align='left'>
-                                                            <Tooltip title={value} placement="bottom" arrow>
+                                                        <TableCell key={column.id} align='center' className='table-cell'>
+                                                            <Tooltip title={value} placement="bottom" classes={{tooltip: 'custom-tooltip-text'}} arrow>
                                                                 <img 
                                                                     src={categories.find((cat) => cat.type === value)?.imgSrc}
                                                                     alt={categories.find((cat) => cat.type === value)?.imgAlt}
-                                                                    className='home-private-cell-with-icon' 
+                                                                    className='cell-with-icon'
                                                                 />
                                                             </Tooltip>
                                                         </TableCell>)
                                                 } else if (column.id === 'date') {
                                                     return (
-                                                        <TableCell key={column.id} align='left'>
-                                                            <Box className='home-private-cell-value'>
+                                                        <TableCell key={column.id} align='center' className='table-cell'>
+                                                            <Box className='cell-value'>
                                                                 {new Date(value).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
                                                             </Box>
                                                         </TableCell>)
                                                 } else if (column.id === 'amount') {                                                                                                                                
                                                     return (
-                                                        <TableCell key={column.id} align='left'>
-                                                            <Box className='home-private-cell-value'>
+                                                        <TableCell key={column.id} align='center' className='table-cell'>
+                                                            <Box className='cell-value'>
                                                                 {`${transaction.currency === 'USD' ? '$' : 
                                                                     (transaction.currency === 'EUR' ? '€' : 'BGN')} ${(value as number).toFixed(2)}
                                                                 `}
@@ -196,32 +197,30 @@ const HomePrivate = () => {
                                                         </TableCell>)
                                                 } else if (column.id === 'payment') {
                                                     return (
-                                                        <TableCell key={column.id} align='left'>
-                                                            <Tooltip title={value} placement="bottom" arrow>
+                                                        <TableCell key={column.id} align='center' className='table-cell'>
+                                                            <Tooltip title={value} placement="bottom" classes={{tooltip: 'custom-tooltip-text'}} arrow>
                                                                 <img
                                                                     src={payments.find((pay) => pay.type === value)?.imgSrc}
                                                                     alt={payments.find((pay) => pay.type === value)?.imgAlt}
-                                                                    className='home-private-cell-with-icon'
+                                                                    className='cell-with-icon'
                                                                 />
                                                             </Tooltip>
                                                         </TableCell>)
                                                 } else {
                                                     return (
-                                                        <TableCell key={column.id} align='left'>
-                                                            <Box className='home-private-cell-value'>
-                                                                {value}
-                                                            </Box>
+                                                        <TableCell key={column.id} align='center' className='table-cell'>
+                                                            <Box className='cell-value'> {value} </Box>
                                                         </TableCell>)
                                                 }
                                             })} 
                                         </TableRow>)
                                     }
                                 </TableBody>
-                            </Table>
+                            </Table>                        
                         </TableContainer>
 
                         <Typography id='currency-disclaimer-text'>
-                            The values in the "Amount" column are in {settings?.currency} currency.
+                            The values in the "Amount" column are in {settings?.currency} currency.                            
                         </Typography>
                     </React.Fragment>
                 )                                                                

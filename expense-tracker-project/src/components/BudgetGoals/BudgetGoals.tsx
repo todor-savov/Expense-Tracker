@@ -52,8 +52,14 @@ const BudgetGoals = ({ isLimitChanged, setIsLimitChanged }: BudgetGoalsProps) =>
         const fetchTransactionsAndCategories = async () => {
             try {            
                 setLoading(true);
-                const transactions = await getTransactions(isLoggedIn.user);
+                let transactions = await getTransactions(isLoggedIn.user);
                 if (typeof transactions === 'string') throw new Error('Error fetching transactions.');
+                const date = new Date().toLocaleDateString();
+                console.log(transactions);
+                console.log(date);
+                transactions = transactions.filter((transaction: FetchedTransaction) => console.log(transaction.date));
+
+                
                 const categories = await getCategories(isLoggedIn.user);
                 if (typeof categories === 'string') throw new Error('Error fetching categories.');
                 categories.map((category: Category) => {

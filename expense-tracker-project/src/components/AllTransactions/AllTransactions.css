@@ -5,20 +5,21 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: white;
+    background-color: #f9f9f9;
     gap: 0.5rem;
 }
 
-#sticky-table-container {
+#sticky-table-container {/* This is used in HomePrivate.tsx as well */
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 1rem 1rem 0 1rem;
 }
 
-#sticky-table {
+#sticky-table {/* This is used in HomePrivate.tsx as well */
     table-layout: fixed;
     overflow-x: auto;
+    background-color: white;
 }
 
 /* Styling for the search filters */
@@ -40,35 +41,36 @@
 }
 
 /* Styling for the table cells */
-.table-cell {
+.table-cell {/* This is used in HomePrivate.tsx as well */
     border: 1px solid rgb(206, 211, 217);
     cursor: pointer;
 }
 
-.custom-tooltip-text {
+.custom-tooltip-text {/* This is used in HomePrivate.tsx as well */
+    padding: 0.15rem 0.3rem !important;
     margin: 0.5rem !important;
     font-size: 0.5rem !important;
 }
 
-#column-title {
+#column-title {/* This is used in HomePrivate.tsx as well */
     font-weight: bold;
 }
 
-#column-title, .cell-value, #no-receipt-text {
+#column-title, .cell-value, #no-receipt-text {/* This is used in HomePrivate.tsx as well */
     font-size: 0.6rem;
 }
 
-.cell-with-icon, #receipt-icon {
+.cell-with-icon, #receipt-icon {/* This is used in HomePrivate.tsx as well */
     width: 1.4rem;
     height: 1.4rem;
 }
 
-#receipt-icon { 
+#receipt-icon {/* This is used in HomePrivate.tsx as well */
     color: rgb(73, 134, 204);
     transition: transform 0.2s ease-in-out;
 }
 
-#receipt-icon:hover {
+#receipt-icon:hover {/* This is used in HomePrivate.tsx as well */
     transform: scale(1.25);
 }
 
@@ -117,7 +119,7 @@ div.MuiTablePagination-toolbar {
 }
 
 /* Styling for the receipt modal */
-#receipt-content {
+#receipt-content {/* This is used in HomePrivate.tsx as well */
     opacity: 1;
     position: fixed;
     top: 0;
@@ -131,7 +133,7 @@ div.MuiTablePagination-toolbar {
     background-color: rgba(0, 0, 0, 0.5);
 }
   
-#receipt-content img {
+#receipt-content img {/* This is used in HomePrivate.tsx as well */
     max-width: 75%;
     max-height: 75%;
     background-color: white;
@@ -139,21 +141,21 @@ div.MuiTablePagination-toolbar {
     padding: 1rem;
 }
 
-#receipt-content-hide {
+#receipt-content-hide {/* This is used in HomePrivate.tsx as well */
     opacity: 0;
     position: fixed;
 }
 
 @media (min-width: 481px) and (max-width: 768px) {       
-    .custom-tooltip-text {
+    .custom-tooltip-text {/* This is used in HomePrivate.tsx as well */
         font-size: 0.6rem !important;
     }
 
-    #column-title, .cell-value, #no-receipt-text {
+    #column-title, .cell-value, #no-receipt-text {/* This is used in HomePrivate.tsx as well */
         font-size: 0.8rem;
     }
 
-    .cell-with-icon, #receipt-icon {
+    .cell-with-icon, #receipt-icon {/* This is used in HomePrivate.tsx as well */
         width: 1.85rem;
         height: 1.85rem;
     }
@@ -172,15 +174,15 @@ div.MuiTablePagination-toolbar {
 }
 
 @media (min-width: 769px) and (max-width: 1024px) {    
-    .custom-tooltip-text {
+    .custom-tooltip-text {/* This is used in HomePrivate.tsx as well */
         font-size: 0.8rem !important;
     }
 
-    #column-title, .cell-value, #no-receipt-text {
+    #column-title, .cell-value, #no-receipt-text {/* This is used in HomePrivate.tsx as well */
         font-size: 1rem;
     }
 
-    .cell-with-icon, #receipt-icon {
+    .cell-with-icon, #receipt-icon {/* This is used in HomePrivate.tsx as well */
         width: 2.3rem;
         height: 2.3rem;
     }
@@ -203,15 +205,15 @@ div.MuiTablePagination-toolbar {
         flex-direction: row;
     }
 
-    .custom-tooltip-text {
+    .custom-tooltip-text {/* This is used in HomePrivate.tsx as well */
         font-size: 0.9rem !important;
     }
 
-    #column-title, .cell-value, #no-receipt-text {
+    #column-title, .cell-value, #no-receipt-text {/* This is used in HomePrivate.tsx as well */
         font-size: 1rem;
     }
 
-    .cell-with-icon, #receipt-icon {
+    .cell-with-icon, #receipt-icon {/* This is used in HomePrivate.tsx as well */
         width: 2.45rem;
         height: 2.45rem;
     }

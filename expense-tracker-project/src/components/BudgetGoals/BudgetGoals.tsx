@@ -58,7 +58,6 @@ const BudgetGoals = ({ isLimitChanged, setIsLimitChanged }: BudgetGoalsProps) =>
                 console.log(transactions);
                 console.log(date);
                 transactions = transactions.filter((transaction: FetchedTransaction) => console.log(transaction.date));
-
                 
                 const categories = await getCategories(isLoggedIn.user);
                 if (typeof categories === 'string') throw new Error('Error fetching categories.');

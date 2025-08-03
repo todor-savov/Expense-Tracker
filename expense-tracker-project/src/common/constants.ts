@@ -98,7 +98,7 @@ export const CLIENT_FEEDBACK = [
         name: "Emily R.",
         text: "The alerts for budget limits have saved me from overspending multiple times!",
         rating: 5,
-        quote: "This app is user-friendly and makes managing my finances feel effortless. I love it!"
+        quote: "The alerts for budget limits have saved me from overspending multiple times! This app is user-friendly and makes managing my finances feel effortless. I love it!"
     },
     {
         img: TODOR_SAVOV_IMAGE,
